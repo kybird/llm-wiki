@@ -1,0 +1,31 @@
+{
+  "name": "llm-wiki",
+  "version": "0.1.0",
+  "description": "LLM-friendly knowledge graph (raw logs → compiled wiki → semantic search) for AI coding agents. Path-agnostic, drop-in for any repo.",
+  "license": "MIT",
+  "bin": {
+    "llm-wiki": "bin/llm-wiki.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "skills/",
+    "templates/",
+    "TROUBLESHOOTING.md",
+    "README.md"
+  ],
+  "optionalDependencies": {
+    "@tobilu/qmd": "^2.5.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "wiki",
+    "llm",
+    "ai-agent",
+    "knowledge-graph",
+    "claude-code",
+    "agentic-memory"
+  ]
+}
