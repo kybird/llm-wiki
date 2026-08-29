@@ -1,6 +1,7 @@
 ---
 name: wiki-compile
 description: Parse raw logs to extract, synthesize, and deprecate project knowledge. Generates high-density grounded wiki pages and maintains the central index.
+skill-version: 1
 ---
 # When to use
 - After accumulating raw logs in doc/raw/

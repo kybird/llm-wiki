@@ -1,6 +1,7 @@
 ---
 name: wiki-search
 description: Retrieve relevant past knowledge. Filters out deprecated practices and follows migration trails.
+skill-version: 1
 ---
 # When to use
 - BEFORE writing any code

@@ -14,8 +14,9 @@ Usage:
   llm-wiki search "<query>"          Semantic/grep search over wiki + raw logs
   llm-wiki compile list              Show raw logs modified since last compile
   llm-wiki compile index             Rebuild wiki index.md + sync QMD search index
-  llm-wiki lint                      Validate wiki integrity (broken links, metadata)
-  llm-wiki init                      Scaffold doc/ + skills/ + hooks in current repo
+  llm-wiki lint                      Validate wiki integrity (broken links, metadata, evidence)
+  llm-wiki init [--check]            Scaffold doc/ + skills/ + hooks (--check: report only)
+  llm-wiki board ...                 Kanban core (see: llm-wiki board --help)
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
@@ -41,7 +42,7 @@ switch (subcommand) {
     lint({ json: jsonRequested });
     break;
   case 'init':
-    init();
+    init({ check: args.includes('--check') });
     break;
   case '--help':
   case '-h':

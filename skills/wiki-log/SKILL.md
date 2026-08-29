@@ -1,6 +1,7 @@
 ---
 name: wiki-log
 description: Record knowledge into raw memory with Karpathy-inspired Agentic Memory format. Captures errors, decisions, and discoveries with high-density grounding.
+skill-version: 1
 ---
 # When to use
 - After an error occurs or a bug is fixed

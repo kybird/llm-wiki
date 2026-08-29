@@ -1,6 +1,7 @@
 ---
 name: wiki-lint
 description: Validate knowledge graph integrity, detect logical conflicts, and generate a professional health report with Mermaid visualizations.
+skill-version: 1
 ---
 # When to use
 - Before starting a major feature or refactor
