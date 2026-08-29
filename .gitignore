@@ -6,3 +6,6 @@ refs/
 # (일반 소비 레포에서는 .agents/skills, .claude/skills를 커밋하는 것이 정책이다)
 .agents/
 .claude/
+
+# board --html 산출물 — 유도물이라 재생성된다 (llm-wiki board --html)
+doc/kanban/board.html

@@ -16,6 +16,7 @@
 | 3 | ✅ | work-loop 스킬(6규칙 전부) + `reopen`(QA 되돌림) + `--renew-claim` |
 | 4 | ✅ | board report(완료:폐기 비율 경보, 추이, 되돌림 수) + abandon이 폐기 사유를 raw에 자동 기록(4-2를 기계화) |
 | 후속(같은 날) | ✅ | 템플릿 사본 갱신 경로 — 1-7의 마커 규칙을 githooks/scripts로 확장(`llm-wiki-template-version:`), `init --check`가 셋 모두 보고. 이 레포는 config `"hooksPath": "templates/githooks"` 선언으로 githooks/ 사본을 없애 drift 원천 차단 |
+| 후속2(같은 날) | ✅ | 루프 가동 — 남은 작업 전부 카드화, 조건 게이트(`not_before`+`resume`)로 미결 #3 튜닝·웹 뷰를 조건만족시 진행으로 전환, `board --html` 시각화, compile list same-day 수정(subagent 설계 리뷰: 채택+수정 3건 반영) |
 
 **미착수(상시 트랙 그대로):** 스킬 git 배포(`skills add`/`sync`), TodoWrite 캡처 조사.
 

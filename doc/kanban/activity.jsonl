@@ -20,3 +20,23 @@
 {"ts":"2026-08-29T12:23:32.063Z","action":"abandoned","title":"QA 되돌림 테스트","detail":"테스트 더미 — reopen/renum 검증 후 폐기. raw 파이프라인 검증도 겸함"}
 {"ts":"2026-08-29T12:23:50.902Z","action":"reverted","title":"칸반 도그푸딩","detail":"QA 점검: Result에 '사유 없는 done 거부' 검증 문장이 결과물 경로 없이 기록됨 — 카드 경로 증거를 보강하기 위해 되돌림"}
 {"ts":"2026-08-29T12:23:51.430Z","action":"done","title":"칸반 도그푸딩"}
+{"ts":"2026-08-29T13:21:03.645Z","action":"created","title":"칸반 시각화 — board --html"}
+{"ts":"2026-08-29T13:21:04.007Z","action":"created","title":"조건 게이트 — not_before + resume"}
+{"ts":"2026-08-29T13:21:04.335Z","action":"created","title":"TodoWrite 캡처 조사"}
+{"ts":"2026-08-29T13:21:04.705Z","action":"created","title":"스킬 git 배포 — skills add/sync"}
+{"ts":"2026-08-29T13:21:05.071Z","action":"created","title":"발산 방지 튜닝"}
+{"ts":"2026-08-29T13:21:05.488Z","action":"created","title":"웹 뷰 — 드래그 이동"}
+{"ts":"2026-08-29T13:21:06.023Z","action":"claimed","title":"칸반 시각화 — board --html","actor":"zcode-loop"}
+{"ts":"2026-08-29T13:21:36.940Z","action":"created","title":"compile list 같은 날 append 감지"}
+{"ts":"2026-08-29T13:21:37.236Z","action":"created","title":"resume 테스트"}
+{"ts":"2026-08-29T13:21:37.534Z","action":"claimed","title":"조건 게이트 — not_before + resume","actor":"t"}
+{"ts":"2026-08-29T13:21:37.854Z","action":"handoff","title":"resume 테스트","detail":"게이트 조건: 테스트"}
+{"ts":"2026-08-29T13:21:38.160Z","action":"resumed","title":"resume 테스트","detail":"조건 충족 테스트"}
+{"ts":"2026-08-29T13:21:38.543Z","action":"abandoned","title":"resume 테스트","detail":"resume 원시형 검증용 더미 — 검증 완료"}
+{"ts":"2026-08-29T13:31:14.346Z","action":"done","title":"칸반 시각화 — board --html"}
+{"ts":"2026-08-29T13:32:27.750Z","action":"created","title":"게이트 스킵 검증 더미"}
+{"ts":"2026-08-29T13:32:28.045Z","action":"claimed","title":"TodoWrite 캡처 조사","actor":"zcode-loop"}
+{"ts":"2026-08-29T13:32:28.965Z","action":"done","title":"조건 게이트 — not_before + resume"}
+{"ts":"2026-08-29T13:32:29.279Z","action":"claimed","title":"스킬 git 배포 — skills add/sync","actor":"zcode-loop"}
+{"ts":"2026-08-29T13:32:29.893Z","action":"done","title":"compile list 같은 날 append 감지"}
+{"ts":"2026-08-29T13:34:02.468Z","action":"abandoned","title":"게이트 스킵 검증 더미","detail":"게이트 스킵 실측용 더미 — pick blocked '시작 예정' 확인으로 증거 확보, 폐기"}
