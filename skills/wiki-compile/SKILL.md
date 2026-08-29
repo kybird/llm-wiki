@@ -1,7 +1,7 @@
 ---
 name: wiki-compile
 description: Parse raw logs to extract, synthesize, and deprecate project knowledge. Generates high-density grounded wiki pages and maintains the central index.
-skill-version: 1
+skill-version: 2
 ---
 # When to use
 - After accumulating raw logs in doc/raw/
@@ -11,7 +11,9 @@ skill-version: 1
 # Action
 
 ## Phase 0: Preparation (Automation)
-1. **Identify New Logs**: Run `llm-wiki compile list` to see files modified since last compile.
+1. **Identify New Logs**: Run `llm-wiki compile list`. Detection is date **OR** content-hash
+   based (`doc/wiki/compile-state.json`) — same-day appends to an already-compiled log are
+   caught too. The listed logs are a real to-do list for Phases 1–3, not a formality.
 2. **Context Loading**: Read the identified logs and the current `doc/wiki/index.md`.
 
 ## Phase 1: High-Density Extraction (LLM)
@@ -84,6 +86,12 @@ Anti-pattern pages use `tags: [domain, anti-pattern]` and document the failure m
    - Rebuilds the tables in `index.md`.
    - Updates `Statistics` and `Last updated` date.
    - Syncs the QMD search index (creates wiki + raw collections if missing, re-indexes, refreshes embeddings).
+   - Regenerates `doc/wiki/compile-state.json` (per-file hashes for same-day append detection).
+
+⚠️ **`compile index` is a "compile complete" declaration.** Running only Phase 4 without
+Phases 1–3 seals every raw log up to now as *compiled*. If the state file ever merges
+badly or goes missing, the resolution is trivial: keep either side (or delete it) and run
+`compile index` once — it is regenerated deterministically from the current `doc/raw/`.
 
 ---
 

@@ -42,8 +42,8 @@ That's it. The agent does the rest.
 |---|---|
 | `llm-wiki init [--check]` | Scaffold `doc/` (wiki + kanban), copy skills + hooks + scripts. Marker-aware — re-running updates copies and preserves your edits. `--check` reports without writing |
 | `llm-wiki search "<query>"` | Grep exact matching + QMD semantic search, **always merged**; ranked by matched-keyword count with line snippets |
-| `llm-wiki compile list` | Show raw logs not yet compiled (judged by log header date) |
-| `llm-wiki compile index` | Rebuild `doc/wiki/index.md` (with aliases and answers) and sync the QMD index |
+| `llm-wiki compile list` | Show raw logs not yet compiled — header date **or** content hash (`compile-state.json`), so same-day appends are caught too |
+| `llm-wiki compile index` | Rebuild `doc/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
 | `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `doc/raw/`), uncompiled concepts, metadata, staleness |
 | `llm-wiki board` / `board report` | Derived kanban view / dashboard (done:abandoned ratio, trend, QA reverts, waiting queue) |
 | `llm-wiki card new/show/edit` | Create and edit cards — the CLI is the only writer (sentinel-safe sections) |
