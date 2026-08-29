@@ -19,21 +19,26 @@ Usage:
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
+  --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
+                                     (search, lint, compile list|index)
   LLM_WIKI_ROOT=/path                Override doc/ root location
   llm-wiki.config.json               { "projectName": "...", "collections": {...} }`);
 }
 
 const [, , subcommand, ...rest] = process.argv;
+// --json은 어느 위치에 와도 플래그로 뽑아낸다 (검색어 문자열에서 제외).
+const jsonRequested = rest.includes('--json');
+const args = rest.filter(a => a !== '--json');
 
 switch (subcommand) {
   case 'search':
-    search(rest.join(' '));
+    search(args.join(' '), { json: jsonRequested });
     break;
   case 'compile':
-    compile(rest[0]); // 'list' | 'index'
+    compile(args[0], { json: jsonRequested }); // 'list' | 'index'
     break;
   case 'lint':
-    lint();
+    lint({ json: jsonRequested });
     break;
   case 'init':
     init();
