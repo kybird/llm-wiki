@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 3
+skill-version: 4
 ---
 # When to use
 
@@ -47,7 +47,9 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
 
 2. **Blocked ≠ stopped.** When a card hits the judgment list, `llm-wiki handoff <제목>
    --question "…"` and immediately pick the next card. Never wait for session approval —
-   this session runs unattended (plan.md 2.1: 승인 대기 = 오프피크 낭비).
+   this session runs unattended (plan.md 2.1: 승인 대기 = 오프피크 낭비). The question is
+   a record made at the wall, not a pre-work approval request — 무인 세션에는 시작 전에
+   물어볼 상대가 없고, 질문은 밤새 대기 큐에 모여 아침에 일괄 답한다.
 
 3. **AC by objective evidence only.** Check an AC (`card edit --check-ac N`) because you
    ran something that proves it — command output, passing test, diff — never because the

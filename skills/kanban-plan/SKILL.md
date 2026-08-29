@@ -1,7 +1,7 @@
 ---
 name: kanban-plan
 description: Planning loop — turn a plan into board cards the work-loop can consume. Cards are written only via the CLI; decompose with divergence guards, gate what isn't ready.
-skill-version: 1
+skill-version: 2
 ---
 # When to use
 
@@ -38,6 +38,18 @@ skill-version: 1
   - Time condition → `card new "<t>" --not-before 2026-09-05`. `pick` skips it until then.
   - Observational condition → create it, then `handoff <t> --question "조건: …"`. It waits
     in review; anyone who can show the condition holds runs `resume <t> --note "근거"`.
+
+# Question timing — start-of-work questions are the cheap ones
+
+- In a session where the person is present (planning), ask **before** boarding a card:
+  an ambiguous spec answered now costs one question; answered after an unattended loop
+  hit the wall, it costs a parked card and a night of latency.
+- The person is away, or the answer can arrive asynchronously: board the card and park it
+  immediately — `handoff <t> --question "…"` puts it in review with the question; when the
+  answer lands, `resume <t> --note "답: …"` sends it back to todo. handoff is "판정을
+  사람에게 넘기기", not "끝나고 물어보기" — timing follows whoever can answer.
+- An unattended loop session cannot ask before starting (plan.md 2.1 — 승인 대기는
+  오프피크 낭비). There, questions are recorded at the wall and answered in bulk by morning.
 
 # Card quality bar
 
