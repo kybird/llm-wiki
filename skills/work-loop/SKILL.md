@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 1
+skill-version: 2
 ---
 # When to use
 
@@ -28,6 +28,16 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
 ```
 
 # Rules (all six are load-bearing)
+
+0. **Condition-gated cards.** Some cards must not start yet:
+   - `not_before: YYYY-MM-DD` in frontmatter (future date) — `pick` skips them
+     automatically; you never see them. Don't try to work around the gate.
+   - A card parked in `review` whose Handoff states an **activation condition**
+     (e.g. "수렴 데이터 7일 축적 후") — while walking the review queue, you may
+     evaluate the condition yourself, but only with objective evidence (`board report`
+     numbers, activity.jsonl, repo state). If it holds, `llm-wiki resume <제목>
+     --note "조건 충족: <근거>"` sends it back to todo. If not, leave it parked.
+   Never resume on vibes. The gate exists so divergence waits its turn.
 
 1. **Judgment = closed list.** Only these four go to `handoff`: ① spec decisions
    ② credentials or outward-facing actions ③ judgment-call merge conflicts

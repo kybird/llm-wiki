@@ -19,7 +19,7 @@ Usage:
   llm-wiki init [--check]            Scaffold doc/ + skills/ + hooks (--check: report only)
 
 Kanban (cards are files; CLI is the only writer):
-  llm-wiki board [--json]            Derived board view (columns, WIP, queue)
+  llm-wiki board [--html] [--json]   Derived board view (columns, WIP, queue) / static HTML
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends)
   llm-wiki card show <title>         Print card file
   llm-wiki card edit <title>         Sentinel-safe edits (--goal/--ac/--add-ac/--check-ac/--note/--plan)
@@ -29,6 +29,7 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki supersede <title> --by a,b       Replace by children (parent dissolves)
   llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
   llm-wiki reopen <title> --why "…"         QA: revert a fake-done card to doing
+  llm-wiki resume <title> [--note "…"]      Return a review (parked) card to todo
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
@@ -40,9 +41,10 @@ Optional:
 }
 
 const [, , subcommand, ...rest] = process.argv;
-// --json은 어느 위치에 와도 플래그로 뽑아낸다 (검색어 문자열에서 제외).
+// --json/--html은 어느 위치에 와도 플래그로 뽑아낸다 (검색어 문자열에서 제외).
 const jsonRequested = rest.includes('--json');
-const args = rest.filter(a => a !== '--json');
+const htmlRequested = rest.includes('--html');
+const args = rest.filter(a => a !== '--json' && a !== '--html');
 
 switch (subcommand) {
   case 'search':
@@ -59,7 +61,7 @@ switch (subcommand) {
     break;
   case 'board':
     if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
-    else kanbanCmd.boardView({ rest: args, json: jsonRequested });
+    else kanbanCmd.boardView({ rest: args, json: jsonRequested, html: htmlRequested });
     break;
   case 'card':
     kanbanCmd.dispatchCard(args);
@@ -81,6 +83,9 @@ switch (subcommand) {
     break;
   case 'reopen':
     kanbanCmd.reopen({ rest: args });
+    break;
+  case 'resume':
+    kanbanCmd.resume({ rest: args });
     break;
   case '--help':
   case '-h':
