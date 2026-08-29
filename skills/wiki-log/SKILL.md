@@ -31,8 +31,17 @@ description: Record knowledge into raw memory with Karpathy-inspired Agentic Mem
 2. Concept Drift Protection (MANDATORY)
 - **Search before naming**: Use `llm-wiki search` or `ls doc/wiki/concepts/` to find existing concepts.
 - Reuse existing names to maintain a dense, high-utility knowledge graph.
+- **Collect aliases**: While searching, note every other name the same concept travels under
+  (Korean/English variants, error codes, product shorthand). Record them so compile can put
+  `aliases: [...]` in the wiki page frontmatter — search fails when the writer's word and the
+  searcher's word differ (plan.md 5.1(3)).
 
-3. Create Entry — choose format based on type:
+3. Verbatim Error Preservation (MANDATORY)
+- The `### Error` section must contain the error message **character-for-character** — copy-paste,
+  never paraphrase or summarize. Later searches paste real error strings; a summarized message
+  deletes exactly the strings they would match.
+
+4. Create Entry — choose format based on type:
 
 ### Type: error
 ```markdown

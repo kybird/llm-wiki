@@ -19,9 +19,20 @@ description: Parse raw logs to extract, synthesize, and deprecate project knowle
    - **Analytical Core**: The "Why" (First Principles) and "Trade-offs".
    - **Taxonomy**: Concepts, Patterns, Anti-patterns.
 2. Merge similar cases, favoring the one with the highest **Confidence** and most recent **Git Hash**.
+3. **Disposition (MANDATORY, per Case)** — classify BEFORE writing any page, and state it in your output:
+   - **New**: no existing page covers this → create a page.
+   - **Update**: extends an existing page → edit that page, append the Case to its Grounding.
+   - **Merge**: duplicates/splits an existing page → fold into it; do not spawn a near-duplicate.
+   - **No material**: the Case is a one-off with no reusable lesson → skip it. Raw log is its archive.
+   A wiki that grows a page per Case diverges; thin pages dilute search. `No material` is a
+   first-class outcome, not a failure.
 
 ## Phase 2: Knowledge Promotion & Synthesis (LLM)
 Synthesize extracted data into structured wiki pages. Use the following high-density templates:
+
+**Verbatim rule**: quote error messages character-for-character from the raw log — never
+paraphrase. `llm-wiki lint` back-matches every `### Error` quote against `doc/raw/`; a
+summarized quote is reported as an evidence violation.
 
 ### Wiki Template (Concept)
 ```markdown
