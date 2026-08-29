@@ -86,7 +86,7 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
   const inIntro = frame < INTRO;
   const outroStart = INTRO + n * PER_EVENT;
   const inOutro = frame >= outroStart;
-  const state = n > 0 ? states[segIdx] : { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0 };
+  const state = n > 0 ? states[segIdx] : { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0, terminal: [] };
   const last = state.last;
   const segFrame = frame - (INTRO + segIdx * PER_EVENT);
 
@@ -145,7 +145,7 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
           </div>
         </AbsoluteFill>
       ) : (
-        <div style={{ display: 'flex', gap: 14, padding: '0 28px', opacity: boardOpacity }}>
+        <div style={{ display: 'flex', gap: 12, padding: '0 28px' }}>
           <Column label="DOING" note={wip !== null ? `${state.doing.length}/${wip}` : undefined}>
             {state.doing.map(c => (
               <Card key={c.title} title={c.title} by={c.by} since={c.since} highlight={lastTitle === c.title && ['claimed', 'reverted'].includes(lastAction)} />
@@ -163,6 +163,28 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
               <Card key={c.title} title={c.title} since={c.since} highlight={lastTitle === c.title && ['created', 'resumed'].includes(lastAction)} />
             ))}
             {state.todo.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
+          </Column>
+          <Column label="종결 적체">
+            {state.terminal.slice(-7).reverse().map(t => (
+              <div key={t.kind + t.title + t.since} style={{ background: '#243040', border: '1px solid #2e3b4a', borderRadius: 8, padding: '8px 10px', marginBottom: 6 }}>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: '#10151b',
+                    background: ACTION_COLOR[t.kind === 'done' ? 'done' : t.kind === 'superseded' ? 'superseded' : 'abandoned'],
+                    borderRadius: 999,
+                    padding: '1px 7px',
+                    marginRight: 6,
+                  }}
+                >
+                  {t.kind === 'done' ? '완료' : t.kind === 'superseded' ? '대체' : '폐기'}
+                </span>
+                <span style={{ fontSize: 12, color: '#c6d2dd' }}>{t.title}</span>
+              </div>
+            ))}
+            {state.terminal.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
           </Column>
         </div>
       )}

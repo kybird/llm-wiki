@@ -3,6 +3,7 @@
 // since = 카드가 현재 컬럼에 들어온 이벤트 인덱스 — 입장 애니메이션의 기준점.
 export type Ev = { ts: string; action: string; title?: string; actor?: string; detail?: string };
 export type Card = { title: string; by?: string; since: number };
+export type Term = { title: string; kind: 'done' | 'superseded' | 'abandoned'; since: number };
 export type State = {
   todo: Card[];
   doing: Card[];
@@ -10,6 +11,7 @@ export type State = {
   done: number;
   superseded: number;
   abandoned: number;
+  terminal: Term[];
   last?: Ev;
 };
 
@@ -23,11 +25,11 @@ const rmAll = (s: State, t: string) => {
 // 알 수 없는 액션은 상태를 바꾸지 않는다 — 미래 포맷에 관대해야 한다.
 export function replay(events: Ev[]): State[] {
   const states: State[] = [];
-  let s: State = { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0 };
+  let s: State = { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0, terminal: [] };
   for (let i = 0; i < events.length; i++) {
     const e = events[i];
     const t = e.title ?? '';
-    const next: State = { ...s, todo: [...s.todo], doing: [...s.doing], review: [...s.review], last: e };
+    const next: State = { ...s, todo: [...s.todo], doing: [...s.doing], review: [...s.review], terminal: [...s.terminal], last: e };
     rmAll(next, t);
     switch (e.action) {
       case 'created':
@@ -47,9 +49,11 @@ export function replay(events: Ev[]): State[] {
         break;
       case 'done':
         next.done += 1;
+        next.terminal.push({ title: t, kind: 'done', since: i });
         break;
       case 'superseded': {
         next.superseded += 1;
+        next.terminal.push({ title: t, kind: 'superseded', since: i });
         const kids = (e.detail ?? '').replace(/^by\s*/, '').split(',').map(x => x.trim()).filter(Boolean);
         for (const k of kids) {
           rmAll(next, k);
@@ -59,6 +63,7 @@ export function replay(events: Ev[]): State[] {
       }
       case 'abandoned':
         next.abandoned += 1;
+        next.terminal.push({ title: t, kind: 'abandoned', since: i });
         break;
       default:
         break;
