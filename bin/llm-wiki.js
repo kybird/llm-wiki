@@ -6,17 +6,28 @@ const { search } = require('../lib/wiki-search');
 const { compile } = require('../lib/wiki-compile');
 const { lint } = require('../lib/wiki-lint');
 const { init } = require('../lib/init');
+const kanbanCmd = require('../lib/kanban-cmd');
 
 function printUsage() {
-  console.log(`llm-wiki — LLM-friendly knowledge graph for AI coding agents
+  console.log(`llm-wiki — LLM-friendly knowledge graph + kanban for AI coding agents
 
 Usage:
-  llm-wiki search "<query>"          Semantic/grep search over wiki + raw logs
+  llm-wiki search "<query>"          Semantic+grep merged search over wiki + raw logs
   llm-wiki compile list              Show raw logs modified since last compile
   llm-wiki compile index             Rebuild wiki index.md + sync QMD search index
-  llm-wiki lint                      Validate wiki integrity (broken links, metadata, evidence)
+  llm-wiki lint                      Validate wiki integrity (links, metadata, evidence)
   llm-wiki init [--check]            Scaffold doc/ + skills/ + hooks (--check: report only)
-  llm-wiki board ...                 Kanban core (see: llm-wiki board --help)
+
+Kanban (cards are files; CLI is the only writer):
+  llm-wiki board [--json]            Derived board view (columns, WIP, queue)
+  llm-wiki card new "<title>"        Create card (--goal, --ac, --depends)
+  llm-wiki card show <title>         Print card file
+  llm-wiki card edit <title>         Sentinel-safe edits (--goal/--ac/--add-ac/--check-ac/--note/--plan)
+  llm-wiki pick --claim <name>       Atomically claim the next eligible card (locks, WIP, deps)
+  llm-wiki handoff <title> --question "…"   Park for human judgment, release claim
+  llm-wiki done <title> --result "…"        Complete (Result required)
+  llm-wiki supersede <title> --by a,b       Replace by children (parent dissolves)
+  llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
@@ -43,6 +54,27 @@ switch (subcommand) {
     break;
   case 'init':
     init({ check: args.includes('--check') });
+    break;
+  case 'board':
+    kanbanCmd.boardView({ rest: args, json: jsonRequested });
+    break;
+  case 'card':
+    kanbanCmd.dispatchCard(args);
+    break;
+  case 'pick':
+    kanbanCmd.pick({ rest: args, json: jsonRequested });
+    break;
+  case 'handoff':
+    kanbanCmd.handoff({ rest: args });
+    break;
+  case 'done':
+    kanbanCmd.doneCard({ rest: args });
+    break;
+  case 'supersede':
+    kanbanCmd.supersede({ rest: args });
+    break;
+  case 'abandon':
+    kanbanCmd.abandon({ rest: args });
     break;
   case '--help':
   case '-h':

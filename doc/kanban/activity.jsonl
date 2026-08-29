@@ -1,0 +1,17 @@
+{"ts":"2026-08-29T12:17:12.960Z","action":"created","title":"칸반 도그푸딩"}
+{"ts":"2026-08-29T12:17:13.245Z","action":"claimed","title":"칸반 도그푸딩","actor":"zcode-stage2"}
+{"ts":"2026-08-29T12:17:27.067Z","action":"done","title":"칸반 도그푸딩"}
+{"ts":"2026-08-29T12:17:41.583Z","action":"created","title":"거부 테스트"}
+{"ts":"2026-08-29T12:17:41.815Z","action":"claimed","title":"거부 테스트","actor":"t1"}
+{"ts":"2026-08-29T12:17:42.549Z","action":"handoff","title":"거부 테스트","detail":"이 카드 상태 전이 테스트 맞나?"}
+{"ts":"2026-08-29T12:17:42.823Z","action":"created","title":"자식 A"}
+{"ts":"2026-08-29T12:17:43.106Z","action":"created","title":"자식 B"}
+{"ts":"2026-08-29T12:17:43.360Z","action":"superseded","title":"거부 테스트","detail":"by 자식 A, 자식 B"}
+{"ts":"2026-08-29T12:17:43.686Z","action":"claimed","title":"자식 A","actor":"w1"}
+{"ts":"2026-08-29T12:17:43.948Z","action":"claimed","title":"자식 B","actor":"w2"}
+{"ts":"2026-08-29T12:18:34.696Z","action":"created","title":"만료 테스트"}
+{"ts":"2026-08-29T12:18:53.811Z","action":"abandoned","title":"자식 A","detail":"라이프사이클 테스트용 더미 — 테스트 종료 후 폐기"}
+{"ts":"2026-08-29T12:18:54.034Z","action":"abandoned","title":"자식 B","detail":"라이프사이클 테스트용 더미 — 테스트 종료 후 폐기"}
+{"ts":"2026-08-29T12:18:54.326Z","action":"claimed","title":"만료 테스트","actor":"agent-a"}
+{"ts":"2026-08-29T12:19:45.232Z","action":"claimed","title":"만료 테스트","actor":"agent-b"}
+{"ts":"2026-08-29T12:20:23.822Z","action":"abandoned","title":"만료 테스트","detail":"라이프사이클 테스트 더미 — 만료 클레임 재집기 검증 완료"}
