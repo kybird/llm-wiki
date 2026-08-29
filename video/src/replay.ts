@@ -1,7 +1,8 @@
 // activity.jsonl 이벤트를 프레임별 보드 상태로 재생한다.
 // CLI(board video)가 만든 타임라인의 이벤트 순서가 곧 시간축이다.
+// since = 카드가 현재 컬럼에 들어온 이벤트 인덱스 — 입장 애니메이션의 기준점.
 export type Ev = { ts: string; action: string; title?: string; actor?: string; detail?: string };
-export type Card = { title: string; by?: string };
+export type Card = { title: string; by?: string; since: number };
 export type State = {
   todo: Card[];
   doing: Card[];
@@ -23,25 +24,26 @@ const rmAll = (s: State, t: string) => {
 export function replay(events: Ev[]): State[] {
   const states: State[] = [];
   let s: State = { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0 };
-  for (const e of events) {
+  for (let i = 0; i < events.length; i++) {
+    const e = events[i];
     const t = e.title ?? '';
     const next: State = { ...s, todo: [...s.todo], doing: [...s.doing], review: [...s.review], last: e };
     rmAll(next, t);
     switch (e.action) {
       case 'created':
-        next.todo.push({ title: t });
+        next.todo.push({ title: t, since: i });
         break;
       case 'claimed':
-        next.doing.push({ title: t, by: e.actor });
+        next.doing.push({ title: t, by: e.actor, since: i });
         break;
       case 'handoff':
-        next.review.push({ title: t });
+        next.review.push({ title: t, since: i });
         break;
       case 'resumed':
-        next.todo.push({ title: t });
+        next.todo.push({ title: t, since: i });
         break;
       case 'reverted':
-        next.doing.push({ title: t });
+        next.doing.push({ title: t, since: i });
         break;
       case 'done':
         next.done += 1;
@@ -51,7 +53,7 @@ export function replay(events: Ev[]): State[] {
         const kids = (e.detail ?? '').replace(/^by\s*/, '').split(',').map(x => x.trim()).filter(Boolean);
         for (const k of kids) {
           rmAll(next, k);
-          next.todo.push({ title: k });
+          next.todo.push({ title: k, since: i });
         }
         break;
       }

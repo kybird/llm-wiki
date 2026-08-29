@@ -40,10 +40,13 @@ const ACTION_COLOR: Record<string, string> = {
   resumed: '#8ab8ff',
 };
 
-const Card = ({ title, by, highlight }: { title: string; by?: string; highlight: boolean }) => {
+// 카드는 보드가 사라지지 않는 한 화면에 계속 있다. 입장(since 세그먼트)에만
+// 스프링으로 "새로 들어온다" — 보드 전체는 매 프레임 연속이다.
+const Card = ({ title, by, since, highlight }: { title: string; by?: string; since: number; highlight: boolean }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const pop = spring({ frame, fps, config: { damping: 200 } });
+  const local = Math.max(0, frame - (INTRO + since * PER_EVENT));
+  const pop = spring({ frame: local, fps, config: { damping: 14, stiffness: 160, mass: 0.7 } });
   return (
     <div
       style={{
@@ -52,7 +55,8 @@ const Card = ({ title, by, highlight }: { title: string; by?: string; highlight:
         borderRadius: 8,
         padding: '8px 10px',
         marginBottom: 6,
-        transform: `scale(${interpolate(pop, [0, 1], [0.96, 1])})`,
+        transform: `scale(${interpolate(pop, [0, 1], [0.9, 1])})`,
+        opacity: interpolate(pop, [0, 1], [0, 1]),
       }}
     >
       <div style={{ fontSize: 13, fontWeight: 600, color: '#e8edf2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -74,25 +78,36 @@ const Column = ({ label, note, children }: { label: string; note?: string; child
 
 export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames: total } = useVideoConfig();
   const states: State[] = replay(events);
   const n = states.length;
 
   const segIdx = Math.max(0, Math.min(Math.floor((frame - INTRO) / PER_EVENT), n - 1));
   const inIntro = frame < INTRO;
-  const inOutro = frame >= INTRO + n * PER_EVENT;
+  const outroStart = INTRO + n * PER_EVENT;
+  const inOutro = frame >= outroStart;
   const state = n > 0 ? states[segIdx] : { todo: [], doing: [], review: [], done: 0, superseded: 0, abandoned: 0 };
   const last = state.last;
   const segFrame = frame - (INTRO + segIdx * PER_EVENT);
-  const fade = interpolate(segFrame, [0, 8], [0.35, 1], { extrapolateRight: 'clamp' });
-  const titleIn = spring({ frame: inIntro ? frame : 0, fps, config: { damping: 200 } });
+
+  // 보드는 intro 끝에서 한 번만 페이드 인된다 — 세션 경계마다 깜빡이지 않는다.
+  const boardOpacity = interpolate(frame, [INTRO - 8, INTRO], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const titleOpacity = interpolate(frame, [INTRO - 10, INTRO - 2], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const outroOpacity = interpolate(frame, [outroStart, outroStart + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const progress = interpolate(frame, [0, total], [0, 100], { extrapolateRight: 'clamp' });
 
   const lastAction = last?.action ?? '';
   const bannerColor = ACTION_COLOR[lastAction] ?? '#8ab8ff';
   const lastTitle = last?.title ?? '';
+  const bannerIn = spring({ frame: segFrame, fps, config: { damping: 200 } });
 
   return (
-    <AbsoluteFill style={{ background: '#0f141a', fontFamily: "'Segoe UI', 'Malgun Gothic', sans-serif", opacity: fade }}>
+    <AbsoluteFill style={{ background: '#0f141a', fontFamily: "'Segoe UI', 'Malgun Gothic', sans-serif" }}>
+      {/* 세션 진행 바 — 경계마다 리셋되지 않는 연속 신호 */}
+      <div style={{ height: 3, background: '#1a222b' }}>
+        <div style={{ height: 3, width: `${progress}%`, background: '#8ab8ff' }} />
+      </div>
+
       <div style={{ padding: '22px 28px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <div>
           <span style={{ fontSize: 20, fontWeight: 700, color: '#e8edf2' }}>{repo} kanban</span>
@@ -104,7 +119,16 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
       </div>
 
       {last && !inIntro ? (
-        <div style={{ margin: '0 28px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div
+          style={{
+            margin: '0 28px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            opacity: interpolate(bannerIn, [0, 1], [0.25, 1]),
+            transform: `translateY(${interpolate(bannerIn, [0, 1], [-6, 0])}px)`,
+          }}
+        >
           <span style={{ background: bannerColor, color: '#10151b', fontWeight: 700, fontSize: 12, borderRadius: 999, padding: '3px 10px' }}>
             {ACTION_LABEL[lastAction] ?? lastAction}
           </span>
@@ -114,29 +138,29 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
       ) : null}
 
       {inIntro ? (
-        <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', transform: `scale(${interpolate(titleIn, [0, 1], [0.92, 1])})` }}>
+        <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', opacity: titleOpacity }}>
           <div style={{ fontSize: 44, fontWeight: 700, color: '#e8edf2' }}>{repo} — board timelapse</div>
           <div style={{ fontSize: 16, color: '#7d90a2', marginTop: 10 }}>
             doc/kanban/activity.jsonl 재생 · {n} events
           </div>
         </AbsoluteFill>
       ) : (
-        <div style={{ display: 'flex', gap: 14, padding: '0 28px' }}>
+        <div style={{ display: 'flex', gap: 14, padding: '0 28px', opacity: boardOpacity }}>
           <Column label="DOING" note={wip !== null ? `${state.doing.length}/${wip}` : undefined}>
             {state.doing.map(c => (
-              <Card key={c.title} title={c.title} by={c.by} highlight={lastTitle === c.title && ['claimed', 'reverted'].includes(lastAction)} />
+              <Card key={c.title} title={c.title} by={c.by} since={c.since} highlight={lastTitle === c.title && ['claimed', 'reverted'].includes(lastAction)} />
             ))}
             {state.doing.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
           </Column>
           <Column label="REVIEW">
             {state.review.map(c => (
-              <Card key={c.title} title={c.title} highlight={lastTitle === c.title && lastAction === 'handoff'} />
+              <Card key={c.title} title={c.title} since={c.since} highlight={lastTitle === c.title && lastAction === 'handoff'} />
             ))}
             {state.review.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
           </Column>
           <Column label="TODO">
             {state.todo.map(c => (
-              <Card key={c.title} title={c.title} highlight={lastTitle === c.title && ['created', 'resumed'].includes(lastAction)} />
+              <Card key={c.title} title={c.title} since={c.since} highlight={lastTitle === c.title && ['created', 'resumed'].includes(lastAction)} />
             ))}
             {state.todo.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
           </Column>
@@ -151,7 +175,7 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
       </div>
 
       {inOutro ? (
-        <AbsoluteFill style={{ background: '#0f141aee', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+        <AbsoluteFill style={{ background: '#0f141a', opacity: outroOpacity, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
           <div style={{ fontSize: 34, fontWeight: 700, color: '#e8edf2' }}>세션 종료</div>
           <div style={{ fontSize: 16, color: '#7d90a2', marginTop: 8 }}>
             {n} events · done {state.done} · superseded {state.superseded} · abandoned {state.abandoned}
