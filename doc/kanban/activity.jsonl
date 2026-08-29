@@ -15,3 +15,8 @@
 {"ts":"2026-08-29T12:18:54.326Z","action":"claimed","title":"만료 테스트","actor":"agent-a"}
 {"ts":"2026-08-29T12:19:45.232Z","action":"claimed","title":"만료 테스트","actor":"agent-b"}
 {"ts":"2026-08-29T12:20:23.822Z","action":"abandoned","title":"만료 테스트","detail":"라이프사이클 테스트 더미 — 만료 클레임 재집기 검증 완료"}
+{"ts":"2026-08-29T12:23:30.365Z","action":"created","title":"QA 되돌림 테스트"}
+{"ts":"2026-08-29T12:23:30.706Z","action":"claimed","title":"QA 되돌림 테스트","actor":"qa-tester"}
+{"ts":"2026-08-29T12:23:32.063Z","action":"abandoned","title":"QA 되돌림 테스트","detail":"테스트 더미 — reopen/renum 검증 후 폐기. raw 파이프라인 검증도 겸함"}
+{"ts":"2026-08-29T12:23:50.902Z","action":"reverted","title":"칸반 도그푸딩","detail":"QA 점검: Result에 '사유 없는 done 거부' 검증 문장이 결과물 경로 없이 기록됨 — 카드 경로 증거를 보강하기 위해 되돌림"}
+{"ts":"2026-08-29T12:23:51.430Z","action":"done","title":"칸반 도그푸딩"}

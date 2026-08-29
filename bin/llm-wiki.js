@@ -28,6 +28,7 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki done <title> --result "…"        Complete (Result required)
   llm-wiki supersede <title> --by a,b       Replace by children (parent dissolves)
   llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
+  llm-wiki reopen <title> --why "…"         QA: revert a fake-done card to doing
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
@@ -56,7 +57,8 @@ switch (subcommand) {
     init({ check: args.includes('--check') });
     break;
   case 'board':
-    kanbanCmd.boardView({ rest: args, json: jsonRequested });
+    if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
+    else kanbanCmd.boardView({ rest: args, json: jsonRequested });
     break;
   case 'card':
     kanbanCmd.dispatchCard(args);
@@ -75,6 +77,9 @@ switch (subcommand) {
     break;
   case 'abandon':
     kanbanCmd.abandon({ rest: args });
+    break;
+  case 'reopen':
+    kanbanCmd.reopen({ rest: args });
     break;
   case '--help':
   case '-h':
