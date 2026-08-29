@@ -73,6 +73,7 @@ your-repo/
 │       ├── cards/         # active: todo / doing / review (frontmatter status)
 │       ├── done/ superseded/ abandoned/   # termination = the folder
 │       └── activity.jsonl # append-only audit log (10k line cap)
+├── AGENTS.md             # seeded once if absent — "which skill when" for every session
 ├── .agents/skills/        # canonical skills (ZCode, Cursor, …)
 ├── .claude/skills/        # mirror for Claude Code
 ├── scripts/               # doc/skill sync scripts (marker-protected copies)
