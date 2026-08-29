@@ -2,3 +2,7 @@ node_modules/
 *.log
 .DS_Store
 refs/
+# 이 레포는 스킬 패키지 정본(skills/)이 사는 곳 — init이 만든 복사본은 추적하지 않는다.
+# (일반 소비 레포에서는 .agents/skills, .claude/skills를 커밋하는 것이 정책이다)
+.agents/
+.claude/
