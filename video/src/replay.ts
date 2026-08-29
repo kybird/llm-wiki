@@ -2,7 +2,7 @@
 // CLI(board video)가 만든 타임라인의 이벤트 순서가 곧 시간축이다.
 // since = 카드가 현재 컬럼에 들어온 이벤트 인덱스 — 입장 애니메이션의 기준점.
 export type Ev = { ts: string; action: string; title?: string; actor?: string; detail?: string };
-export type Card = { title: string; by?: string; since: number };
+export type Card = { title: string; by?: string; since: number; q?: string };
 export type Term = { title: string; kind: 'done' | 'superseded' | 'abandoned'; since: number };
 export type State = {
   todo: Card[];
@@ -39,7 +39,7 @@ export function replay(events: Ev[]): State[] {
         next.doing.push({ title: t, by: e.actor, since: i });
         break;
       case 'handoff':
-        next.review.push({ title: t, since: i });
+        next.review.push({ title: t, since: i, q: e.detail }); // detail = 사람에게 던지는 질문
         break;
       case 'resumed':
         next.todo.push({ title: t, since: i });

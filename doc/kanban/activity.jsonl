@@ -40,3 +40,6 @@
 {"ts":"2026-08-29T13:32:29.279Z","action":"claimed","title":"스킬 git 배포 — skills add/sync","actor":"zcode-loop"}
 {"ts":"2026-08-29T13:32:29.893Z","action":"done","title":"compile list 같은 날 append 감지"}
 {"ts":"2026-08-29T13:34:02.468Z","action":"abandoned","title":"게이트 스킵 검증 더미","detail":"게이트 스킵 실측용 더미 — pick blocked '시작 예정' 확인으로 증거 확보, 폐기"}
+{"ts":"2026-08-29T14:47:23.666Z","action":"created","title":"대기 큐 질문 표시 테스트"}
+{"ts":"2026-08-29T14:47:24.210Z","action":"handoff","title":"대기 큐 질문 표시 테스트","detail":"이 질문이 board report 대기 큐에 그대로 보이는가?"}
+{"ts":"2026-08-29T14:47:25.301Z","action":"abandoned","title":"대기 큐 질문 표시 테스트","detail":"질문 표시 검증용 더미 — 검증 완료 후 폐기"}

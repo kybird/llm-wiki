@@ -42,7 +42,7 @@ const ACTION_COLOR: Record<string, string> = {
 
 // 카드는 보드가 사라지지 않는 한 화면에 계속 있다. 입장(since 세그먼트)에만
 // 스프링으로 "새로 들어온다" — 보드 전체는 매 프레임 연속이다.
-const Card = ({ title, by, since, highlight }: { title: string; by?: string; since: number; highlight: boolean }) => {
+const Card = ({ title, by, since, q, highlight }: { title: string; by?: string; since: number; q?: string; highlight: boolean }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const local = Math.max(0, frame - (INTRO + since * PER_EVENT));
@@ -62,6 +62,7 @@ const Card = ({ title, by, since, highlight }: { title: string; by?: string; sin
       <div style={{ fontSize: 13, fontWeight: 600, color: '#e8edf2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {title}
       </div>
+      {q ? <div style={{ fontSize: 11, color: '#ffd479', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>↳ {q}</div> : null}
       {by ? <div style={{ fontSize: 11, color: '#8fa3b5', marginTop: 2 }}>by {by}</div> : null}
     </div>
   );
@@ -154,7 +155,7 @@ export const BoardTimelapse: React.FC<TimelineProps> = ({ repo, wip, events }) =
           </Column>
           <Column label="REVIEW">
             {state.review.map(c => (
-              <Card key={c.title} title={c.title} since={c.since} highlight={lastTitle === c.title && lastAction === 'handoff'} />
+              <Card key={c.title} title={c.title} since={c.since} q={c.q} highlight={lastTitle === c.title && lastAction === 'handoff'} />
             ))}
             {state.review.length === 0 ? <div style={{ color: '#46586a', fontSize: 12 }}>(비어 있음)</div> : null}
           </Column>
