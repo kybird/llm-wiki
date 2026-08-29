@@ -1,8 +1,9 @@
 {
-  "name": "llm-wiki",
-  "version": "0.1.0",
-  "description": "LLM-friendly knowledge graph (raw logs → compiled wiki → semantic search) for AI coding agents. Path-agnostic, drop-in for any repo.",
+  "name": "@kybird/llm-wiki",
+  "version": "0.2.0",
+  "description": "LLM-friendly knowledge graph + kanban for AI coding agents. Raw daily logs → compiled wiki → merged semantic+grep search, and a card-per-file kanban the work-loop skill consumes unattended. Drop-in for any repo.",
   "license": "MIT",
+  "author": "kybird",
   "bin": {
     "llm-wiki": "bin/llm-wiki.js"
   },
@@ -14,6 +15,12 @@
     "TROUBLESHOOTING.md",
     "README.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kybird/llm-wiki.git"
+  },
+  "homepage": "https://github.com/kybird/llm-wiki#readme",
+  "bugs": "https://github.com/kybird/llm-wiki/issues",
   "optionalDependencies": {
     "@tobilu/qmd": "^2.5.3"
   },
@@ -22,10 +29,12 @@
   },
   "keywords": [
     "wiki",
+    "kanban",
     "llm",
     "ai-agent",
     "knowledge-graph",
+    "agentic-memory",
     "claude-code",
-    "agentic-memory"
+    "work-loop"
   ]
 }

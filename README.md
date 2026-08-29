@@ -13,7 +13,9 @@ The skills (`wiki-search`, `wiki-log`, `wiki-compile`, `wiki-lint`, `kanban-plan
 ## Install
 
 ```bash
-npm install -g llm-wiki
+npm install -g @kybird/llm-wiki   # installs the `llm-wiki` command
+# or run without installing:
+npx @kybird/llm-wiki init
 ```
 
 ## Quickstart (in any repo)
