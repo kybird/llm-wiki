@@ -20,6 +20,8 @@ Usage:
 
 Kanban (cards are files; CLI is the only writer):
   llm-wiki board [--html] [--json]   Derived board view (columns, WIP, queue) / static HTML
+  llm-wiki board report              Dashboard (done:abandoned ratio, trend, reverts)
+  llm-wiki board video               Timelapse of board activity → MP4 (needs video/ project)
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends)
   llm-wiki card show <title>         Print card file
   llm-wiki card edit <title>         Sentinel-safe edits (--goal/--ac/--add-ac/--check-ac/--note/--plan)
@@ -61,6 +63,7 @@ switch (subcommand) {
     break;
   case 'board':
     if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
+    else if (args[0] === 'video') kanbanCmd.boardVideo({ rest: args });
     else kanbanCmd.boardView({ rest: args, json: jsonRequested, html: htmlRequested });
     break;
   case 'card':

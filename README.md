@@ -8,7 +8,7 @@ Inspired by [Karpathy's Agentic Memory](https://github.com/karpathy/llm.c) ideas
 
 AI coding agents (Claude Code, Cursor, ZCode, Gemini CLI, …) forget everything between sessions. A project wiki that they actually read — grounded in git hashes, real error strings, and real failure cases — turns one-off debugging pain into durable, reusable knowledge. The kanban adds a convergence loop: cards are picked, resolved, parked for human judgment, or abandoned *with a reason* that feeds back into the wiki as anti-pattern material.
 
-The skills (`wiki-search`, `wiki-log`, `wiki-compile`, `wiki-lint`, `work-loop`) are **LLM prompts**: the intelligence lives in the agent's context, not in a server. The CLI is just the plumbing.
+The skills (`wiki-search`, `wiki-log`, `wiki-compile`, `wiki-lint`, `kanban-plan`, `work-loop`) are **LLM prompts**: the intelligence lives in the agent's context, not in a server. The CLI is just the plumbing. Planning sessions turn plans into cards (`kanban-plan`); unattended loop sessions resolve them (`work-loop`).
 
 ## Install
 
@@ -46,6 +46,7 @@ That's it. The agent does the rest.
 | `llm-wiki compile index` | Rebuild `doc/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
 | `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `doc/raw/`), uncompiled concepts, metadata, staleness |
 | `llm-wiki board` / `board report` | Derived kanban view / dashboard (done:abandoned ratio, trend, QA reverts, waiting queue) |
+| `llm-wiki board video` | Replay `activity.jsonl` into a board timelapse MP4 (requires the `video/` Remotion project; CPU render, no GPU) |
 | `llm-wiki card new/show/edit` | Create and edit cards — the CLI is the only writer (sentinel-safe sections) |
 | `llm-wiki pick --claim <name>` | Atomically claim the next eligible card (lock, WIP limit, dependencies, claim expiry) |
 | `llm-wiki handoff <title> --question "…"` | Park a card for human judgment and release the claim |

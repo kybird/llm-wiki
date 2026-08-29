@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 2
+skill-version: 3
 ---
 # When to use
 
@@ -55,9 +55,10 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
    검증했는가. The QA pass (below) reverts fake dones.
 
 4. **Stop rule.** `pick` returns "No pickable card": check the board's review queue.
-   If everything is parked, run `llm-wiki board report`, leave the questions in one place,
-   and STOP. Do not invent new cards to look productive. 밤새 카드가 300장이 되는 것이
-   이 시스템이 죽는 방식이다 (plan.md 2.3).
+   If everything is parked, run `llm-wiki board report` **and** `llm-wiki board video`
+   (보고서와 함께 세션 타임랩스 영상을 남긴다 — 아침의 사람이 40초로 밤을 본다),
+   leave the questions in one place, and STOP. Do not invent new cards to look
+   productive. 밤새 카드가 300장이 되는 것이 이 시스템이 죽는 방식이다 (plan.md 2.3).
 
 5. **Search before work.** `llm-wiki search "<keywords>"` before starting a card. If the
    wall you are about to hit already has an abandoned card or an anti-pattern page, skip
