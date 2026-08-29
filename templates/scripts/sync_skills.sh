@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# llm-wiki-template-version: 1 — 이 줄이 살아있으면 llm-wiki init이 갱신하고, 지워져 있으면 사용자 수정본으로 건너뛴다 (plan.md 6.1).
 # .agents/skills/(정본) → .claude/skills/(복사본) 디렉토리 미러링.
 # 정본에 없는 스킬/파일은 복사본에서 제거(완전 미러).
 # 항상 .agents/skills/만 편집하고 이 스크립트를 실행할 것.

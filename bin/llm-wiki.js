@@ -35,7 +35,8 @@ Optional:
   --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
                                      (search, lint, compile list|index)
   LLM_WIKI_ROOT=/path                Override doc/ root location
-  llm-wiki.config.json               { "projectName": "...", "collections": {...} }`);
+  llm-wiki.config.json               { "projectName": "...", "collections": {...},
+                                       "hooksPath": "templates/githooks" }`);
 }
 
 const [, , subcommand, ...rest] = process.argv;

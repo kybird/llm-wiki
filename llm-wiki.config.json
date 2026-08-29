@@ -1,3 +1,4 @@
 {
-  "projectName": "llm-wiki"
+  "projectName": "llm-wiki",
+  "hooksPath": "templates/githooks"
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# llm-wiki-template-version: 1 — 이 줄이 살아있으면 llm-wiki init이 갱신하고, 지워져 있으면 사용자 수정본으로 건너뛴다 (plan.md 6.1).
 # CLAUDE.md(정본) → 복사본 동기화.
 # 복사본 목록(mirrors)에 새 에이전트 파일을 추가하면 자동으로 동기화된다.
 # 항상 CLAUDE.md만 편집하고 이 스크립트를 실행할 것.
