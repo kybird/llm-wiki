@@ -113,3 +113,132 @@ test('락 점유 중 변이는 거부된다 — 콜백 안 fail도 락을 반납
     assert.equal(b.run(['card', 'new', '누출확인', '--goal', 'g']).status, 0, 'fail 후 락 누출 없음');
   } finally { b.cleanup(); }
 });
+
+// ── 2026-09-10 접수 — card edit 무조건 성공 보고(결함 A)·의존성 후기 등록(결함 B)
+
+test('card edit — 모르는 플래그·값 없는 플래그·플래그 없음은 실패하고 파일이 불변이다 (결함 A)', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '엄격', '--goal', 'g']).status, 0);
+    const p = path.join(b.cardsDir, '엄격.md');
+    const before = fs.readFileSync(p, 'utf8');
+
+    const r1 = b.run(['card', 'edit', '엄격', '--nonexistent-flag', '쓰레기']);
+    assert.notEqual(r1.status, 0, '모르는 플래그는 실패');
+    assert.ok((r1.stderr || '').includes('--nonexistent-flag'), '모르는 플래그 이름을 보고해야 한다');
+
+    const r2 = b.run(['card', 'edit', '엄격', '--note']);
+    assert.notEqual(r2.status, 0, '값 없는 --note는 실패');
+    assert.ok((r2.stderr || '').includes('--note'), '값 없는 플래그 이름을 보고해야 한다');
+
+    const r3 = b.run(['card', 'edit', '엄격']);
+    assert.notEqual(r3.status, 0, '바꿀 것 없는 edit은 실패');
+
+    assert.equal(fs.readFileSync(p, 'utf8'), before, '세 케이스 모두 파일 불변');
+  } finally { b.cleanup(); }
+});
+
+test('card edit — 성공 출력이 실제로 무엇이 바뀌었는지 말한다 (결함 A)', () => {
+  const b = makeBoard();
+  try {
+    b.run(['card', 'new', '선행']);
+    b.run(['card', 'new', '보고', '--goal', 'g', '--ac', 'AC1']);
+    const r = b.run(['card', 'edit', '보고', '--note', '노트', '--add-ac', 'AC2', '--add-depends', '선행']);
+    assert.equal(r.status, 0);
+    assert.ok(
+      r.stdout.includes('note +1') && r.stdout.includes('ac +1') && r.stdout.includes('depends +선행'),
+      `변경 요약이 실제 변경을 말해야 한다: ${r.stdout}`,
+    );
+
+    // 멱등 재시도 — 이미 걸린 의존성을 다시 걸면 성공 문구 없이 '변경 없음' (exit 0 유지)
+    const retry = b.run(['card', 'edit', '보고', '--add-depends', '선행']);
+    assert.equal(retry.status, 0, '멱등 재시도는 실패가 아니다');
+    assert.ok(!retry.stdout.includes('Card edited:'), '아무것도 안 바뀌었으면 성공 문구를 찍지 않는다');
+    assert.ok(retry.stdout.includes('변경 없음'));
+  } finally { b.cleanup(); }
+});
+
+test('card edit — depends_on 추가·제거가 파일에 반영된다 (결함 B)', () => {
+  const b = makeBoard();
+  try {
+    b.run(['card', 'new', '선행']);
+    b.run(['card', 'new', '후행']);
+    const parse = f => require('../lib/kanban').parseFrontmatter(fs.readFileSync(path.join(b.cardsDir, f), 'utf8'));
+
+    const add = b.run(['card', 'edit', '후행', '--add-depends', '선행']);
+    assert.equal(add.status, 0);
+    assert.deepEqual(parse('후행.md').depends_on, ['선행'], '추가 반영');
+    assert.ok(add.stdout.includes('depends +선행'), `추가가 출력에 보인다: ${add.stdout}`);
+
+    const rm = b.run(['card', 'edit', '후행', '--remove-depends', '선행']);
+    assert.equal(rm.status, 0);
+    assert.ok(!('depends_on' in parse('후행.md')), '제거 반영');
+
+    // 전체 교체 — --depends로 목록을 바꾼다
+    b.run(['card', 'new', '제3의카드']);
+    const repl = b.run(['card', 'edit', '후행', '--depends', '선행, 제3의카드']);
+    assert.equal(repl.status, 0);
+    assert.deepEqual(parse('후행.md').depends_on, ['선행', '제3의카드'], '전체 교체 반영');
+  } finally { b.cleanup(); }
+});
+
+test('의존성 검증 — 없는 카드·자기 자신·순환은 거부된다 (card new/edit 같은 규칙)', () => {
+  const b = makeBoard();
+  try {
+    b.run(['card', 'new', 'A']);
+    b.run(['card', 'new', 'B', '--depends', 'A']);
+    b.run(['card', 'new', 'C']);
+    const parse = f => require('../lib/kanban').parseFrontmatter(fs.readFileSync(path.join(b.cardsDir, f), 'utf8'));
+
+    const r1 = b.run(['card', 'edit', 'C', '--add-depends', '유령']);
+    assert.notEqual(r1.status, 0, '없는 카드 의존성 거부');
+    assert.ok((r1.stderr || '').includes('유령'));
+
+    const r2 = b.run(['card', 'edit', 'C', '--add-depends', 'C']);
+    assert.notEqual(r2.status, 0, '자기 자신 의존성 거부');
+
+    assert.equal(b.run(['card', 'edit', 'C', '--add-depends', 'B']).status, 0, 'C→B는 정상 (B→A만 있으므로)');
+    const r3 = b.run(['card', 'edit', 'A', '--add-depends', 'C']);
+    assert.notEqual(r3.status, 0, 'A→C→B→A 순환 거부');
+    assert.ok((r3.stderr || '').includes('순환'));
+    assert.ok(!Array.isArray(parse('A.md').depends_on), '거부 후 A는 파일 불변');
+
+    const r4 = b.run(['card', 'new', 'D', '--depends', '유령']);
+    assert.notEqual(r4.status, 0, 'card new에서도 같은 규칙');
+    assert.ok(!fs.existsSync(path.join(b.cardsDir, 'D.md')), '검증 실패 시 카드가 만들어지지 않는다');
+
+    const r5 = b.run(['card', 'edit', 'C', '--remove-depends', '유령']);
+    assert.notEqual(r5.status, 0, '목록에 없는 의존성 제거는 오타다 — 거부');
+  } finally { b.cleanup(); }
+});
+
+test('종결 카드를 의존성으로 넣는 것은 허용된다 — pick의 resolved 판정과 일치', () => {
+  const b = makeBoard();
+  try {
+    b.run(['card', 'new', '끝난일', '--ac', 'AC1']);
+    b.run(['card', 'edit', '끝난일', '--check-ac', '1']);
+    b.run(['done', '끝난일', '--result', '완료']);
+    b.run(['card', 'new', '이후일']);
+
+    const r = b.run(['card', 'edit', '이후일', '--add-depends', '끝난일']);
+    assert.equal(r.status, 0, 'done 의존성은 허용');
+
+    const pick = b.run(['pick', '--claim', 't']);
+    assert.equal(pick.status, 0);
+    assert.ok(pick.stdout.includes('이후일'), '해소된 의존성은 pick을 막지 않는다');
+  } finally { b.cleanup(); }
+});
+
+test('레거시 끊어진 의존성은 card edit --remove-depends로 정리된다', () => {
+  const b = makeBoard();
+  try {
+    b.run(['card', 'new', '레거시']);
+    const p = path.join(b.cardsDir, '레거시.md');
+    // 검증 없던 시절의 카드 — 대상 카드가 사라진 의존성이 남아 pick을 영구히 막는다.
+    fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/^status: todo$/m, 'status: todo\ndepends_on: ["사라진 카드"]'));
+
+    const r = b.run(['card', 'edit', '레거시', '--remove-depends', '사라진 카드']);
+    assert.equal(r.status, 0, '끊어진 의존성 제거는 허용');
+    assert.ok(!('depends_on' in require('../lib/kanban').parseFrontmatter(fs.readFileSync(p, 'utf8'))));
+  } finally { b.cleanup(); }
+});

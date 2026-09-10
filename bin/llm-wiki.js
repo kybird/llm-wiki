@@ -32,9 +32,12 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki board [--html] [--json]   Derived board view (columns, WIP, queue) / static HTML
   llm-wiki board report              Dashboard (done:abandoned ratio, trend, reverts)
   llm-wiki board video               Timelapse of board activity → MP4 (needs video/ project)
-  llm-wiki card new "<title>"        Create card (--goal, --ac, --depends)
+  llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before)
   llm-wiki card show <title>         Print card file
-  llm-wiki card edit <title>         Sentinel-safe edits (--goal/--ac/--add-ac/--check-ac/--note/--plan)
+  llm-wiki card edit <title>         Sentinel-safe edits; unknown/blank flags fail, output
+                                     says what changed (--goal/--plan/--ac/--add-ac/
+                                     --check-ac/--note/--renew-claim/--depends/
+                                     --add-depends/--remove-depends)
   llm-wiki pick --claim <name>       Atomically claim the next eligible card (locks, WIP, deps)
   llm-wiki handoff <title> --question "…"   Park for human judgment, release claim
   llm-wiki done <title> --result "…"        Complete (Result required)
