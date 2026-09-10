@@ -9,6 +9,7 @@ const { init } = require('../lib/init');
 const kanbanCmd = require('../lib/kanban-cmd');
 const skills = require('../lib/skills');
 const { findDocRoot } = require('../lib/find-doc-root');
+const { version } = require('../package.json');
 
 function printUsage() {
   console.log(`llm-wiki — LLM-friendly knowledge graph + kanban for AI coding agents
@@ -111,6 +112,10 @@ switch (subcommand) {
   case '-h':
   case undefined:
     printUsage();
+    break;
+  case '--version':
+  case '-v':
+    console.log(version);
     break;
   default:
     console.error(`Unknown command: ${subcommand}`);

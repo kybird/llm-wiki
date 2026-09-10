@@ -57,3 +57,5 @@
 {"ts":"2026-09-10T03:14:15.682Z","action":"done","title":"쓰기 명령 락 전면화"}
 {"ts":"2026-09-10T03:14:48.554Z","action":"claimed","title":"frontmatter 왕복 보존","actor":"zcode-loop"}
 {"ts":"2026-09-10T03:21:54.704Z","action":"done","title":"frontmatter 왕복 보존"}
+{"ts":"2026-09-10T03:22:27.323Z","action":"claimed","title":"CLI 계약 정리","actor":"zcode-loop"}
+{"ts":"2026-09-10T03:28:29.653Z","action":"done","title":"CLI 계약 정리"}
