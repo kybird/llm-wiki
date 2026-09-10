@@ -43,3 +43,9 @@
 {"ts":"2026-08-29T14:47:23.666Z","action":"created","title":"대기 큐 질문 표시 테스트"}
 {"ts":"2026-08-29T14:47:24.210Z","action":"handoff","title":"대기 큐 질문 표시 테스트","detail":"이 질문이 board report 대기 큐에 그대로 보이는가?"}
 {"ts":"2026-08-29T14:47:25.301Z","action":"abandoned","title":"대기 큐 질문 표시 테스트","detail":"질문 표시 검증용 더미 — 검증 완료 후 폐기"}
+{"ts":"2026-09-10T02:28:23.321Z","action":"created","title":"쓰기 명령 락 전면화"}
+{"ts":"2026-09-10T02:28:23.573Z","action":"created","title":"frontmatter 왕복 보존"}
+{"ts":"2026-09-10T02:28:23.799Z","action":"created","title":"CLI 계약 정리"}
+{"ts":"2026-09-10T02:28:40.215Z","action":"created","title":"docRoot 일관성"}
+{"ts":"2026-09-10T02:28:40.457Z","action":"created","title":"컴파일·검색 잔여 정리"}
+{"ts":"2026-09-10T02:28:40.696Z","action":"created","title":"왕복 테스트 스캐폴드"}
