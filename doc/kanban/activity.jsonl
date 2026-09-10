@@ -59,3 +59,5 @@
 {"ts":"2026-09-10T03:21:54.704Z","action":"done","title":"frontmatter 왕복 보존"}
 {"ts":"2026-09-10T03:22:27.323Z","action":"claimed","title":"CLI 계약 정리","actor":"zcode-loop"}
 {"ts":"2026-09-10T03:28:29.653Z","action":"done","title":"CLI 계약 정리"}
+{"ts":"2026-09-10T03:28:54.887Z","action":"claimed","title":"docRoot 일관성","actor":"zcode-loop"}
+{"ts":"2026-09-10T03:32:01.159Z","action":"done","title":"docRoot 일관성"}
