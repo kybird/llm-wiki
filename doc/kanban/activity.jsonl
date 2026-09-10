@@ -55,3 +55,5 @@
 {"ts":"2026-09-10T03:03:05.329Z","action":"handoff","title":"발산 방지 튜닝","detail":"활성화 조건 미충족 — AC#1 '수렴 데이터 7일 이상'을 데이터로 판정한 결과: activity.jsonl의 활동 분포가 2026-08-29(하룻밤 폭발: created 16·done 5·abandoned 7)과 2026-09-10(오늘) 단 2일뿐이고 중간 11일은 침묵. 달력으로는 12일이지만 수렴 '곡선'은 2포인트라 규칙 도출(AC#2)이 데이터가 아니라 추측이 된다. 재개 조건(객관적): activity.jsonl에 활동일 5일 이상 + 'done ≥ created'인 날이 2회 이상 등장. 이 조건이 확인되면 resume --note '조건 충족: <근거>' 로 todo로 돌려라. 그 전까지는 미결 #3을 억지로 확정하지 않는다(가짜 수렴 분석 방지 — plan.md 2.4 역 symmetry)"}
 {"ts":"2026-09-10T03:03:18.136Z","action":"claimed","title":"쓰기 명령 락 전면화","actor":"zcode-loop"}
 {"ts":"2026-09-10T03:14:15.682Z","action":"done","title":"쓰기 명령 락 전면화"}
+{"ts":"2026-09-10T03:14:48.554Z","action":"claimed","title":"frontmatter 왕복 보존","actor":"zcode-loop"}
+{"ts":"2026-09-10T03:21:54.704Z","action":"done","title":"frontmatter 왕복 보존"}
