@@ -11,6 +11,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 
 | 개념 | 설명 | 별칭 |
 |------|------|------|
+| [[agent-cli-contract]] | 이 CLI의 1차 사용자는 종료 코드와 출력으로만 판단하는 에이전트다 — 성공 보고는 실제 변경에 묶인다. | CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그 거부, unknown flag rejection, validateFlags |
 | [[qmd-optional-dependency]] | @tobilu/qmd는 선택 의존성 — 없으면 grep으로 강하하고, 있으면 시맨틱이 더해진다. | semantic search optional, findQmd, QMD 설치 위치 |
 
 ---
@@ -23,6 +24,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 | [[header-date-over-mtime]] | 로그 신선함 판정은 파일 mtime이 아니라 로그 헤더의 날짜로 한다. | same-day false positive, mtime 오탐, checkout machine independence |
 | [[npm-scoped-publishing]] | 스코프 패키지 배포의 세 함정 — 2FA 강제, private 기본값, 404여도 존재하는 패키지. | 403 two-factor, cannot publish over, 스코프 패키지 배포, npm 404 private |
 | [[question-timing-follows-answerability]] | 질문 타이밍은 "누가 대답할 수 있는가"가 결정한다 — 사람 있으면 시작 전, 무인이면 벽에서 park. | 질문 타이밍, handoff 질문, 시작 전 질문, pre-work question |
+| [[write-validation-matches-read-semantics]] | 쓰기 경로의 검증은 읽는 쪽(pick)의 판정과 정확히 같아야 한다 — 더 엄격하면 합법 상태를 입력할 길이 없고, 더 느슨하면 읽는 쪽이 영원히 못 푼다. | 의존성 검증, depends_on 후기 등록, --add-depends, --remove-depends, 순환 거부, cycle rejection, validateDepTargets |
 
 ---
 
@@ -44,8 +46,8 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 
 ## Statistics
 
-- Total concepts: 1
-- Total patterns: 4
+- Total concepts: 2
+- Total patterns: 5
 - Total anti-patterns: 2
 - Total answers: 0
-- Last updated: 2026-09-09
+- Last updated: 2026-09-10
