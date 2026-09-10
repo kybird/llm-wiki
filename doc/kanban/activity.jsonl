@@ -49,3 +49,5 @@
 {"ts":"2026-09-10T02:28:40.215Z","action":"created","title":"docRoot 일관성"}
 {"ts":"2026-09-10T02:28:40.457Z","action":"created","title":"컴파일·검색 잔여 정리"}
 {"ts":"2026-09-10T02:28:40.696Z","action":"created","title":"왕복 테스트 스캐폴드"}
+{"ts":"2026-09-10T02:52:35.920Z","action":"done","title":"TodoWrite 캡처 조사"}
+{"ts":"2026-09-10T03:00:18.825Z","action":"done","title":"스킬 git 배포 — skills add/sync"}

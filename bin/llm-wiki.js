@@ -7,6 +7,8 @@ const { compile } = require('../lib/wiki-compile');
 const { lint } = require('../lib/wiki-lint');
 const { init } = require('../lib/init');
 const kanbanCmd = require('../lib/kanban-cmd');
+const skills = require('../lib/skills');
+const { findDocRoot } = require('../lib/find-doc-root');
 
 function printUsage() {
   console.log(`llm-wiki — LLM-friendly knowledge graph + kanban for AI coding agents
@@ -17,6 +19,13 @@ Usage:
   llm-wiki compile index             Rebuild wiki index.md + sync QMD search index
   llm-wiki lint                      Validate wiki integrity (links, metadata, evidence)
   llm-wiki init [--check]            Scaffold doc/ + skills/ + hooks (--check: report only)
+
+Skills (git channel — prompt edits without npm publish, plan.md 6.2):
+  llm-wiki skills add <url>          Register a skill repo (owner/repo → GitHub)
+  llm-wiki skills remove <url>       Unregister
+  llm-wiki skills list               Show registered sources
+  llm-wiki skills sync [--yes]       Clone, show diff, install after approval (6.5)
+                                     [--skill <name>]   sync one skill only
 
 Kanban (cards are files; CLI is the only writer):
   llm-wiki board [--html] [--json]   Derived board view (columns, WIP, queue) / static HTML
@@ -39,7 +48,8 @@ Optional:
                                      (search, lint, compile list|index)
   LLM_WIKI_ROOT=/path                Override doc/ root location
   llm-wiki.config.json               { "projectName": "...", "collections": {...},
-                                       "hooksPath": "templates/githooks" }`);
+                                       "hooksPath": "templates/githooks",
+                                       "skills": { "sources": ["<git-url>"], "enabled": ["<name>"] } }`);
 }
 
 const [, , subcommand, ...rest] = process.argv;
@@ -60,6 +70,13 @@ switch (subcommand) {
     break;
   case 'init':
     init({ check: args.includes('--check') });
+    break;
+  case 'skills':
+    // sync는 diff 제시 후 승인 프롬프트를 위해 async다.
+    skills.dispatch(args, findDocRoot()).catch(e => {
+      console.error(e.message);
+      process.exitCode = 1;
+    });
     break;
   case 'board':
     if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
