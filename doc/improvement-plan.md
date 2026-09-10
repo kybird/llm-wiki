@@ -17,6 +17,7 @@
 | 4 | ✅ | board report(완료:폐기 비율 경보, 추이, 되돌림 수) + abandon이 폐기 사유를 raw에 자동 기록(4-2를 기계화) |
 | 후속(같은 날) | ✅ | 템플릿 사본 갱신 경로 — 1-7의 마커 규칙을 githooks/scripts로 확장(`llm-wiki-template-version:`), `init --check`가 셋 모두 보고. 이 레포는 config `"hooksPath": "templates/githooks"` 선언으로 githooks/ 사본을 없애 drift 원천 차단 |
 | 후속2(같은 날) | ✅ | 루프 가동 — 남은 작업 전부 카드화, 조건 게이트(`not_before`+`resume`)로 미결 #3 튜닝·웹 뷰를 조건만족시 진행으로 전환, `board --html` 시각화, compile list same-day 수정(subagent 설계 리뷰: 채택+수정 3건 반영) |
+| 5단계(2026-09-09) | 🔄 | 전체 레포 리뷰 → 쓰기 경로 결함 수습 — [§8](#8-5단계--결함-수습-2026-09-09-전체-리뷰) |
 
 **미착수(상시 트랙 그대로):** 스킬 git 배포(`skills add`/`sync`), TodoWrite 캡처 조사.
 
@@ -248,3 +249,39 @@ pick → work(개발: 해소) → 판정 ─ done / handoff / abandon(폐기) / 
 | 3 | 발산 방지 | **1차 방어 채택**(WIP 상한) + 측정 후 튜닝으로 남음 |
 | 4 | TodoWrite 가로채기 | 상시 조사 과제로 유지. 무인 루프는 이것 없이도 성립(§4.1) |
 | 2, 5, 6 | 정본(파일/스킬), Pi, 아카이브 정책 | 영향 없음. 웹 뷰 확정 시점에 재검토 |
+
+---
+
+## 8. 5단계 — 결함 수습 (2026-09-09 전체 리뷰)
+
+**배경**: 0.2.2 배포 후 사용기 첫 전체 레포 검토(코드 리뷰 서브에이전트 + lint/compile
+실행 실측). 읽기 경로(lint·compile·검색 병합)는 청정 — 문제는 **쓰기 경로(카드 저장·이동·
+선별)에 재현 검증된 데이터 손실 4건**. 결함 수정은 게이트 면제(사용기 원칙)라 즉시 수정,
+완료분은 0.2.3 패치로 배포한다(채널 분리 원칙 그대로 — push + `npm version patch`).
+
+### 5-1. [확정] 즉시 수정 → 0.2.3
+
+| # | 결함 | 위치 | 내용 |
+|---|---|---|---|
+| 5-1-1 | 검색어 셸 주입 | wiki-search.js | qmd 호출 `execSync`에 검색어를 문자열 끼워넣음 — POSIX 따옴표 안 `$(...)`·백틱 실행, cmd는 검색어의 `"`가 인용 파손. 에러 메시지를 붙여넣는 LLM 호출자에겐 일상 입력. `execFileSync` 인자 배열로 전환 |
+| 5-1-2 | 노트 `## ` 섹션 하이재크 | kanban.js | `card edit --note` 값의 `## ` 줄이 섹션 경계로 오인 — Notes 내용이 유령 섹션으로 이동하거나(`## Goal` 충돌 시) 전부 삭제. append-only 저널 계약 파손. 직렬화 시 본문 이스케이프 + 파서는 알려진 섹션명만 경계로 인정 |
+| 5-1-3 | 중복 제목 종결 덮어쓰기 | kanban-cmd.js · kanban.js | `card new` 존재 검사가 cards/만 봄 + `moveCardTo` 충돌 무검사 → 같은 제목 재생성 후 종결 시 기존 done 카드의 Result가 조용히 소멍(3.3 "지우지 않는다"의 정면 반례). 존재 검사 4폴더 전부 + 이동 충돌 거부 |
+| 5-1-4 | pick 비카드 삭제 | kanban-cmd.js | 후보 필터에 status 검증 없음 — frontmatter 없는 .md(cards/README.md 등)가 후보가 되고 재직렬화에서 `## ` 앞 본문이 통째로 소실. 활성 status 아닌 파일 스킵 |
+| 5-1-5 | not_before UTC 판정 | kanban-cmd.js 4곳 | pick 게이트·보드/HTML 배지가 `toISOString()`(UTC)로 오늘을 삼음 — KST 자정~9시 게이트 오판. wiki-compile에서 localToday()로 고친 바로 그 결함(4c5f27c)의 칸반판. 공유 유틸로 통일 |
+| 5-1-6 | findstr CP949 조용한 0건 | wiki-search.js | grep 대체 findstr이 ACP 의존 — 한국어 Windows(코드페이지 949)에서 한국어 검색어가 비트 불일치로 0건(이 머신은 시스템 UTF-8이라 우연히 동작). findstr 제거, 디렉터리 순회 안에서 순수 JS 라인 스캐너로 |
+
+**완료 조건**: 각 결함은 이미 재현으로 확인된 것 — 수정 후 동일 재현 절차(임시
+`LLM_WIKI_ROOT` 보드)로 부재를 확인해야 완료.
+
+### 5-2. [확정] 카드행 (게이트 없음 — pick 가능)
+
+설계 판단이 섞였거나 낮은 결함은 즉시 수정 트랙에서 제외, 아래 카드로:
+
+| 카드 | 묶는 것 |
+|---|---|
+| 쓰기 명령 락 전면화 | 락은 pick에만 존재 — done/handoff/card edit 등 무방비 read-modify-write(동시 실행 시 활성+종결 이중 상태), `--renew-claim` 비원자 갱신, lock.json 못 쓰고 죽은 고아 락 폴더의 영구 강탈 불가 |
+| frontmatter 왕복 보존 | `[a, b]` 꼴 문자열의 배열 변형, `,` 포함 depends_on 항목 분해, 비대칭 따옴표 박리, board.yml `statuses:` 정규식의 행내 주석 오염, 슬러그 폴백 모호 매칭(a/b ≡ a:b) |
+| CLI 계약 정리 | `--version` 부재(exit 1), compile 서브커맨드 오타가 exit 0, parseArgs가 값 없는 플래그에 다음 플래그를 삼킴(`done --result` 누락 시 "true" 기록) |
+| docRoot 일관성 | board video의 `../doc/` 하드코딩(문서 루트 오버라이드 무시) + npm 소비자는 video/ 프로젝트 미포함이라 명령 불가 — 안내로 명시, init이 LLM_WIKI_ROOT 무시(안내 무한루프 유발) |
+| 컴파일·검색 잔여 | raw/ 없으면 writeCompileState 크래시, QMD 컬렉션 존재 판정이 부분문자열(`<base>-wiki` ≡ `<base>-wiki-raw` 접두사), wiki-compile 잔여 execSync(입력이 설정값이라 위험 낮음) |
+| 왕복 테스트 스캐폴드 | 5-1류 결함(직렬화 왕복·중복 제목·선별 필터)을 잡는 회귀 테스트 도입 — 이번 수습의 임시 재현 스크립트를 정식 테스트로 승격 |
