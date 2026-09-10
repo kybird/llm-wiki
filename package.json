@@ -36,5 +36,8 @@
     "agentic-memory",
     "claude-code",
     "work-loop"
-  ]
+  ],
+  "scripts": {
+    "test": "node --test test/roundtrip.test.js test/kanban-write.test.js"
+  }
 }

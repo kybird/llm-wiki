@@ -164,6 +164,8 @@ git config core.hooksPath templates/githooks
 
 `llm-wiki.config.json` here declares `"hooksPath": "templates/githooks"`, so `init` never creates a `githooks/` copy — the active hook *is* the canonical template. See [doc/improvement-plan.md](doc/improvement-plan.md) for the roadmap state and [doc/plan.md](doc/plan.md) for the design record.
 
+Regression tests (round-trip serialization, duplicate titles, non-card pick, concurrent writes) run on throwaway boards — never touch this repo's `doc/`: `npm test`.
+
 ## License
 
 MIT

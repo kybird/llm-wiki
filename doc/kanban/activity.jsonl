@@ -63,3 +63,5 @@
 {"ts":"2026-09-10T03:32:01.159Z","action":"done","title":"docRoot 일관성"}
 {"ts":"2026-09-10T03:32:13.265Z","action":"claimed","title":"컴파일·검색 잔여 정리","actor":"zcode-loop"}
 {"ts":"2026-09-10T03:34:24.486Z","action":"done","title":"컴파일·검색 잔여 정리"}
+{"ts":"2026-09-10T03:34:37.058Z","action":"claimed","title":"왕복 테스트 스캐폴드","actor":"zcode-loop"}
+{"ts":"2026-09-10T03:39:36.618Z","action":"done","title":"왕복 테스트 스캐폴드"}
