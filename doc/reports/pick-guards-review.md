@@ -272,7 +272,38 @@ PICKED: …\cards\만료실험.md
 
 ---
 
-## 사람이 정해야 할 것
+## 마무리 결과 (사람 결정 반영, 2026-09-12)
+
+아래 "사람이 정해야 할 것"은 결정을 받아 처리됐다. 결정 내용과 실제 결과:
+
+| 항목 | 결정 | 결과 |
+|---|---|---|
+| 버전 | 0.3.0으로 올린다 | **완료** — `npm version 0.3.0` (커밋 `d3e0770`, 태그 `v0.3.0`), 48종 재통과 후 푸시 |
+| publish | 게시한다 | **미완 — 인증 대기.** 아래 참조 |
+| 브랜치 삭제 | llm-wiki 것만 지운다 | **완료** — `glm/pick-guards` 로컬·origin 양쪽 삭제(병합 확인 후 `-d`) |
+| sugarScan | llm-wiki **사용자**다 | 건드리지 않음 — 문서 갱신은 그쪽 몫으로 넘김 |
+
+**publish가 안 끝난 이유**: 이 환경의 npm이 인증돼 있지 않다. `npm whoami` → `E401
+Unauthorized`, `npm publish --access public` → `E404 Not Found - PUT
+.../@kybird%2fllm-wiki`. 이 404는 "없다"가 아니라 **"권한이 없다"**의 겉보기 404다 —
+이 위키의 [[npm-scoped-publishing]]이 적어 둔 바로 그 함정이다. 로그인은 2FA 웹
+플로우라 사람이 해야 한다.
+
+남은 한 단계(패키지 내용·테스트·버전은 전부 검증 완료):
+
+```
+npm login          # 2FA 웹 플로우
+npm publish --access public
+npm view @kybird/llm-wiki version     # 0.3.0 확인
+```
+
+게시 전까지 sugarScan의 전역 llm-wiki는 여전히 **0.2.2**이고, `pick --help`가 카드를
+집고 `pick --card`가 조용히 무시된다. 게시 후 sugarScan 쪽에서 전역 설치를 갱신해야
+가드가 실제로 보호한다.
+
+---
+
+## 사람이 정해야 할 것 (원본 — 위에서 해소됨)
 
 ### 1. npm 버전과 publish — 혼자 하지 않았다
 
