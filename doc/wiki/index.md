@@ -35,6 +35,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 |------|------|------|
 | [[cuda-version-coexistence]] | 여러 CUDA 버전을 공존시키면 prebuilt 바이너리가 깨지고 소스빌드 지옥으로 빠진다. | STL1002, cublas64 DLL conflict, win-x64-cuda load failure |
 | [[destructuring-live-getters]] | 게터를 포함한 반환 객체를 구조 분해하면 그 순간 평가된 스냅샷 원시값이 복사된다 — 살아있는 값이 죽은 값으로 위장한다. | 게터 구조 분해, getter destructuring, out 스냅샷, 빈 stdout 오인, destructuring getter snapshot |
+| [[probing-side-effect-commands]] | 부작용 있는 명령을 확인용으로 실행하는 것 — `--help`는 무해하다는 관례를 전제로 에이전트가 실제 상태를 바꾼다. 기록으로는 막히지 않고 도구로만 막힌다. | 탐색용 호출, pick --help 사고, help가 카드를 집는다, probing for options, 안전한 탐색 경로 부재, 검증 없는 위임 플래그 |
 | [[shared-default-collection-names]] | 두 프로젝트가 QMD 기본 컬렉션 이름을 공유하면 에러 없이 검색이 교차 오염된다. | QMD 컬렉션 충돌, 검색 교차 오염, collection name collision |
 
 ---
@@ -50,6 +51,6 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 
 - Total concepts: 2
 - Total patterns: 6
-- Total anti-patterns: 3
+- Total anti-patterns: 4
 - Total answers: 0
 - Last updated: 2026-09-12

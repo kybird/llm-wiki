@@ -19,6 +19,7 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - Evidence: doc/raw/2026-09-10.md Case 1 — `Card edited: D:\...\카드.md` 가 종료 코드 0과 함께 나오고 파일은 무변화였다(sugarScan 실사용 접수). lib/kanban-cmd.js validateFlags
 - 선행 조각: doc/raw/2026-09-09.md fcd1f4b — parseArgs의 값 없는 플래그 `true` 삼킴 방지(같은 벽의 이전 조각)
 - 확장(2026-09-12): `hash:16e7eb9` — doc/raw/2026-09-12.md Case 3 — wait를 auto-update 트리거에서 제외. stdout이 계약인 명령(wait: 0=이벤트 한 줄, 2=침묵)에서 배너 한 줄이 두 계약을 동시에 깼다
+- 갭 폐쇄(2026-09-12): `hash:6c5e0f2` — doc/raw/2026-09-12.md Case 5 — 아래 "잔여 갭"이 사고로 실현된 뒤 닫혔다. 검증 밖이던 일곱 명령(pick·handoff·done·supersede·abandon·reopen·resume)에 `validateFlags` 적용. 실측: `✗ 모르는 플래그: --card — 쓸 수 있는 플래그: --question` (종료 1, 파일 해시 불변)
 - Confidence: 5/5
 
 ### Analysis
@@ -41,9 +42,22 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - **Anti-Pattern**: 무엇이 바뀌었는가와 성공했는가의 분리 — 아는 키만 꺼내 쓰고 모르는
   키는 무시한 채 조건 없이 writeCard + 성공 문구. 지식 그래프의 "근거 없는 검증 기록"
   경고([[always-merge-exact-matching]]의 조기 분기)가 CLI 계층에서 난 모양이다.
-- 잔여 갭(2026-09-10 보고, 미처리): `pick --claime` 같은 오타가 unnamed-agent로
-  조용히 귀속된다 — card new/edit과 구조가 달라 이번 범위 밖이었음.
+- ~~잔여 갭(2026-09-10 보고, 미처리): `pick --claime` 같은 오타가 unnamed-agent로
+  조용히 귀속된다 — card new/edit과 구조가 달라 이번 범위 밖이었음.~~
+  **해소(2026-09-12, `hash:6c5e0f2`)** — 그 갭이 실제 사고로 실현됐다: 존재하지 않는
+  `pick --card`가 검증 없이 위임 프롬프트에 들어갔고, `pick`이 조용히 버린 뒤 ordinal
+  최저 카드를 집었다(doc/raw/2026-09-12.md Case 5). 일곱 명령에 `validateFlags`를
+  태워 닫았다. spec은 **코드가 지금 실제로 읽는 플래그만** 담는다 — 검증을 붙이는
+  김에 플래그를 늘리면 계약이 아니라 추측이 된다.
+- **조용한 폴백은 오타와 구분되지 않는다**(2026-09-12): 값 없는 `pick --claim`(예전
+  `unnamed-agent`)과 값 없는 `resume --note`(예전 기본 문구)가 이제 실패한다. 폴백의
+  편의보다 "어느 카드를 누가 집었는지 모르는 채 루프가 계속되는" 비용이 크다. 값을
+  주는 기존 호출은 전부 불변이다.
+- **계약은 탐색 경로까지 포함한다**(2026-09-12, `hash:864bc67`): 모르는 플래그를
+  거부하는 것만으로는 부족하다 — 부작용 있는 명령을 확인할 안전한 방법이 없으면
+  에이전트는 실행으로 확인한다. `--help`/`-h`가 args 어느 위치에 있어도 사용법만
+  내고 종료 0으로 나간다(디스패치보다 앞). 자세히는 [[probing-side-effect-commands]].
 
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]] · [[flush-before-exit]]
-- **Anti-Patterns**: [[destructuring-live-getters]]
+- **Anti-Patterns**: [[destructuring-live-getters]] · [[probing-side-effect-commands]]
