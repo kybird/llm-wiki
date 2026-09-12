@@ -4,6 +4,15 @@
 >
 > QMD is **optional**. Without it, `llm-wiki search` falls back to grep and the wiki index still rebuilds correctly.
 
+## 워크트리마다 보드가 다르게 보인다 (kanban, not QMD)
+
+Symptom: two `git worktree`s of the same repo show different boards — a card abandoned in the primary worktree is still live in a linked one, cards created in the primary are invisible in the link, and `doc/kanban/activity.jsonl` conflicts on every merge.
+
+That was a defect, fixed in the doc-root resolution: the board is a project resource, not a branch resource. `findDocRoot` (`lib/find-doc-root.js`) now resolves to the **primary worktree's** `doc/` when run inside a linked worktree, so every worktree sees (and writes) the same cards, claims and activity log. Search order: `LLM_WIKI_ROOT` → primary worktree `doc/` (if a git repo and `doc/wiki` exists there) → walk up from cwd → `cwd/doc`.
+
+- Intended side effect: `pick`/`done` run from a secondary worktree modify the primary worktree's files. Those changes stay uncommitted in the primary worktree and get committed there. This is by design, not a bug.
+- Opt-out — restore the old per-worktree (cwd-based) behavior: set `LLM_WIKI_WORKTREE_LOCAL=1`.
+
 ## Runtime CUDA OOM vs build-time compile failure
 
 These are two different failure modes:

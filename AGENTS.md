@@ -12,6 +12,11 @@
 - 무인 실행 = `work-loop` 스킬: pick → done/handoff/abandon. 정지 규칙에서 report + video 남긴다.
 - 준비 안 된 카드는 게이트: 시간은 `--not-before`, 관측 조건은 `handoff` → 충족 근거가 오면 `resume`.
 
+## 워크트리 — 보드는 프로젝트 자원
+- **보드는 프로젝트 자원이지 브랜치 자원이 아니다.** 워크트리가 몇 개든 카드와 클레임과 활동 로그(`doc/kanban/`)는 주 워크트리 한 곳에 있다 — `findDocRoot`가 링크 워크트리 안에서도 주 워크트리의 `doc/`로 향한다(2026-09-12 sugarScan 실측 결함 수습).
+- 부작용(의도한 동작, 버그 아님): 부 워크트리에서 실행한 pick/done이 **주 워크트리의 파일**을 수정한다. 그 변경은 주 워크트리에 미커밋 상태로 남고 거기서 커밋된다.
+- 종전 동작(워크트리 각자의 doc/)으로 돌리려면 `LLM_WIKI_WORKTREE_LOCAL=1` — 자세한 것은 TROUBLESHOOTING.md.
+
 ## 배포 (npm) — 항상 참조
 - 패키지: **`@kybird/llm-wiki`** (스코프 — `llm-wiki`는 선점됨).
 - 배포: `npm version minor && npm publish --access public` → 브라우저 웹 인증.

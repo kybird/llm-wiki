@@ -113,6 +113,8 @@ Create `llm-wiki.config.json` in your repo root:
 
 You can also set `LLM_WIKI_ROOT=/path/to/doc-parent` to point at a `doc/` outside the repo.
 
+**Git worktrees:** the board is a project resource, not a branch resource — no matter how many linked worktrees you have, cards, claims and the activity log (`doc/kanban/`) live in one place, the primary worktree's `doc/`. `findDocRoot` resolves a linked worktree to the primary worktree's `doc/` (via `git rev-parse --git-common-dir`). Intended side effect: `pick`/`done` run from a secondary worktree modify files in the primary worktree — those changes stay uncommitted there and are committed there. Set `LLM_WIKI_WORKTREE_LOCAL=1` to restore the old cwd-based (per-worktree) behavior.
+
 ## How the knowledge flows
 
 ```
