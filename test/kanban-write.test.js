@@ -15,7 +15,9 @@ function makeBoard() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-test-'));
   const docRoot = path.join(tmp, 'doc');
   require('../lib/kanban').scaffold(docRoot);
-  const env = { ...process.env, LLM_WIKI_ROOT: docRoot };
+  // LLM_WIKI_STATE_DIR: npm 업데이트 자동 반영(auto-update)의 스탬프를 임시 보드 안에
+  // 가둔다 — 테스트가 사용자 홈(~/.llm-wiki)에 스탬프를 남기지 않게.
+  const env = { ...process.env, LLM_WIKI_ROOT: docRoot, LLM_WIKI_STATE_DIR: path.join(tmp, 'state') };
   const run = (args, opts = {}) => spawnSync('node', [CLI, ...args], { env, encoding: 'utf8', ...opts });
   return {
     tmp, docRoot, env, run,

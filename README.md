@@ -82,15 +82,15 @@ your-repo/
 
 ## Updating
 
-The skills, hooks, and scripts copied into your repo are **marker-protected copies**. Updating is two commands:
+`npm update` is the only step. The skills, hooks, and scripts copied into your repo are **marker-protected copies**, and the first `llm-wiki` command you run after a version change re-syncs them automatically (it prints one summary line; `llm-wiki init --check` shows the full report, `llm-wiki init` applies manually as before):
 
 ```bash
-npm update -g llm-wiki    # refresh the global CLI
-llm-wiki init --check     # what would change? (ok / stale / user-modified / missing)
-llm-wiki init             # apply — stale copies update, your edits survive
+npm update -g @kybird/llm-wiki    # then run any llm-wiki command — copies auto-update
 ```
 
-The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — `init` then treats it as yours and never overwrites it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`.
+The version stamp lives per-repo in `~/.llm-wiki/auto-update/` (override with `LLM_WIKI_STATE_DIR`), never inside your repo. Opt out with `"autoUpdate": false` in `llm-wiki.config.json`, or `LLM_WIKI_NO_AUTO_UPDATE=1` for a single run.
+
+The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — updates then treat it as yours and never overwrite it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`. The seeded `AGENTS.md` is yours forever — written once at `init`, never updated.
 
 ## Configuration (optional)
 

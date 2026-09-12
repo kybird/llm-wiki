@@ -38,6 +38,6 @@
     "work-loop"
   ],
   "scripts": {
-    "test": "node --test test/roundtrip.test.js test/kanban-write.test.js test/find-doc-root-worktree.test.js"
+    "test": "node --test test/roundtrip.test.js test/kanban-write.test.js test/find-doc-root-worktree.test.js test/auto-update.test.js"
   }
 }

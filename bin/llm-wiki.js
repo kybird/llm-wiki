@@ -9,6 +9,7 @@ const { init } = require('../lib/init');
 const kanbanCmd = require('../lib/kanban-cmd');
 const skills = require('../lib/skills');
 const { findDocRoot } = require('../lib/find-doc-root');
+const { maybeAutoUpdate } = require('../lib/auto-update');
 const { version } = require('../package.json');
 
 function printUsage() {
@@ -48,6 +49,9 @@ Kanban (cards are files; CLI is the only writer):
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
+  npm update -g @kybird/llm-wiki     Copied skills/hooks/scripts auto-update on the next
+                                     command ("autoUpdate": false in llm-wiki.config.json,
+                                     or LLM_WIKI_NO_AUTO_UPDATE=1, to opt out)
   --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
                                      (search, lint, compile list|index)
   LLM_WIKI_ROOT=/path                Override doc/ root location
@@ -61,6 +65,14 @@ const [, , subcommand, ...rest] = process.argv;
 const jsonRequested = rest.includes('--json');
 const htmlRequested = rest.includes('--html');
 const args = rest.filter(a => a !== '--json' && a !== '--html');
+
+// npm 업데이트 자동 반영(README "Updating") — 리포를 실제로 쓰는 명령 앞에서만.
+// init은 자체 동기화 흐름이 있고, 도움말·버전·오타 명령은 리포를 건드릴 이유가 없다.
+// 실패는 maybeAutoUpdate 안에서 삼켜진다 — 갱신 실패가 명령을 막지 않는다.
+if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'handoff',
+  'done', 'supersede', 'abandon', 'reopen', 'resume'].includes(subcommand)) {
+  maybeAutoUpdate();
+}
 
 switch (subcommand) {
   case 'search':
