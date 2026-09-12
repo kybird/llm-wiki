@@ -18,6 +18,7 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - Git Context: `hash:cc0f4b1` (결함 시점) → 2026-09-10 수정 커밋
 - Evidence: doc/raw/2026-09-10.md Case 1 — `Card edited: D:\...\카드.md` 가 종료 코드 0과 함께 나오고 파일은 무변화였다(sugarScan 실사용 접수). lib/kanban-cmd.js validateFlags
 - 선행 조각: doc/raw/2026-09-09.md fcd1f4b — parseArgs의 값 없는 플래그 `true` 삼킴 방지(같은 벽의 이전 조각)
+- 확장(2026-09-12): `hash:16e7eb9` — doc/raw/2026-09-12.md Case 3 — wait를 auto-update 트리거에서 제외. stdout이 계약인 명령(wait: 0=이벤트 한 줄, 2=침묵)에서 배너 한 줄이 두 계약을 동시에 깼다
 - Confidence: 5/5
 
 ### Analysis
@@ -31,6 +32,12 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - 규칙은 명령 전체에 균일해야 한다 — 어디는 엄격하고 어디는 관대하면 사용자(사람과
   에이전트 둘 다)가 규칙을 못 배운다. card new/edit이 공용 validateFlags로 같은
   명세 검증을 공유한다.
+- **stdout이 계약인 명령에서는 부가 출력도 예외가 아니다**(2026-09-12, wait): 종료 코드가
+  출력과 함께 계약을 이루는 명령의 stdout에는 장식을 섞지 않는다. wait를 auto-update
+  트리거에 넣었더니 배너 한 줄이 "타임아웃=완전 침묵" 계약과 `--json` 파싱(JSON.parse
+  대상 stdout)을 동시에 깼다. 수습은 출력 억제가 아니라 **트리거 제외** — 관측 전용
+  명령은 동기화를 몰고 올 이유가 없고, 갱신은 능동 명령(pick/done/board)이 매 사이클
+  발동시킨다. 계약 있는 출력의 전달 자체는 [[flush-before-exit]]이 지킨다.
 - **Anti-Pattern**: 무엇이 바뀌었는가와 성공했는가의 분리 — 아는 키만 꺼내 쓰고 모르는
   키는 무시한 채 조건 없이 writeCard + 성공 문구. 지식 그래프의 "근거 없는 검증 기록"
   경고([[always-merge-exact-matching]]의 조기 분기)가 CLI 계층에서 난 모양이다.
@@ -38,4 +45,5 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
   조용히 귀속된다 — card new/edit과 구조가 달라 이번 범위 밖이었음.
 
 ### Related Knowledge
-- Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]]
+- Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]] · [[flush-before-exit]]
+- **Anti-Patterns**: [[destructuring-live-getters]]
