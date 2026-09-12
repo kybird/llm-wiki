@@ -7,6 +7,7 @@ const { compile } = require('../lib/wiki-compile');
 const { lint } = require('../lib/wiki-lint');
 const { init } = require('../lib/init');
 const kanbanCmd = require('../lib/kanban-cmd');
+const kanbanWait = require('../lib/kanban-wait');
 const skills = require('../lib/skills');
 const { findDocRoot } = require('../lib/find-doc-root');
 const { maybeAutoUpdate } = require('../lib/auto-update');
@@ -46,6 +47,12 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
   llm-wiki reopen <title> --why "…"         QA: revert a fake-done card to doing
   llm-wiki resume <title> [--note "…"]      Return a review (parked) card to todo
+  llm-wiki wait [--for <필터>] [--since <ISO ts>] [--timeout <초>] [--stall-min <분>] [--json]
+                                     Block until a board event, then exit. 종료 코드가 계약:
+                                     0 = 이벤트(stdout 한 줄), 2 = 타임아웃(출력 없음 — 조용히
+                                     재무장), 1 = 오류. 필터: handoff(기본) | done | any |
+                                     stall(--stall-min 분 무활동 후 0, 기본 20). --since 생략
+                                     시 지금 — 이후의 기존 이벤트는 대기 전에 먼저 검사한다
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
@@ -68,6 +75,8 @@ const args = rest.filter(a => a !== '--json' && a !== '--html');
 
 // npm 업데이트 자동 반영(README "Updating") — 리포를 실제로 쓰는 명령 앞에서만.
 // init은 자체 동기화 흐름이 있고, 도움말·버전·오타 명령은 리포를 건드릴 이유가 없다.
+// wait도 빠진다 — 백그라운드 관측 명령이라 동기화를 몰고 올 이유가 없고, 무엇보다
+// stdout이 "이벤트 한 줄 or 침묵" 계약이라 auto-update 배너가 그 계약을 깬다.
 // 실패는 maybeAutoUpdate 안에서 삼켜진다 — 갱신 실패가 명령을 막지 않는다.
 if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'handoff',
   'done', 'supersede', 'abandon', 'reopen', 'resume'].includes(subcommand)) {
@@ -122,6 +131,9 @@ switch (subcommand) {
     break;
   case 'resume':
     kanbanCmd.resume({ rest: args });
+    break;
+  case 'wait':
+    kanbanWait.wait({ rest: args, json: jsonRequested });
     break;
   case '--help':
   case '-h':

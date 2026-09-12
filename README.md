@@ -56,8 +56,14 @@ That's it. The agent does the rest.
 | `llm-wiki supersede <title> --by a,b` | Replace a card by children; the parent dissolves into `superseded/` |
 | `llm-wiki abandon <title> --reason "…"` | Discard — reason required, and auto-logged to `doc/raw/` as anti-pattern material |
 | `llm-wiki reopen <title> --why "…"` | QA: revert a fake-done card back to doing |
+| `llm-wiki wait [--for handoff\|done\|any\|stall] [--since <ISO>] [--timeout <s>] [--stall-min <m>] [--json]` | Block until a board event, then exit — **exit codes are the contract: 0 = event (one line to stdout), 2 = timeout (nothing printed), 1 = error**; callers re-arm on 2 and act on 0. `--for` picks the event (`handoff` default; `stall` fires after `--stall-min` minutes of silence, default 20). `--since` (default: now) is checked *before* waiting starts, so events that piled up while the caller was busy are returned immediately. Read-only; timestamp-based (survives wholesale `activity.jsonl` rewrites), skips broken lines, waits for the file to exist, `fs.watch` + 5s poll fallback (junction-safe) |
 
-`search`, `lint`, `compile list|index`, `board`, `pick` accept `--json` (a `{schemaVersion: 1, kind: …}` envelope for scripts and skills).
+`search`, `lint`, `compile list|index`, `board`, `pick` accept `--json` (a `{schemaVersion: 1, kind: …}` envelope for scripts and skills). `wait --json` is different by design: it prints the matched event itself as one JSON line (or a `{action: "stall", …}` line), because callers parse that line directly.
+
+```bash
+# overnight re-arm loop: wake on the next handoff parked after midnight; silent exit 2 after an hour
+llm-wiki wait --for handoff --since 2026-09-12T00:00:00Z --timeout 3600 --json
+```
 
 ## What `init` creates
 
