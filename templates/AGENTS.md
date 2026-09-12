@@ -21,4 +21,8 @@ Files are the source of truth. Kanban card files are written ONLY via the CLI �
 - Quote error messages **character-for-character** in logs and wiki pages — `llm-wiki lint`
   back-checks every quote and `hash:` against `doc/raw/`.
 - Follow `status: deprecated` → `superseded_by` when reading wiki pages.
+- The board is a **project** resource, not a branch resource: from any git linked worktree,
+  `llm-wiki` reads and writes the **primary worktree's** `doc/kanban/`. `pick`/`done` run in
+  a secondary worktree leave uncommitted changes in the primary worktree — intended, commit
+  them there. Opt out with `LLM_WIKI_WORKTREE_LOCAL=1`.
 - Expand this file with this repo's own conventions. Keep it short — it loads every session.
