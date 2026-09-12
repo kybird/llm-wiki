@@ -73,6 +73,24 @@ const jsonRequested = rest.includes('--json');
 const htmlRequested = rest.includes('--html');
 const args = rest.filter(a => a !== '--json' && a !== '--html');
 
+// 가드 — 탐색용 호출이 보드를 건드리지 못하게(2026-09-11·12 사고). 부작용 있는
+// 서브커맨드를 확인하려고 `pick --help`를 쳤다가 실제로 카드를 집는 일을 원천
+// 차단한다: 알려진 서브커맨드의 args 어디에 --help/-h가 있어도 그 명령의 사용법만
+// 찍고 나간다. 종료 코드 0 — --help는 오류가 아니고, 카드 파일과 activity 로그는
+// 한 글자도 바뀌지 않는다. 사용법 문자열은 각 명령의 fail()이 쓰는 것과 같은 곳
+// (kanban-cmd의 USAGE)에서 온다. 전용 문자열이 없는 읽기 전용 명령(search 등)은
+// 전체 사용법으로 대신한다. return으로 자연 종료한다 — Windows 파이프 stdout은
+// 비동기라 process.exit은 마지막 줄을 지울 수 있다(kanban-wait 교훈).
+const KNOWN_SUBCOMMANDS = ['search', 'compile', 'lint', 'init', 'skills', 'board', 'card',
+  'pick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'wait'];
+if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.includes('-h'))) {
+  const usageKey = subcommand === 'card' && ['new', 'show', 'edit'].includes(args[0]) ? `card ${args[0]}` : subcommand;
+  const usage = kanbanCmd.USAGE[usageKey];
+  if (usage) console.log(usage);
+  else printUsage();
+  return;
+}
+
 // npm 업데이트 자동 반영(README "Updating") — 리포를 실제로 쓰는 명령 앞에서만.
 // init은 자체 동기화 흐름이 있고, 도움말·버전·오타 명령은 리포를 건드릴 이유가 없다.
 // wait도 빠진다 — 백그라운드 관측 명령이라 동기화를 몰고 올 이유가 없고, 무엇보다
