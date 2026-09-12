@@ -279,27 +279,47 @@ PICKED: …\cards\만료실험.md
 | 항목 | 결정 | 결과 |
 |---|---|---|
 | 버전 | 0.3.0으로 올린다 | **완료** — `npm version 0.3.0` (커밋 `d3e0770`, 태그 `v0.3.0`), 48종 재통과 후 푸시 |
-| publish | 게시한다 | **미완 — 인증 대기.** 아래 참조 |
+| publish | 게시한다 | **완료** — `@kybird/llm-wiki@0.3.0` 게시됨. 아래 검증 참조 |
 | 브랜치 삭제 | llm-wiki 것만 지운다 | **완료** — `glm/pick-guards` 로컬·origin 양쪽 삭제(병합 확인 후 `-d`) |
 | sugarScan | llm-wiki **사용자**다 | 건드리지 않음 — 문서 갱신은 그쪽 몫으로 넘김 |
 
-**publish가 안 끝난 이유**: 이 환경의 npm이 인증돼 있지 않다. `npm whoami` → `E401
-Unauthorized`, `npm publish --access public` → `E404 Not Found - PUT
-.../@kybird%2fllm-wiki`. 이 404는 "없다"가 아니라 **"권한이 없다"**의 겉보기 404다 —
-이 위키의 [[npm-scoped-publishing]]이 적어 둔 바로 그 함정이다. 로그인은 2FA 웹
-플로우라 사람이 해야 한다.
+**publish 경위**: 에이전트 환경의 npm은 인증돼 있지 않았다(`npm whoami` → `E401`,
+`npm publish` → `E404 Not Found - PUT .../@kybird%2fllm-wiki`). 이 404는 "없다"가
+아니라 **"권한이 없다"**의 겉보기 404 — 이 위키의 [[npm-scoped-publishing]]이 적어
+둔 함정 그대로다. 로그인은 2FA 웹 플로우라 사람이 수행했고, 게시는 성공했다.
 
-남은 한 단계(패키지 내용·테스트·버전은 전부 검증 완료):
+### 게시본 검증 (레지스트리에서 재설치해 실행)
+
+무엇을 올렸는지가 아니라 **올라간 것이 무엇인지**를 확인했다.
 
 ```
-npm login          # 2FA 웹 플로우
-npm publish --access public
-npm view @kybird/llm-wiki version     # 0.3.0 확인
+$ npm view @kybird/llm-wiki version dist.shasum
+version    = '0.3.0'
+dist.shasum = 'b927c82aaf10c6cf48b80997fb0436d17eb52da7'   ← 게시 전 npm pack 값과 동일
 ```
 
-게시 전까지 sugarScan의 전역 llm-wiki는 여전히 **0.2.2**이고, `pick --help`가 카드를
-집고 `pick --card`가 조용히 무시된다. 게시 후 sugarScan 쪽에서 전역 설치를 갱신해야
-가드가 실제로 보호한다.
+셔섬이 일치하므로 게시된 바이트는 위에서 검증한 타르볼과 같다. 그 위에서 두 사고를
+**레지스트리 설치본으로** 재현 시도했다(임시 보드, 검증 후 삭제):
+
+```
+$ npm install @kybird/llm-wiki@0.3.0   → 0.3.0
+
+$ llm-wiki pick --help
+사용법: llm-wiki pick [--claim <이름>] [--card "<제목>"] — --card 없으면 ordinal 최저를 집는다
+[exit=0]        ← 보드 해시 불변. 사고 1 재현 불가
+
+$ llm-wiki handoff "<카드>" --question "q?" --card "X"
+✗ 모르는 플래그: --card — 쓸 수 있는 플래그: --question
+[exit=1]        ← 보드 해시 불변. 사고 2 재현 불가
+
+$ llm-wiki pick --card "<카드>" --claim verify
+PICKED: …\cards\실보드-모사-카드.md  (status: doing / claimed_by: verify)
+[exit=0]        ← 정상 경로는 살아있다
+```
+
+**남은 한 단계는 소비자 쪽이다**: sugarScan의 전역 설치가 갱신되기 전까지 그쪽은
+여전히 0.2.2 동작이다(`pick --help`가 카드를 집는다). 전역 갱신 후에야 가드가 실제로
+보호한다.
 
 ---
 
