@@ -82,3 +82,49 @@ test('wait --help — 대기에 들어가지 않고 사용법을 찍고 종료 �
     assert.ok(!r.stderr.includes('waiting:'), '대기 진입 안내가 없다 = 대기하지 않았다');
   } finally { b.cleanup(); }
 });
+
+// ── 가드 2 — 모르는 플래그를 조용히 삼키지 않는다 (사고 2) ────────────────
+
+test('모르는 플래그 — 일곱 명령이 각각 실패하고 카드 파일과 activity 로그가 그대로다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '엄격칸반', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    const cardP = path.join(b.cardsDir, '엄격칸반.md');
+    const cardBefore = fs.readFileSync(cardP, 'utf8');
+    const actBefore = fs.readFileSync(b.activityPath, 'utf8');
+
+    const cases = [
+      ['pick', '--claim', 'x', '--clam', 'y'],        // 오타 — 예전엔 무시돼 다른 카드가 집혔다
+      ['handoff', '엄격칸반', '--question', 'q', '--note', 'x'],
+      ['done', '엄격칸반', '--result', 'r', '--reason', 'x'],
+      ['supersede', '엄격칸반', '--by', 'a', '--into', 'x'],
+      ['abandon', '엄격칸반', '--reason', 'r', '--quiet'],
+      ['reopen', '엄격칸반', '--why', 'w', '--force'],
+      ['resume', '엄격칸반', '--note', 'n', '--why', 'x'],
+    ];
+    for (const argv of cases) {
+      const r = b.run(argv);
+      assert.notEqual(r.status, 0, `실패해야 한다: ${argv.join(' ')}`);
+      assert.ok((r.stderr || '').includes('모르는 플래그'), `모르는 플래그를 보고해야 한다: ${argv[0]}`);
+    }
+    assert.equal(fs.readFileSync(cardP, 'utf8'), cardBefore, '카드 불변');
+    assert.equal(fs.readFileSync(b.activityPath, 'utf8'), actBefore, 'activity 불변');
+  } finally { b.cleanup(); }
+});
+
+test('값 없는 필수 플래그 — pick --claim·resume --note도 조용히 넘어가지 않는다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '값없음', '--goal', 'g']).status, 0);
+    // 예전엔 pick --claim이 'unnamed-agent'로 조용히 폴백됐다 — 오타와 구분이 안 된다.
+    const r1 = b.run(['pick', '--claim']);
+    assert.notEqual(r1.status, 0, '값 없는 --claim은 실패');
+    assert.ok((r1.stderr || '').includes('--claim'));
+    // resume --note도 마찬가지 — true가 심겨 기본 문구로 폴백되던 길이다.
+    const r2 = b.run(['resume', '값없음', '--note']);
+    assert.notEqual(r2.status, 0, '값 없는 --note는 실패');
+    assert.ok((r2.stderr || '').includes('--note'));
+    const cardP = path.join(b.cardsDir, '값없음.md');
+    assert.ok(fs.readFileSync(cardP, 'utf8').includes('status: todo'), '아무 카드도 안 집혔다');
+  } finally { b.cleanup(); }
+});
