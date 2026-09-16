@@ -9,6 +9,7 @@
 
 ## 계획과 실행의 분리
 - 계획 = `kanban-plan` 스킬: 카드 1장 = 컨텍스트 1개 = 커밋 1개, 자식은 엄격히 더 작게, 깊이 ≤ 3.
+- 2장 이상으로 갈라지는 계획은 **마일스톤 카드로 묶는다**(`--kind milestone`, 멤버는 `--milestone`) — 목적 축은 유도되고 손으로 끝내지 않는다(plan.md 3.8).
 - 무인 실행 = `work-loop` 스킬: pick → done/handoff/abandon. 정지 규칙에서 report + video 남긴다.
 - 준비 안 된 카드는 게이트: 시간은 `--not-before`, 관측 조건은 `handoff` → 충족 근거가 오면 `resume`.
 
