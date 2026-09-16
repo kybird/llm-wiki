@@ -20,6 +20,7 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - 선행 조각: doc/raw/2026-09-09.md fcd1f4b — parseArgs의 값 없는 플래그 `true` 삼킴 방지(같은 벽의 이전 조각)
 - 확장(2026-09-12): `hash:16e7eb9` — doc/raw/2026-09-12.md Case 3 — wait를 auto-update 트리거에서 제외. stdout이 계약인 명령(wait: 0=이벤트 한 줄, 2=침묵)에서 배너 한 줄이 두 계약을 동시에 깼다
 - 갭 폐쇄(2026-09-12): `hash:6c5e0f2` — doc/raw/2026-09-12.md Case 5 — 아래 "잔여 갭"이 사고로 실현된 뒤 닫혔다. 검증 밖이던 일곱 명령(pick·handoff·done·supersede·abandon·reopen·resume)에 `validateFlags` 적용. 실측: `✗ 모르는 플래그: --card — 쓸 수 있는 플래그: --question` (종료 1, 파일 해시 불변)
+- 확장(2026-09-16): `hash:5f1ac2d` — doc/raw/2026-09-16.md Case 1 — board --html/--json 폐지 중: bin의 전역 `--json` 선추출이 명령층 validateFlags를 우회해 폐지 플래그가 조용한 성공이 될 뻔했고, 인접 결함 `board video --json` 무시(종료 0)도 같은 커밋에서 처분. 실측: `✗ 모르는 플래그: --html — 쓸 수 있는 플래그: ` (종료 1)
 - Confidence: 5/5
 
 ### Analysis
@@ -57,6 +58,13 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
   거부하는 것만으로는 부족하다 — 부작용 있는 명령을 확인할 안전한 방법이 없으면
   에이전트는 실행으로 확인한다. `--help`/`-h`가 args 어느 위치에 있어도 사용법만
   내고 종료 0으로 나간다(디스패치보다 앞). 자세히는 [[probing-side-effect-commands]].
+- **검증은 사용자가 친 토큰에 붙는다 — 전처리가 토큰을 지우면 검증은 장님이 된다**
+  (2026-09-16, `hash:5f1ac2d`): bin이 `--json`을 전역 추출해 args에서 제거하면
+  명령층 validateFlags는 그 토큰을 못 본다 — 플래그를 폐지할 때 분기만 지우면
+  텍스트 보드 + 종료 0(조용한 no-op)이 된다. 수습: 추출된 불리언을 dispatch 너머로
+  넘겨 표준 실패 경로로. 같은 원리의 연장으로 monitor도 auto-update 트리거에서
+  제외 — stdout 첫 줄이 `http://127.0.0.1:<port>` 계약이라 배너가 깨면 안 된다
+  (wait 전례의 반복, doc/raw/2026-09-16.md Case 2).
 
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]] · [[flush-before-exit]]
