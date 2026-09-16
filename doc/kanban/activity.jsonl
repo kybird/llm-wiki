@@ -77,3 +77,7 @@
 {"ts":"2026-09-16T20:45:06.575Z","action":"created","title":"모니터 카드 상세 보기"}
 {"ts":"2026-09-16T20:45:06.686Z","action":"claimed","title":"모니터 카드 상세 보기","actor":"zcode"}
 {"ts":"2026-09-16T20:50:53.070Z","action":"done","title":"모니터 카드 상세 보기"}
+{"ts":"2026-09-16T21:46:50.670Z","action":"created","title":"카드 모델 — milestone 필드와 kind"}
+{"ts":"2026-09-16T21:46:50.758Z","action":"created","title":"마일스톤 집기 제외·자동 종결"}
+{"ts":"2026-09-16T21:46:50.848Z","action":"created","title":"보드 뷰 — 마일스톤 목적 축"}
+{"ts":"2026-09-16T21:46:50.960Z","action":"created","title":"kanban-plan v4 — 마일스톤 계획 흐름"}
