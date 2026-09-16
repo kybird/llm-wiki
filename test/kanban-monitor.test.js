@@ -69,6 +69,7 @@ test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · �
     const page = await (await fetch(m.url + '/')).text();
     assert.ok(page.includes('llm-wiki monitor'), '페이지 제목');
     assert.ok(page.includes('/api/board') && page.includes('/api/activity'), '폴링 대상 엔드포인트');
+    assert.ok(page.includes('list-terminal'), '종결 컬럼 골격');
 
     const post = await fetch(`${m.url}/api/board`, { method: 'POST' });
     assert.equal(post.status, 405, '쓰기 메서드는 405');
@@ -79,6 +80,15 @@ test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · �
     const act = await (await fetch(m.url + '/api/activity')).json();
     assert.equal(act.kind, 'kanban-activity');
     assert.ok(act.events.some(e => e.title === '모니터대상' && e.action === 'claimed'), '활동 스트림에 집김 이벤트');
+
+    // 종결 컬럼(2026-09-16 후속) — 완료된 카드가 최근 목록에 오른다.
+    assert.equal(b.run(['done', '모니터대상', '--result', '완료']).status, 0);
+    const after = await (await fetch(`${m.url}/api/board`)).json();
+    assert.ok(Array.isArray(after.terminalRecent), 'terminalRecent 배열');
+    const top = after.terminalRecent[0];
+    assert.equal(top.title, '모니터대상', '가장 최근 종결 항목');
+    assert.equal(top.kind, 'done');
+    assert.ok(top.at && !Number.isNaN(Date.parse(top.at)), '종결 시각(mtime ISO)');
   } finally {
     m.child.kill();
     b.cleanup();
