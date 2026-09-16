@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 5
+skill-version: 6
 ---
 # When to use
 
@@ -61,6 +61,10 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
    (보고서와 함께 세션 타임랩스 영상을 남긴다 — 아침의 사람이 40초로 밤을 본다),
    leave the questions in one place, and STOP. Do not invent new cards to look
    productive. 밤새 카드가 300장이 되는 것이 이 시스템이 죽는 방식이다 (plan.md 2.3).
+   Milestone cards are **never pickable** (they are grouping, not work — plan.md 3.8):
+   if the No-pickable detail lists them, that is normal — don't `done` or `abandon` a
+   milestone by hand; it auto-completes when its last member terminates (a `done` that
+   prints `◉ milestone 완료` closed it for you).
 
 5. **Search before work.** `llm-wiki search "<keywords>"` before starting a card. If the
    wall you are about to hit already has an abandoned card or an anti-pattern page, skip

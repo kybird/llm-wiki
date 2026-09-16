@@ -13,8 +13,9 @@ Files are the source of truth. Kanban card files are written ONLY via the CLI �
 | After fixing a bug / making a decision / discovering something | `wiki-log` skill → a Case in `doc/raw/YYYY-MM-DD.md` with verbatim error + `hash:` grounding |
 | When raw logs have accumulated | `wiki-compile` skill → promote to `doc/wiki/` pages, then `llm-wiki compile index` |
 | Sanity check of the knowledge base | `wiki-lint` skill or `llm-wiki lint` |
-| Planning work (person present) | `kanban-plan` skill → cards via `llm-wiki card new "<title>"` |
+| Planning work (person present) | `kanban-plan` skill → cards via `llm-wiki card new "<title>"`. A plan that splits into 2+ cards gets **one milestone card** (`--kind milestone`, members carry `--milestone`); milestones are never picked and auto-complete when all members terminate |
 | Unattended execution | `work-loop` skill → `llm-wiki pick --claim <name>`, park judgment calls with `handoff` |
+| Watching the board (human) | `llm-wiki monitor` — read-only live view (claims, elapsed, gates, terminal pile, milestones) at `http://127.0.0.1:4747` |
 
 ## Rules
 

@@ -45,13 +45,16 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki card edit <title>         Sentinel-safe edits; unknown/blank flags fail, output
                                      says what changed (--goal/--plan/--ac/--add-ac/
                                      --check-ac/--note/--renew-claim/--depends/
-                                     --add-depends/--remove-depends)
+                                     --add-depends/--remove-depends/--milestone)
+                                     --milestone (re)groups an active card under a
+                                     milestone card
   llm-wiki pick --claim <name> [--card <title>]
                                      Atomically claim the next eligible card (locks, WIP, deps);
                                      --card names a specific card — gates are never bypassed;
                                      milestone cards are never picked (plan.md 3.8)
   llm-wiki handoff <title> --question "…"   Park for human judgment, release claim
-  llm-wiki done <title> --result "…"        Complete (Result required)
+  llm-wiki done <title> --result "…"        Complete (Result required). Completing the
+                                     last member auto-completes its milestone (3.8)
   llm-wiki supersede <title> --by a,b       Replace by children (parent dissolves)
   llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
   llm-wiki reopen <title> --why "…"         QA: revert a fake-done card to doing

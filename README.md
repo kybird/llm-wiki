@@ -53,7 +53,7 @@ That's it. The agent does the rest.
 | `llm-wiki card new/show/edit` | Create and edit cards — the CLI is the only writer (sentinel-safe sections). `--kind milestone` creates a milestone card (the plan's 대의 lives in its Goal; not pickable, auto-completes when all members terminate); `--milestone "<title>"` attaches a card to one — membership is frontmatter, milestone progress is derived, never stored (plan.md 3.8) |
 | `llm-wiki pick --claim <name> [--card <title>]` | Atomically claim the next eligible card (lock, WIP limit, dependencies, claim expiry). `--card` claims a specific card by title — every gate still applies: a blocked pick prints why and leaves all files untouched, an unknown title fails (exit 1) |
 | `llm-wiki handoff <title> --question "…"` | Park a card for human judgment and release the claim |
-| `llm-wiki done <title> --result "…"` | Complete a card — Result is required |
+| `llm-wiki done <title> --result "…"` | Complete a card — Result is required. Completing the last member auto-completes its milestone |
 | `llm-wiki supersede <title> --by a,b` | Replace a card by children; the parent dissolves into `superseded/` |
 | `llm-wiki abandon <title> --reason "…"` | Discard — reason required, and auto-logged to `doc/raw/` as anti-pattern material |
 | `llm-wiki reopen <title> --why "…"` | QA: revert a fake-done card back to doing |
