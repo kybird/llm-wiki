@@ -74,3 +74,6 @@
 {"ts":"2026-09-16T20:38:13.828Z","action":"created","title":"모니터 종결 컬럼 — 완료 적체"}
 {"ts":"2026-09-16T20:38:13.951Z","action":"claimed","title":"모니터 종결 컬럼 — 완료 적체","actor":"zcode"}
 {"ts":"2026-09-16T20:42:25.641Z","action":"done","title":"모니터 종결 컬럼 — 완료 적체"}
+{"ts":"2026-09-16T20:45:06.575Z","action":"created","title":"모니터 카드 상세 보기"}
+{"ts":"2026-09-16T20:45:06.686Z","action":"claimed","title":"모니터 카드 상세 보기","actor":"zcode"}
+{"ts":"2026-09-16T20:50:53.070Z","action":"done","title":"모니터 카드 상세 보기"}

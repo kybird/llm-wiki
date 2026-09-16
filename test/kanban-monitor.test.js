@@ -70,6 +70,7 @@ test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · �
     assert.ok(page.includes('llm-wiki monitor'), '페이지 제목');
     assert.ok(page.includes('/api/board') && page.includes('/api/activity'), '폴링 대상 엔드포인트');
     assert.ok(page.includes('list-terminal'), '종결 컬럼 골격');
+    assert.ok(page.includes('modal-title') && page.includes('/api/card'), '상세 보기 모달 골격');
 
     const post = await fetch(`${m.url}/api/board`, { method: 'POST' });
     assert.equal(post.status, 405, '쓰기 메서드는 405');
@@ -89,6 +90,15 @@ test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · �
     assert.equal(top.title, '모니터대상', '가장 최근 종결 항목');
     assert.equal(top.kind, 'done');
     assert.ok(top.at && !Number.isNaN(Date.parse(top.at)), '종결 시각(mtime ISO)');
+
+    // 카드 상세 보기(같은 날 후속) — 종결 카드 본문도 메타·섹션 통째로.
+    const detail = await (await fetch(`${m.url}/api/card?title=${encodeURIComponent('모니터대상')}`)).json();
+    assert.equal(detail.kind, 'kanban-card');
+    assert.equal(detail.meta.status, 'done');
+    assert.ok(detail.sections.Goal.includes('g'), 'Goal 섹션 본문');
+    assert.ok(String(detail.sections.Result).includes('완료'), 'Result 섹션 본문');
+    const missing = await fetch(`${m.url}/api/card?title=${encodeURIComponent('없는 제목')}`);
+    assert.equal(missing.status, 404);
   } finally {
     m.child.kill();
     b.cleanup();
