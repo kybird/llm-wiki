@@ -38,6 +38,6 @@
     "work-loop"
   ],
   "scripts": {
-    "test": "node --test test/roundtrip.test.js test/kanban-write.test.js test/kanban-pick-guards.test.js test/kanban-board-flags.test.js test/kanban-monitor.test.js test/kanban-wait.test.js test/find-doc-root-worktree.test.js test/auto-update.test.js"
+    "test": "node --test test/roundtrip.test.js test/kanban-write.test.js test/kanban-pick-guards.test.js test/kanban-board-flags.test.js test/kanban-milestone.test.js test/kanban-monitor.test.js test/kanban-wait.test.js test/find-doc-root-worktree.test.js test/auto-update.test.js"
   }
 }

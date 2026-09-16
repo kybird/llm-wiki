@@ -38,7 +38,9 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki monitor [--port <n>]      Live read-only board view at http://127.0.0.1:<n>
                                      (default 4747) — claims, elapsed, gates, activity;
                                      the CLI stays the only writer (405 on writes)
-  llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before)
+  llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before;
+                                     --kind milestone = milestone card, --milestone "<t>"
+                                     attaches to one — plan-level grouping, plan.md 3.8)
   llm-wiki card show <title>         Print card file
   llm-wiki card edit <title>         Sentinel-safe edits; unknown/blank flags fail, output
                                      says what changed (--goal/--plan/--ac/--add-ac/
