@@ -28,5 +28,5 @@
 ## 문서 지도
 - 설계: `doc/plan.md` · 실행 계획: `doc/improvement-plan.md` · 비교 분석: `doc/refs-comparison.md`
 - 지식 흐름: `doc/raw/`(일일 로그, wiki-log) → `doc/wiki/`(컴파일, wiki-compile) → search
-- 보드: `doc/kanban/` 카드가 정본 · `board-timelapse.mp4`는 유도물
+- 보드: `doc/kanban/` 카드가 정본 · `llm-wiki monitor`(읽기 전용 실시간 뷰)·`board-timelapse.mp4`는 유도물
 - qmd/CUDA 빌드 이슈: `TROUBLESHOOTING.md`

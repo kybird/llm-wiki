@@ -7,6 +7,7 @@ const { compile } = require('../lib/wiki-compile');
 const { lint } = require('../lib/wiki-lint');
 const { init } = require('../lib/init');
 const kanbanCmd = require('../lib/kanban-cmd');
+const kanbanMonitor = require('../lib/kanban-monitor');
 const kanbanWait = require('../lib/kanban-wait');
 const skills = require('../lib/skills');
 const { findDocRoot } = require('../lib/find-doc-root');
@@ -34,6 +35,9 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki board                     Derived board view (columns, WIP, queue) — text only, no flags
   llm-wiki board report              Dashboard (done:abandoned ratio, trend, reverts)
   llm-wiki board video               Timelapse of board activity → MP4 (needs video/ project)
+  llm-wiki monitor [--port <n>]      Live read-only board view at http://127.0.0.1:<n>
+                                     (default 4747) — claims, elapsed, gates, activity;
+                                     the CLI stays the only writer (405 on writes)
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before)
   llm-wiki card show <title>         Print card file
   llm-wiki card edit <title>         Sentinel-safe edits; unknown/blank flags fail, output
@@ -84,7 +88,7 @@ const args = rest.filter(a => a !== '--json');
 // (kanban-cmd의 USAGE)에서 온다. 전용 문자열이 없는 읽기 전용 명령(search 등)은
 // 전체 사용법으로 대신한다. return으로 자연 종료한다 — Windows 파이프 stdout은
 // 비동기라 process.exit은 마지막 줄을 지울 수 있다(kanban-wait 교훈).
-const KNOWN_SUBCOMMANDS = ['search', 'compile', 'lint', 'init', 'skills', 'board', 'card',
+const KNOWN_SUBCOMMANDS = ['search', 'compile', 'lint', 'init', 'skills', 'board', 'monitor', 'card',
   'pick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'wait'];
 if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.includes('-h'))) {
   const usageKey = subcommand === 'card' && ['new', 'show', 'edit'].includes(args[0]) ? `card ${args[0]}` : subcommand;
@@ -128,6 +132,11 @@ switch (subcommand) {
     if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
     else if (args[0] === 'video') kanbanCmd.boardVideo({ rest: args, json: jsonRequested });
     else kanbanCmd.boardView({ rest: args, json: jsonRequested });
+    break;
+  case 'monitor':
+    // auto-update 트리거 목록에 없다 — stdout 첫 줄이 URL 계약이라 배너가 깨면
+    // 안 된다(wait 제외와 같은 이유).
+    kanbanMonitor.monitor({ rest: args, json: jsonRequested });
     break;
   case 'card':
     kanbanCmd.dispatchCard(args);

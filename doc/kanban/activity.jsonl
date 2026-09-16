@@ -69,3 +69,5 @@
 {"ts":"2026-09-16T19:30:01.617Z","action":"created","title":"모니터 뷰어 — 실시간 보드"}
 {"ts":"2026-09-16T19:35:49.323Z","action":"claimed","title":"board 시각화 폐지 — 텍스트 전용","actor":"zcode"}
 {"ts":"2026-09-16T19:44:03.117Z","action":"done","title":"board 시각화 폐지 — 텍스트 전용"}
+{"ts":"2026-09-16T19:45:00.770Z","action":"claimed","title":"모니터 뷰어 — 실시간 보드","actor":"zcode"}
+{"ts":"2026-09-16T19:50:56.890Z","action":"done","title":"모니터 뷰어 — 실시간 보드"}
