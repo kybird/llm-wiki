@@ -4,6 +4,7 @@ status: todo
 ordinal: 10000
 created: 2026-09-16
 depends_on: ["카드 모델 — milestone 필드와 kind"]
+milestone: 마일스톤 구현
 ---
 
 ## Goal

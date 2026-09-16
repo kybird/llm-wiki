@@ -214,3 +214,22 @@ test('reopen 역동기화 — 멤버 reopen이 종결된 마일스톤을 todo로
     assert.ok(fs.existsSync(path.join(b.cardsDir, kanban.slugify('계획5') + '.md')), '마일스톤 todo 복귀');
   } finally { b.cleanup(); }
 });
+
+test('보드 텍스트 — 마일스톤 요약 줄이 뜨고 컬럼에서는 제외된다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '목적축계획', '--kind', 'milestone', '--goal', '대의']).status, 0);
+    assert.equal(b.run(['card', 'new', '소속작업', '--milestone', '목적축계획', '--goal', 'g']).status, 0);
+    let r = b.run(['board']);
+    assert.ok(r.stdout.includes('마일스톤 (1)'), '마일스톤 절');
+    assert.ok(r.stdout.includes('• 목적축계획 — 0/1 (todo 1 · doing 0 · review 0)'), '진행 요약');
+    const todoSection = r.stdout.split('TODO')[1].split('────')[0];
+    assert.ok(!todoSection.includes('목적축계획'), '컬럼 제외');
+    assert.ok(todoSection.includes('소속작업'), '멤버는 컬럼에');
+
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '소속작업']).status, 0);
+    assert.equal(b.run(['done', '소속작업', '--result', 'r']).status, 0);
+    r = b.run(['board']);
+    assert.ok(r.stdout.includes('✓ 목적축계획 — 1/1 (done)'), '종결 ✓ 줄');
+  } finally { b.cleanup(); }
+});

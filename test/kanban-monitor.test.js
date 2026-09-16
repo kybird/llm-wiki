@@ -11,6 +11,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const kanban = require('../lib/kanban');
+const { renderMonitorPage } = require('../lib/kanban-monitor');
 
 const CLI = path.join(__dirname, '..', 'bin', 'llm-wiki.js');
 
@@ -50,6 +51,16 @@ async function startMonitor(b) {
   assert.ok(firstLine, `서버가 첫 줄에 URL을 출력해야 한다 (stdout: ${out} / stderr: ${err})`);
   return { child, url: firstLine, get out() { return out; }, get err() { return err; } };
 }
+
+test('페이지 스크립트 구문 게이트 — 노드 테스트로 최소한 파싱은 못박는다', () => {
+  // 브라우저에서만 도는 스크립트가 문자열 안에서 조용히 죽는 사고 2건(2026-09-16:
+  // sed 변수 혼동·중괄호 중복) — 노드 테스트는 파싱이라도 검사한다. 런타임 검증은
+  // 여전히 브라우저 실측이 게이트다([[ui-changes-need-browser-verification]]).
+  const page = renderMonitorPage();
+  const m = page.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(m, '스크립트 블록이 있다');
+  assert.doesNotThrow(() => new Function(m[1]), '페이지 스크립트 구문 오류 없음');
+});
 
 test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · 쓰기 405 · 모르는 경로 404', async () => {
   const b = makeBoard();
@@ -120,4 +131,31 @@ test('monitor 플래그 계약 — 모르는 플래그·잘못된 --port는 exit
     assert.equal(help.status, 0, '탐색 가드');
     assert.ok(help.stdout.includes('llm-wiki monitor'), '사용법 문자열(USAGE.monitor)');
   } finally { b.cleanup(); }
+});
+
+test('monitor 마일스톤 패널 — /api/board 유도 집계·페이지 골격·상세 멤버(3.8)', async () => {
+  const b = makeBoard();
+  assert.equal(b.run(['card', 'new', '목적 계획', '--kind', 'milestone', '--goal', '대의를 이룬다']).status, 0);
+  assert.equal(b.run(['card', 'new', '패널멤버', '--milestone', '목적 계획', '--goal', 'g', '--ac', 'AC1']).status, 0);
+  const m = await startMonitor(b);
+  try {
+    const board = await (await fetch(`${m.url}/api/board`)).json();
+    assert.ok(Array.isArray(board.milestones) && board.milestones.length === 1, '마일스톤 1개');
+    const ms = board.milestones[0];
+    assert.equal(ms.title, '목적 계획');
+    assert.equal(ms.counts.active, 1, '활성 멤버 1');
+    assert.equal(ms.total, 1);
+    assert.ok(ms.goal.includes('대의'), 'Goal(대의) 노출');
+    assert.ok(!board.columns.todo.some(c => c.title === '목적 계획'), '컬럼 제외');
+    assert.equal(board.columns.todo[0].milestone, '목적 계획', 'viewCard에 소속 노출');
+
+    const page = await (await fetch(m.url + '/')).text();
+    assert.ok(page.includes('list-milestones'), '패널 골격');
+
+    const detail = await (await fetch(`${m.url}/api/card?title=${encodeURIComponent('목적 계획')}`)).json();
+    assert.ok(Array.isArray(detail.members) && detail.members[0].title === '패널멤버', '상세에 멤버 목록');
+  } finally {
+    m.child.kill();
+    b.cleanup();
+  }
 });

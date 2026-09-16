@@ -85,3 +85,6 @@
 {"ts":"2026-09-16T22:46:25.478Z","action":"done","title":"카드 모델 — milestone 필드와 kind"}
 {"ts":"2026-09-16T22:46:53.692Z","action":"claimed","title":"마일스톤 집기 제외·자동 종결","actor":"zcode"}
 {"ts":"2026-09-16T22:49:42.298Z","action":"done","title":"마일스톤 집기 제외·자동 종결"}
+{"ts":"2026-09-16T22:50:20.206Z","action":"claimed","title":"보드 뷰 — 마일스톤 목적 축","actor":"zcode"}
+{"ts":"2026-09-16T22:54:42.348Z","action":"created","title":"마일스톤 구현"}
+{"ts":"2026-09-16T23:02:15.516Z","action":"done","title":"보드 뷰 — 마일스톤 목적 축"}
