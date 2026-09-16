@@ -118,3 +118,99 @@ test('왕복 직렬화 — milestone·kind는 노트 추가 등 재작성을 거
     assert.equal(b.run(['card', 'new', '값없음', '--milestone']).status, 1);
   } finally { b.cleanup(); }
 });
+
+test('pick — 마일스톤은 집지 않는다(통상 스킵+사유, --card 지정 게이트 차단)', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '멤버1', '--milestone', '계획', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    // 통상 pick은 마일스톤이 아니라 멤버를 집는다(ordinal이 낮아도)
+    const r = b.run(['pick', '--claim', 't']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.ok(r.stdout.includes('멤버1'), '멤버를 집는다');
+    assert.equal(b.run(['done', '멤버1', '--result', 'r']).status, 0);
+    // 마지막 멤버 종결 → 마일스톤 자동 종결(다음 테스트가 본체, 여기선 상태 정리)
+    assert.ok(fs.existsSync(path.join(b.docRoot, 'kanban', 'done', kanban.slugify('계획') + '.md')), '자동 종결됨');
+  } finally { b.cleanup(); }
+});
+
+test('pick --card <마일스톤> — 게이트 차단 언어로 보고하고 파일이 불변이다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획X', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    const p = path.join(b.cardsDir, kanban.slugify('계획X') + '.md');
+    const before = fs.readFileSync(p, 'utf8');
+    const r = b.run(['pick', '--claim', 't', '--card', '계획X']);
+    assert.equal(r.status, 0, '게이트 차단은 종료 0(통상 pick 보고 계약과 동일)');
+    assert.ok(r.stdout.includes('마일스톤 카드다'), '차단 사유');
+    assert.equal(fs.readFileSync(p, 'utf8'), before, '파일 불변');
+  } finally { b.cleanup(); }
+});
+
+test('자동 종결 — 마지막 멤버 done이 마일스톤을 종결한다(요란한 보고·Result·활동)', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획2', '--kind', 'milestone', '--goal', '대의']).status, 0);
+    assert.equal(b.run(['card', 'new', '일1', '--milestone', '계획2', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    assert.equal(b.run(['card', 'new', '일2', '--milestone', '계획2', '--goal', 'g', '--ac', 'AC1']).status, 0);
+
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '일1']).status, 0);
+    const first = b.run(['done', '일1', '--result', 'r1']);
+    assert.equal(first.status, 0);
+    assert.ok(!first.stdout.includes('milestone 완료'), '멤버가 남아 있으면 종결 아님');
+    assert.ok(fs.existsSync(path.join(b.cardsDir, kanban.slugify('계획2') + '.md')), '마일스톤 아직 활성');
+
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '일2']).status, 0);
+    const last = b.run(['done', '일2', '--result', 'r2']);
+    assert.equal(last.status, 0);
+    assert.ok(last.stdout.includes('milestone 완료'), '요란한 보고');
+    const donePath = path.join(b.docRoot, 'kanban', 'done', kanban.slugify('계획2') + '.md');
+    assert.ok(fs.existsSync(donePath), '마일스톤 done/ 이동');
+    const ms = fs.readFileSync(donePath, 'utf8');
+    assert.ok(ms.includes('전원 종결 자동 반영'), 'Result 기록');
+    const activity = fs.readFileSync(path.join(b.docRoot, 'kanban', 'activity.jsonl'), 'utf8');
+    assert.ok(activity.includes('"milestone-done"'), '활동 로그');
+  } finally { b.cleanup(); }
+});
+
+test('review 대기 마일스톤 — 전원 종결돼도 판정을 덮지 않고 보고만', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획3', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '단일', '--milestone', '계획3', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    assert.equal(b.run(['handoff', '계획3', '--question', '이 계획을 계속 가나?']).status, 0);
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '단일']).status, 0);
+    const r = b.run(['done', '단일', '--result', 'r']);
+    assert.equal(r.status, 0);
+    assert.ok(r.stdout.includes('자동 종결하지 않는다'), '보고만');
+    assert.ok(fs.existsSync(path.join(b.cardsDir, kanban.slugify('계획3') + '.md')), '마일스톤 review 유지');
+  } finally { b.cleanup(); }
+});
+
+test('abandon 가드 — 활성 멤버가 남은 마일스톤 폐기는 실패한다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획4', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '남은멤버', '--milestone', '계획4', '--goal', 'g']).status, 0);
+    const r = b.run(['abandon', '계획4', '--reason', '접는다']);
+    assert.equal(r.status, 1);
+    assert.ok(r.stderr.includes('남은멤버'), '사유에 멤버 목록');
+    assert.ok(fs.existsSync(path.join(b.cardsDir, kanban.slugify('계획4') + '.md')), '마일스톤 불변');
+  } finally { b.cleanup(); }
+});
+
+test('reopen 역동기화 — 멤버 reopen이 종결된 마일스톤을 todo로 되돌린다', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '계획5', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '되돌림대상', '--milestone', '계획5', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '되돌림대상']).status, 0);
+    assert.equal(b.run(['done', '되돌림대상', '--result', 'r']).status, 0);
+    assert.ok(fs.existsSync(path.join(b.docRoot, 'kanban', 'done', kanban.slugify('계획5') + '.md')), '자동 종결됨');
+
+    const r = b.run(['reopen', '되돌림대상', '--why', 'fake done']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.ok(r.stdout.includes('Milestone reverted'), '역동기화 보고');
+    assert.ok(fs.existsSync(path.join(b.cardsDir, kanban.slugify('계획5') + '.md')), '마일스톤 todo 복귀');
+  } finally { b.cleanup(); }
+});

@@ -48,7 +48,8 @@ Kanban (cards are files; CLI is the only writer):
                                      --add-depends/--remove-depends)
   llm-wiki pick --claim <name> [--card <title>]
                                      Atomically claim the next eligible card (locks, WIP, deps);
-                                     --card names a specific card — gates are never bypassed
+                                     --card names a specific card — gates are never bypassed;
+                                     milestone cards are never picked (plan.md 3.8)
   llm-wiki handoff <title> --question "…"   Park for human judgment, release claim
   llm-wiki done <title> --result "…"        Complete (Result required)
   llm-wiki supersede <title> --by a,b       Replace by children (parent dissolves)

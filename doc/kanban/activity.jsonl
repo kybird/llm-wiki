@@ -83,3 +83,5 @@
 {"ts":"2026-09-16T21:46:50.960Z","action":"created","title":"kanban-plan v4 — 마일스톤 계획 흐름"}
 {"ts":"2026-09-16T22:43:33.463Z","action":"claimed","title":"카드 모델 — milestone 필드와 kind","actor":"zcode"}
 {"ts":"2026-09-16T22:46:25.478Z","action":"done","title":"카드 모델 — milestone 필드와 kind"}
+{"ts":"2026-09-16T22:46:53.692Z","action":"claimed","title":"마일스톤 집기 제외·자동 종결","actor":"zcode"}
+{"ts":"2026-09-16T22:49:42.298Z","action":"done","title":"마일스톤 집기 제외·자동 종결"}
