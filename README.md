@@ -47,7 +47,7 @@ That's it. The agent does the rest.
 | `llm-wiki compile list` | Show raw logs not yet compiled — header date **or** content hash (`compile-state.json`), so same-day appends are caught too |
 | `llm-wiki compile index` | Rebuild `doc/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
 | `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `doc/raw/`), uncompiled concepts, metadata, staleness |
-| `llm-wiki board` / `board report` | Derived kanban view / dashboard (done:abandoned ratio, trend, QA reverts, waiting queue) |
+| `llm-wiki board` / `board report` | Derived kanban view (text only, no flags) / dashboard (done:abandoned ratio, trend, QA reverts, waiting queue) |
 | `llm-wiki board video` | Replay `activity.jsonl` into a board timelapse MP4 (requires the `video/` Remotion project; CPU render, no GPU) |
 | `llm-wiki card new/show/edit` | Create and edit cards — the CLI is the only writer (sentinel-safe sections) |
 | `llm-wiki pick --claim <name> [--card <title>]` | Atomically claim the next eligible card (lock, WIP limit, dependencies, claim expiry). `--card` claims a specific card by title — every gate still applies: a blocked pick prints why and leaves all files untouched, an unknown title fails (exit 1) |
@@ -58,9 +58,9 @@ That's it. The agent does the rest.
 | `llm-wiki reopen <title> --why "…"` | QA: revert a fake-done card back to doing |
 | `llm-wiki wait [--for handoff\|done\|any\|stall] [--since <ISO>] [--timeout <s>] [--stall-min <m>] [--json]` | Block until a board event, then exit — **exit codes are the contract: 0 = event (one line to stdout), 2 = timeout (nothing printed), 1 = error**; callers re-arm on 2 and act on 0. `--for` picks the event (`handoff` default; `stall` fires after `--stall-min` minutes of silence, default 20). `--since` (default: now) is checked *before* waiting starts, so events that piled up while the caller was busy are returned immediately. Read-only; timestamp-based (survives wholesale `activity.jsonl` rewrites), skips broken lines, waits for the file to exist, `fs.watch` + 5s poll fallback (junction-safe) |
 
-`search`, `lint`, `compile list|index`, `board`, `pick` accept `--json` (a `{schemaVersion: 1, kind: …}` envelope for scripts and skills). `wait --json` is different by design: it prints the matched event itself as one JSON line (or a `{action: "stall", …}` line), because callers parse that line directly.
+`search`, `lint`, `compile list|index`, `board report`, `pick` accept `--json` (a `{schemaVersion: 1, kind: …}` envelope for scripts and skills). `wait --json` is different by design: it prints the matched event itself as one JSON line (or a `{action: "stall", …}` line), because callers parse that line directly.
 
-Any subcommand accepts `--help`/`-h` anywhere in its args: it prints that command's usage and exits 0 without touching the board — exploring a command must never mutate cards. Every card command also rejects unknown flags (`모르는 플래그`), so a typo'd flag fails loudly instead of silently no-oping.
+Any subcommand accepts `--help`/`-h` anywhere in its args: it prints that command's usage and exits 0 without touching the board — exploring a command must never mutate cards. Every board and card command also rejects unknown flags (`모르는 플래그`), so a typo'd flag fails loudly instead of silently no-oping.
 
 ```bash
 # overnight re-arm loop: wake on the next handoff parked after midnight; silent exit 2 after an hour

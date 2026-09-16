@@ -65,3 +65,7 @@
 {"ts":"2026-09-10T03:34:24.486Z","action":"done","title":"컴파일·검색 잔여 정리"}
 {"ts":"2026-09-10T03:34:37.058Z","action":"claimed","title":"왕복 테스트 스캐폴드","actor":"zcode-loop"}
 {"ts":"2026-09-10T03:39:36.618Z","action":"done","title":"왕복 테스트 스캐폴드"}
+{"ts":"2026-09-16T19:30:01.231Z","action":"created","title":"board 시각화 폐지 — 텍스트 전용"}
+{"ts":"2026-09-16T19:30:01.617Z","action":"created","title":"모니터 뷰어 — 실시간 보드"}
+{"ts":"2026-09-16T19:35:49.323Z","action":"claimed","title":"board 시각화 폐지 — 텍스트 전용","actor":"zcode"}
+{"ts":"2026-09-16T19:44:03.117Z","action":"done","title":"board 시각화 폐지 — 텍스트 전용"}

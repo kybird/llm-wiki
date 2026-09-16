@@ -1,7 +1,7 @@
 ---
 name: kanban-plan
 description: Planning loop — turn a plan into board cards the work-loop can consume. Cards are written only via the CLI; decompose with divergence guards, gate what isn't ready.
-skill-version: 2
+skill-version: 3
 ---
 # When to use
 
@@ -15,7 +15,7 @@ skill-version: 2
 - 기획(this skill) = **분해**: a plan becomes cards.
 - 개발(`work-loop`) = **해소**: pick → done.
 - QA = **수렴 강제**: fake dones get reverted; `board report` shows the ratio.
-- The person watches progress through `llm-wiki board` / `board report` / `board --html`.
+- The person watches progress through `llm-wiki board` / `board report`.
   Plan so that this one screen is enough — 리뷰가 카드 수에 비례하면 무인의 의미가 없다.
 
 # Before creating cards

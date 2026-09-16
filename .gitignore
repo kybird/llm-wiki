@@ -7,8 +7,6 @@ refs/
 .agents/
 .claude/
 
-# board --html 산출물 — 유도물이라 재생성된다 (llm-wiki board --html)
-doc/kanban/board.html
 video/node_modules/
 doc/kanban/board-timelapse.mp4
 doc/kanban/board-timeline.json

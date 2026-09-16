@@ -31,7 +31,7 @@ Skills (git channel — prompt edits without npm publish, plan.md 6.2):
                                      [--skill <name>]   sync one skill only
 
 Kanban (cards are files; CLI is the only writer):
-  llm-wiki board [--html] [--json]   Derived board view (columns, WIP, queue) / static HTML
+  llm-wiki board                     Derived board view (columns, WIP, queue) — text only, no flags
   llm-wiki board report              Dashboard (done:abandoned ratio, trend, reverts)
   llm-wiki board video               Timelapse of board activity → MP4 (needs video/ project)
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before)
@@ -62,7 +62,7 @@ Optional:
                                      command ("autoUpdate": false in llm-wiki.config.json,
                                      or LLM_WIKI_NO_AUTO_UPDATE=1, to opt out)
   --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
-                                     (search, lint, compile list|index)
+                                     (search, lint, compile list|index, board report, pick)
   LLM_WIKI_ROOT=/path                Override doc/ root location
   llm-wiki.config.json               { "projectName": "...", "collections": {...},
                                        "hooksPath": "templates/githooks",
@@ -70,10 +70,11 @@ Optional:
 }
 
 const [, , subcommand, ...rest] = process.argv;
-// --json/--html은 어느 위치에 와도 플래그로 뽑아낸다 (검색어 문자열에서 제외).
+// --json은 어느 위치에 와도 플래그로 뽑아낸다 (검색어 문자열에서 제외). board는
+// --json/--html을 받지 않는다 — 추출된 사실을 dispatch 너머 명령에 넘겨 명시적으로
+// 실패시킨다(전역 선추출이 validateFlags를 우회하게 두면 조용한 no-op 성공이 된다).
 const jsonRequested = rest.includes('--json');
-const htmlRequested = rest.includes('--html');
-const args = rest.filter(a => a !== '--json' && a !== '--html');
+const args = rest.filter(a => a !== '--json');
 
 // 가드 — 탐색용 호출이 보드를 건드리지 못하게(2026-09-11·12 사고). 부작용 있는
 // 서브커맨드를 확인하려고 `pick --help`를 쳤다가 실제로 카드를 집는 일을 원천
@@ -125,8 +126,8 @@ switch (subcommand) {
     break;
   case 'board':
     if (args[0] === 'report') kanbanCmd.boardReport({ json: jsonRequested });
-    else if (args[0] === 'video') kanbanCmd.boardVideo({ rest: args });
-    else kanbanCmd.boardView({ rest: args, json: jsonRequested, html: htmlRequested });
+    else if (args[0] === 'video') kanbanCmd.boardVideo({ rest: args, json: jsonRequested });
+    else kanbanCmd.boardView({ rest: args, json: jsonRequested });
     break;
   case 'card':
     kanbanCmd.dispatchCard(args);
