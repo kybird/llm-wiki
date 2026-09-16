@@ -141,8 +141,11 @@ switch (subcommand) {
     break;
   case 'monitor':
     // auto-update 트리거 목록에 없다 — stdout 첫 줄이 URL 계약이라 배너가 깨면
-    // 안 된다(wait 제외와 같은 이유).
-    kanbanMonitor.monitor({ rest: args, json: jsonRequested });
+    // 안 된다(wait 제외와 같은 이유). monitor는 async(멱등 재사용 검사)다.
+    kanbanMonitor.monitor({ rest: args, json: jsonRequested }).catch(e => {
+      console.error(`✗ ${e.message}`);
+      process.exit(1);
+    });
     break;
   case 'card':
     kanbanCmd.dispatchCard(args);

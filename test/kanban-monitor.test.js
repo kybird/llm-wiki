@@ -159,3 +159,27 @@ test('monitor 마일스톤 패널 — /api/board 유도 집계·페이지 골격
     b.cleanup();
   }
 });
+
+test('monitor 멱등 재기동 — 우리 모니터가 있으면 exit 0으로 재사용, 남의 포트는 exit 1', async () => {
+  const b = makeBoard();
+  const m = await startMonitor(b); // --port 0 → 임시 포트를 URL에서 얻는다
+  const fixedPort = Number(new URL(m.url).port);
+  try {
+    const again = b.run(['monitor', '--port', String(fixedPort)]);
+    assert.equal(again.status, 0, `재사용은 성공: ${again.stdout}${again.stderr}`);
+    assert.ok(again.stdout.includes(m.url), '같은 URL 보고');
+    assert.ok(again.stdout.includes('재사용'), '멱등 안내');
+
+    // 남의 서버가 잡은 포트 — 침묵하지 않고 실패(포트 안내).
+    const foreign = require('node:http').createServer((req, res) => res.end('not llm-wiki'));
+    await new Promise(res => foreign.listen(0, '127.0.0.1', res));
+    const foreignPort = foreign.address().port;
+    const clash = b.run(['monitor', '--port', String(foreignPort)]);
+    assert.equal(clash.status, 1, '남의 포트는 실패');
+    assert.ok(clash.stderr.includes('이미 쓰이고 있다'), 'EADDRINUSE 안내');
+    await new Promise(res => foreign.close(res));
+  } finally {
+    m.child.kill();
+    b.cleanup();
+  }
+});
