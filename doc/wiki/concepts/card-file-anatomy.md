@@ -1,10 +1,10 @@
 ---
 title: card-file-anatomy
-description: 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다.
+description: 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를 결정한다.
 status: active
-version_context: "llm-wiki 0.3.x, lib/kanban.js parseBody"
+version_context: "llm-wiki 0.4.x, lib/kanban.js parseBody"
 tags: [kanban, concept]
-aliases: [카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱]
+aliases: [카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드]
 created: 2026-09-16
 confidence: 5
 ---
@@ -34,6 +34,11 @@ sections Map에는 없다 — "헤더=섹션"이라는 자연스러운 모델이
   status와 일치하도록 moveCardTo가 함께 고친다.
 - 제목이 곧 식별자다(plan.md 3.5) — findCard는 정확 제목 비교 후 슬러그 폴백.
   파일명이 아니라 파싱된 제목과 비교하므로 조회 키로 안전하다.
+- **소속/종류 필드(0.4.x, plan.md 3.8)**: `kind: milestone`은 마일스톤 카드(pick 불가,
+  멤버 전원 종결 시 자동 종결), 멤버의 `milestone: "<마일스톤 제목>"`은 소속. 소속을
+  바꾸는 길(설정·재지정·해제)은 **활성 카드에만** 열려 있다 — 종결 카드의 소속과 종결
+  마일스톤 자체는 회고 뷰가 읽는 이력이다. 가드는 쌍 경로(set/remove) 모두에 붙어야
+  한다(2026-09-19: remove 경로 누락을 회귀 테스트가 포착).
 
 ## Related
 
@@ -44,4 +49,5 @@ sections Map에는 없다 — "헤더=섹션"이라는 자연스러운 모델이
 
 - Git Context: `hash:fac5062` (/api/card 구현 중 발견)
 - Evidence: doc/raw/2026-09-16.md Case 6 — 디버그 실측 `sections keys: [ 'Plan', 'Notes', 'Handoff', 'Result' ]`, `sections.get('Goal')` → undefined
+- 확장(2026-09-19): `hash:281d97d` — doc/raw/2026-09-18.md Case 2 — kind·milestone 필드 문서화 + 종결 소속 가드(쌍 경로)
 - 구조 실장: lib/kanban.js parseBody·serializeCard

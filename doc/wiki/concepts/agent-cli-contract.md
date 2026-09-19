@@ -21,6 +21,7 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
 - 확장(2026-09-12): `hash:16e7eb9` — doc/raw/2026-09-12.md Case 3 — wait를 auto-update 트리거에서 제외. stdout이 계약인 명령(wait: 0=이벤트 한 줄, 2=침묵)에서 배너 한 줄이 두 계약을 동시에 깼다
 - 갭 폐쇄(2026-09-12): `hash:6c5e0f2` — doc/raw/2026-09-12.md Case 5 — 아래 "잔여 갭"이 사고로 실현된 뒤 닫혔다. 검증 밖이던 일곱 명령(pick·handoff·done·supersede·abandon·reopen·resume)에 `validateFlags` 적용. 실측: `✗ 모르는 플래그: --card — 쓸 수 있는 플래그: --question` (종료 1, 파일 해시 불변)
 - 확장(2026-09-16): `hash:5f1ac2d` — doc/raw/2026-09-16.md Case 1 — board --html/--json 폐지 중: bin의 전역 `--json` 선추출이 명령층 validateFlags를 우회해 폐지 플래그가 조용한 성공이 될 뻔했고, 인접 결함 `board video --json` 무시(종료 0)도 같은 커밋에서 처분. 실측: `✗ 모르는 플래그: --html — 쓸 수 있는 플래그: ` (종료 1)
+- 확장(2026-09-19): `hash:0b683b9` — doc/raw/2026-09-18.md Case 1 — 멱등 재사용의 대상 식별. `이미 떠 있다 — 이 모니터를 재사용한다 (멱등 재시도).` 가 **다른 프로젝트의 포트**에서 인쇄됐다(사용자 실사용 접수) — kind만 보고 "우리 몸" 판정한 재사용이 타 보드를 가로챔
 - Confidence: 5/5
 
 ### Analysis
@@ -65,6 +66,11 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
   넘겨 표준 실패 경로로. 같은 원리의 연장으로 monitor도 auto-update 트리거에서
   제외 — stdout 첫 줄이 `http://127.0.0.1:<port>` 계약이라 배너가 깨면 안 된다
   (wait 전례의 반복, doc/raw/2026-09-16.md Case 2).
+- **멱등 재사용은 대상의 신원까지 비교한다**(2026-09-19, `hash:0b683b9`): "재시도≠실패"를
+  구현할 때 재시도 대상의 동일성을 전제하지 마라 — 응답 종류(kind)가 같아도 대상이 다를
+  수 있다(같은 CLI의 다른 프로젝트 인스턴스). 대상의 신원을 노출하고(예: /api/board의
+  repo.docRoot) 같은 대상만 재사용하며, 다르면 소유자 이름을 말하라. 모니터의 기본 실행은
+  포트를 워크(4747→)해 각자의 보드가 각자의 URL에 뜬다.
 
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]] · [[flush-before-exit]]
