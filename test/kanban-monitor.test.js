@@ -183,3 +183,59 @@ test('monitor 멱등 재기동 — 우리 모니터가 있으면 exit 0으로 �
     b.cleanup();
   }
 });
+
+test('monitor 다른 프로젝트 소유 포트 — --port 명시는 소유자를 말하며 실패(가로채기 결함 회귀)', async () => {
+  const a = makeBoard();
+  const b = makeBoard(); // 다른 보드(다른 docRoot)
+  const m = await startMonitor(a);
+  const portA = Number(new URL(m.url).port);
+  try {
+    const r = spawnSync('node', [CLI, 'monitor', '--port', String(portA)], { env: b.env, encoding: 'utf8' });
+    assert.equal(r.status, 1, `실패해야 한다: ${r.stdout}${r.stderr}`);
+    assert.ok(r.stderr.includes('다른 프로젝트'), '소유자 안내');
+    assert.ok(r.stderr.includes('기본 실행') || r.stderr.includes('--port'), '다음 행동 안내');
+  } finally {
+    m.child.kill();
+    a.cleanup();
+    b.cleanup();
+  }
+});
+
+test('monitor 기본 포트 워크 — 다른 프로젝트 모니터는 건너뛰고 다음 포트에 자기 보드', async () => {
+  const a = makeBoard();
+  const b = makeBoard();
+  assert.equal(a.run(['card', 'new', 'A카드', '--goal', 'g']).status, 0);
+  assert.equal(b.run(['card', 'new', 'B카드', '--goal', 'g']).status, 0);
+  // 테스트 노브 — 워크 시작 포트를 옮겨 병렬 테스트 경합을 피한다(wait POLL_MS 전례).
+  const base = 30000 + (process.pid % 1000) * 10;
+  const envA = { ...a.env, LLM_WIKI_MONITOR_BASE_PORT: String(base) };
+  const envB = { ...b.env, LLM_WIKI_MONITOR_BASE_PORT: String(base) };
+  const spawnDefault = env => {
+    const child = spawn('node', [CLI, 'monitor'], { env });
+    let out = '';
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', d => { out += d; });
+    return { child, get out() { return out; } };
+  };
+  const mA = spawnDefault(envA);
+  const urlA = await waitFor(() => mA.out.split('\n')[0], l => /^http:\/\/127\.0\.0\.1:\d+$/.test(l || ''));
+  const mB = spawnDefault(envB);
+  const urlB = await waitFor(() => mB.out.split('\n')[0], l => /^http:\/\/127\.0\.0\.1:\d+$/.test(l || ''));
+  try {
+    assert.ok(urlA && urlB, `URL 출력: ${mA.out} / ${mB.out}`);
+    assert.equal(Number(new URL(urlA).port), base, '첫 모니터는 시작 포트');
+    assert.equal(Number(new URL(urlB).port), base + 1, '다른 프로젝트는 다음 포트로 건너뛴다');
+    const boardB = await (await fetch(`${urlB}/api/board`)).json();
+    assert.ok(boardB.columns.todo.some(c => c.title === 'B카드'), 'B의 보드가 떴다');
+    assert.equal(boardB.repo.docRoot, b.docRoot, '보드 신원 일치');
+    // 같은 프로젝트 재실행은 여전히 멱등 — 첫 포트 재사용 exit 0.
+    const again = spawnSync('node', [CLI, 'monitor'], { env: envA, encoding: 'utf8' });
+    assert.equal(again.status, 0, again.stderr);
+    assert.ok(again.stdout.includes(urlA) && again.stdout.includes('재사용'), '같은 보드 재사용');
+  } finally {
+    mA.child.kill();
+    mB.child.kill();
+    a.cleanup();
+    b.cleanup();
+  }
+});
