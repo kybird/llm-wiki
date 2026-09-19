@@ -215,8 +215,37 @@ test('reopen 역동기화 — 멤버 reopen이 종결된 마일스톤을 todo로
   } finally { b.cleanup(); }
 });
 
-test('보드 텍스트 — 마일스톤 요약 줄이 뜨고 컬럼에서는 제외된다', () => {
+test('종결 마일스톤 가드 — 종결된 계획에 새 소속을 못 건다 + --remove-milestone 해제', () => {
   const b = makeBoard();
+  try {
+    // 마일스톤을 완성해 종결시킨다
+    assert.equal(b.run(['card', 'new', '끝난계획', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '마지막일', '--milestone', '끝난계획', '--goal', 'g', '--ac', 'AC1']).status, 0);
+    assert.equal(b.run(['pick', '--claim', 't', '--card', '마지막일']).status, 0);
+    assert.equal(b.run(['done', '마지막일', '--result', 'r']).status, 0);
+    assert.ok(fs.existsSync(path.join(b.docRoot, 'kanban', 'done', kanban.slugify('끝난계획') + '.md')), '마일스톤 종결');
+
+    // 종결 마일스톤에 새 멤버 — 회고 이력 오염 거부(2026-09-17 접수: 스스로 저지른 뒤 가드 추가)
+    const late = b.run(['card', 'new', '늦은멤버', '--milestone', '끝난계획', '--goal', 'g']);
+    assert.equal(late.status, 1);
+    assert.ok(late.stderr.includes('종결된 마일스톤'), '가드 사유');
+    assert.ok(!fs.existsSync(b.cardPath('늦은멤버')), '실패는 파일 미생성');
+    const lateEdit = b.run(['card', 'edit', '늦은멤버', '--milestone', '끝난계획']); // 카드 자체가 없다 — 못 찾음 실패
+    assert.equal(lateEdit.status, 1);
+
+    // --remove-milestone — 없는 소속 지우기는 실패(오타 규칙), 있는 것은 해제
+    assert.equal(b.run(['card', 'new', '활성계획', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '해제대상', '--milestone', '활성계획', '--goal', 'g']).status, 0);
+    const noMs = b.run(['card', 'edit', '마지막일', '--remove-milestone']);
+    assert.equal(noMs.status, 1); // 종결 카드 + 소속 없음 — 어느 쪽이든 거부
+    const rm = b.run(['card', 'edit', '해제대상', '--remove-milestone']);
+    assert.equal(rm.status, 0, rm.stderr);
+    assert.ok(rm.stdout.includes('milestone -해제'), '변경 요약');
+    assert.ok(!fs.readFileSync(b.cardPath('해제대상'), 'utf8').includes('milestone:'), '파일에서 소속 제거');
+  } finally { b.cleanup(); }
+});
+
+test('보드 텍스트 — 마일스톤 요약 줄이 뜨고 컬럼에서는 제외된다', () => {  const b = makeBoard();
   try {
     assert.equal(b.run(['card', 'new', '목적축계획', '--kind', 'milestone', '--goal', '대의']).status, 0);
     assert.equal(b.run(['card', 'new', '소속작업', '--milestone', '목적축계획', '--goal', 'g']).status, 0);

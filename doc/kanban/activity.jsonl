@@ -94,3 +94,4 @@
 {"ts":"2026-09-16T23:25:35.469Z","action":"created","title":"work-loop 모니터 동반 기동"}
 {"ts":"2026-09-16T23:25:35.560Z","action":"claimed","title":"work-loop 모니터 동반 기동","actor":"zcode"}
 {"ts":"2026-09-16T23:27:04.665Z","action":"done","title":"work-loop 모니터 동반 기동"}
+{"ts":"2026-09-19T05:42:07.452Z","action":"created","title":"모니터 플릿 뷰 — monitor --all"}
