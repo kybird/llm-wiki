@@ -1,6 +1,6 @@
 {
   "name": "@kybird/llm-wiki",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "LLM-friendly knowledge graph + kanban for AI coding agents. Raw daily logs → compiled wiki → merged semantic+grep search, and a card-per-file kanban the work-loop skill consumes unattended. Drop-in for any repo.",
   "license": "MIT",
   "author": "kybird",
