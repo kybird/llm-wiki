@@ -35,9 +35,12 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki board                     Derived board view (columns, WIP, queue) — text only, no flags
   llm-wiki board report              Dashboard (done:abandoned ratio, trend, reverts)
   llm-wiki board video               Timelapse of board activity → MP4 (needs video/ project)
-  llm-wiki monitor [--port <n>]      Live read-only board view at http://127.0.0.1:<n>
-                                     (default 4747) — claims, elapsed, gates, activity;
-                                     the CLI stays the only writer (405 on writes)
+  llm-wiki monitor [--port <n>] [--all]  Live read-only board view at http://127.0.0.1:<n>
+                                     (default 4747, walks to the next free port past other
+                                     projects' monitors) — claims, elapsed, gates, activity;
+                                     --all = fleet view of EVERY llm-wiki project on this
+                                     machine (tiles + per-project boards); the CLI stays the
+                                     only writer (405 on any write method)
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before;
                                      --kind milestone = milestone card, --milestone "<t>"
                                      attaches to one — plan-level grouping, plan.md 3.8)

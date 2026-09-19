@@ -11,7 +11,8 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const kanban = require('../lib/kanban');
-const { renderMonitorPage } = require('../lib/kanban-monitor');
+const { renderMonitorPage, renderFleetPage } = require('../lib/kanban-monitor');
+const { recordProject, readProjects } = require('../lib/auto-update');
 
 const CLI = path.join(__dirname, '..', 'bin', 'llm-wiki.js');
 
@@ -56,10 +57,82 @@ test('페이지 스크립트 구문 게이트 — 노드 테스트로 최소한 
   // 브라우저에서만 도는 스크립트가 문자열 안에서 조용히 죽는 사고 2건(2026-09-16:
   // sed 변수 혼동·중괄호 중복) — 노드 테스트는 파싱이라도 검사한다. 런타임 검증은
   // 여전히 브라우저 실측이 게이트다([[ui-changes-need-browser-verification]]).
-  const page = renderMonitorPage();
-  const m = page.match(/<script>([\s\S]*?)<\/script>/);
-  assert.ok(m, '스크립트 블록이 있다');
-  assert.doesNotThrow(() => new Function(m[1]), '페이지 스크립트 구문 오류 없음');
+  for (const [name, page] of [['board', renderMonitorPage()], ['fleet', renderFleetPage()]]) {
+    const m = page.match(/<script>([\s\S]*?)<\/script>/);
+    assert.ok(m, `${name} 스크립트 블록이 있다`);
+    assert.doesNotThrow(() => new Function(m[1]), `${name} 페이지 스크립트 구문 오류 없음`);
+  }
+});
+
+test('프로젝트 등록부 — recordProject/readProjects(플릿의 발견 소스)', () => {
+  const b = makeBoard();
+  const state = path.join(b.tmp, 'registry-state');
+  process.env.LLM_WIKI_STATE_DIR = state;
+  try {
+    assert.deepEqual(readProjects(), [], '빈 등록부');
+    recordProject(b.docRoot, undefined);
+    recordProject(b.docRoot, undefined); // 멱등 — 항목 갱신, 중복 아님
+    const projects = readProjects();
+    assert.equal(projects.length, 1, '한 항목');
+    assert.equal(projects[0].docRoot, b.docRoot, '경로');
+    assert.equal(projects[0].name, path.basename(b.tmp), '이름은 리포 디렉터리');
+    assert.ok(projects[0].lastSeen, '마지막 본 시각');
+  } finally {
+    delete process.env.LLM_WIKI_STATE_DIR;
+    b.cleanup();
+  }
+});
+
+test('monitor --all 플릿 — 등록부의 모든 보드를 한 페이지로, /p/<slug>/는 그 보드', async () => {
+  const a = makeBoard();
+  const b2 = makeBoard();
+  assert.equal(a.run(['card', 'new', '알파카드', '--goal', 'g']).status, 0);
+  assert.equal(b2.run(['card', 'new', '베타카드', '--goal', 'g']).status, 0);
+  // 등록부에 두 보드를 직접 심는다(능동 명령 파이프와 같은 파일).
+  const fleetState = path.join(os.tmpdir(), `kb-fleet-${process.pid}-`);
+  fs.mkdirSync(fleetState, { recursive: true });
+  const registry = {
+    [path.dirname(a.docRoot)]: { name: '알파', docRoot: a.docRoot, lastSeen: new Date().toISOString() },
+    [path.dirname(b2.docRoot)]: { name: '베타', docRoot: b2.docRoot, lastSeen: new Date().toISOString() },
+  };
+  fs.writeFileSync(path.join(fleetState, 'projects.json'), JSON.stringify(registry));
+  const env = { ...a.env, LLM_WIKI_STATE_DIR: fleetState };
+  const child = spawn('node', [CLI, 'monitor', '--all', '--port', '0'], { env });
+  let out = '';
+  child.stdout.setEncoding('utf8');
+  child.stdout.on('data', d => { out += d; });
+  let err = '';
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', d => { err += d; });
+  const url = await waitFor(() => out.split('\n')[0], l => /^http:\/\/127\.0\.0\.1:\d+$/.test(l || ''));
+  try {
+    assert.ok(url, `URL 출력 (stdout: ${out} / stderr: ${err})`);
+    const fleet = await (await fetch(`${url}/api/fleet`)).json();
+    assert.equal(fleet.kind, 'kanban-fleet');
+    assert.equal(fleet.projects.length, 2, '두 프로젝트(모니터 시작이 cwd 보드를 정규 이름으로 재등록)');
+    // 시드한 '베타' + 플릿 시작이 재등록한 cwd 보드(정규 이름 = 리포 디렉터리)
+    const alpha = fleet.projects.find(p => p.docRoot === a.docRoot);
+    const beta = fleet.projects.find(p => p.name === '베타');
+    assert.ok(alpha && beta, `두 보드 발견: ${JSON.stringify(fleet.projects.map(p => p.name))}`);
+    assert.ok(alpha.slug, '슬러그');
+    assert.equal(alpha.counts.todo, 1, '알파 todo 1');
+
+    const page = await (await fetch(`${url}/p/${encodeURIComponent(alpha.slug)}/`).then(r => r.text()));
+    assert.ok(page.includes('llm-wiki monitor'), '하위 경로는 표준 보드 페이지');
+    const board = await (await fetch(`${url}/p/${encodeURIComponent(alpha.slug)}/api/board`)).json();
+    assert.ok(board.columns.todo.some(c => c.title === '알파카드'), '그 프로젝트의 보드');
+    assert.equal(board.repo.docRoot, a.docRoot, '보드 신원(docRoot)');
+
+    // 플릿 재기동 멱등 — 다른 플릿은 재사용
+    const again = spawnSync('node', [CLI, 'monitor', '--all', '--port', String(new URL(url).port)], { env, encoding: 'utf8' });
+    assert.equal(again.status, 0, again.stderr);
+    assert.ok(again.stdout.includes('재사용'), '플릿 재사용');
+  } finally {
+    child.kill();
+    a.cleanup();
+    b2.cleanup();
+    fs.rmSync(fleetState, { recursive: true, force: true });
+  }
 });
 
 test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · 쓰기 405 · 모르는 경로 404', async () => {
@@ -79,9 +152,9 @@ test('monitor — URL 첫 줄 계약 · /api 뷰(클레임 주체·시각) · �
 
     const page = await (await fetch(m.url + '/')).text();
     assert.ok(page.includes('llm-wiki monitor'), '페이지 제목');
-    assert.ok(page.includes('/api/board') && page.includes('/api/activity'), '폴링 대상 엔드포인트');
+    assert.ok(page.includes('api/board') && page.includes('api/activity'), '폴링 대상 엔드포인트(상대 경로)');
     assert.ok(page.includes('list-terminal'), '종결 컬럼 골격');
-    assert.ok(page.includes('modal-title') && page.includes('/api/card'), '상세 보기 모달 골격');
+    assert.ok(page.includes('modal-title') && page.includes('api/card'), '상세 보기 모달 골격');
 
     const post = await fetch(`${m.url}/api/board`, { method: 'POST' });
     assert.equal(post.status, 405, '쓰기 메서드는 405');
