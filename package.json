@@ -13,7 +13,8 @@
     "skills/",
     "templates/",
     "TROUBLESHOOTING.md",
-    "README.md"
+    "README.md",
+    "README.ko.md"
   ],
   "repository": {
     "type": "git",
