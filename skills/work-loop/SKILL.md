@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 8
+skill-version: 10
 ---
 # When to use
 
@@ -31,13 +31,13 @@ skill-version: 8
 # Loop graph
 
 ```
-pick → work → 판정 ─ done / handoff / abandon / supersede
+pick → work → 판정 ─ done / handoff / abandon / supersede / unpick(반납)
   ↑                     │
   └────── next card ←───┘
 집을 카드 없음 → review(대기) 큐 점검 → 전부 대기면 질문을 모아 정지 (반스래시)
 ```
 
-# Rules (all seven are load-bearing)
+# Rules (all eight are load-bearing)
 
 0. **Condition-gated cards.** Some cards must not start yet:
    - `not_before: YYYY-MM-DD` in frontmatter (future date) — `pick` skips them
@@ -54,6 +54,9 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
    ④ repeatedly failing tests you cannot diagnose. Everything else — naming, structure,
    implementation details, test approach — you decide yourself. Opening the list wider
    produces chronic park-avoidance in the other direction: an empty done/ pile.
+   A **wrongly picked** card (e.g. a `pick --help` accident) is not on the judgment
+   list — `llm-wiki unpick <제목> --why "…"` returns it to todo (claim released, WIP
+   slot freed, reason recorded); parking it with `handoff` pollutes the review queue.
 
 2. **Blocked ≠ stopped.** When a card hits the judgment list, `llm-wiki handoff <제목>
    --question "…"` and immediately pick the next card. Never wait for session approval —
@@ -92,6 +95,12 @@ pick → work → 판정 ─ done / handoff / abandon / supersede
    commit in the primary from here. `LLM_WIKI_WORKTREE_LOCAL=1` restores per-worktree
    boards.
 
+8. **Interrupt cards go to the unaffiliated backlog.** Follow-ups, user requests, bug cards
+   discovered mid-work → `card new "<제목>" --goal "…"` with **no** `--milestone` (2026-09-21
+   규약): never glue new work onto a live milestone — that is a scope change the CLI guards
+   with `--scope-amend`. The morning ritual triages the backlog — (가) a new milestone,
+   (나) an explicit scope change, (다) `abandon`; '나중에' is not an outcome.
+
 # Splitting (supersede) — divergence guard
 
 Supersede only when each child is **strictly smaller** than the parent in context needed.
@@ -107,4 +116,10 @@ Run at the end of the night, or in a separate morning session:
   verification, and are checked ACs backed by evidence in Notes or the diff?
 - Evidence-thin → `llm-wiki reopen <제목> --why "…"` (reverts to doing). A temporary
   increase in card count is the price of a real convergence curve (plan.md 2.4).
-- `llm-wiki board report` shows the revert count — reverts are signal, not shame.
+- `llm-wiki board report` shows the revert count — reverts are signal, not shame. It also
+  shows **review aging** (가장 오래된 대기 일수 · 7일 초과 건수) and **마일스톤 경과일**
+  (생성일 기준) — the morning ritual's first item is the review 삼진: every waiting card
+  gets answered (`resume --note`) or discarded (`abandon --reason`), 사람이 답한다/버린다.
+- A milestone that closed during the night → gather its member `Result`s into a
+  human-readable completion record (`DONE.md` 류). The cards already rest in
+  `doc/kanban/done/` — promotion is a **summary**, not information movement (2026-09-21 규약).

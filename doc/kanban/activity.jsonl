@@ -96,3 +96,22 @@
 {"ts":"2026-09-16T23:27:04.665Z","action":"done","title":"work-loop 모니터 동반 기동"}
 {"ts":"2026-09-19T05:42:07.452Z","action":"created","title":"모니터 플릿 뷰 — monitor --all"}
 {"ts":"2026-09-19T06:01:40.173Z","action":"done","title":"모니터 플릿 뷰 — monitor --all"}
+{"ts":"2026-09-22T04:41:14.042Z","action":"created","title":"규약 2026-09-21 반영"}
+{"ts":"2026-09-22T04:41:30.059Z","action":"created","title":"봉인 가드·report 신지표 CLI 구현"}
+{"ts":"2026-09-22T04:41:30.168Z","action":"created","title":"init 템플릿·스킬에 규약 서술"}
+{"ts":"2026-09-22T04:41:30.292Z","action":"created","title":"README·plan.md 규약 갱신"}
+{"ts":"2026-09-22T04:41:38.822Z","action":"claimed","title":"봉인 가드·report 신지표 CLI 구현","actor":"zcode"}
+{"ts":"2026-09-22T04:50:04.508Z","action":"done","title":"봉인 가드·report 신지표 CLI 구현"}
+{"ts":"2026-09-22T04:50:21.865Z","action":"claimed","title":"init 템플릿·스킬에 규약 서술","actor":"zcode"}
+{"ts":"2026-09-22T04:50:22.071Z","action":"done","title":"init 템플릿·스킬에 규약 서술"}
+{"ts":"2026-09-22T04:50:22.183Z","action":"claimed","title":"README·plan.md 규약 갱신","actor":"zcode"}
+{"ts":"2026-09-22T04:50:22.394Z","action":"done","title":"README·plan.md 규약 갱신"}
+{"ts":"2026-09-22T04:50:22.401Z","action":"milestone-done","title":"규약 2026-09-21 반영","detail":"멤버 3장 전원 종결"}
+{"ts":"2026-09-22T05:07:58.944Z","action":"created","title":"doing→todo 반납 명령 unpick"}
+{"ts":"2026-09-22T05:07:59.055Z","action":"claimed","title":"doing→todo 반납 명령 unpick","actor":"zcode"}
+{"ts":"2026-09-22T05:10:04.802Z","action":"unpicked","title":"doing→todo 반납 명령 unpick","detail":"실측 스모크 — 반납 후 재집기 왕복 확인"}
+{"ts":"2026-09-22T05:10:05.057Z","action":"claimed","title":"doing→todo 반납 명령 unpick","actor":"zcode"}
+{"ts":"2026-09-22T05:10:22.002Z","action":"done","title":"doing→todo 반납 명령 unpick"}
+{"ts":"2026-09-22T05:24:09.037Z","action":"created","title":"board report 헤더 날짜 로컬화"}
+{"ts":"2026-09-22T05:24:09.144Z","action":"claimed","title":"board report 헤더 날짜 로컬화","actor":"zcode"}
+{"ts":"2026-09-22T05:24:48.836Z","action":"done","title":"board report 헤더 날짜 로컬화"}

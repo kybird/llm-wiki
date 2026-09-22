@@ -49,11 +49,12 @@ npm install @tobilu/qmd
 | `llm-wiki compile list` | 아직 컴파일 안 된 원시 로그 목록 — 헤더 날짜 **또는** 콘텐츠 해시(`compile-state.json`)라 같은 날 추가분도 잡는다 |
 | `llm-wiki compile index` | `doc/wiki/index.md` 재생성(별칭·답변 포함), `compile-state.json` 재생성, QMD 인덱스 동기화. **"컴파일 완료" 선언**이다 — wiki-compile 스킬의 페이즈 뒤에 실행할 것, 페이즈를 대신하는 게 아니다 |
 | `llm-wiki lint` | 깨진 링크, **증거 역매칭**(해시 참조와 `### Error` 인용이 `doc/raw/`에 문자 그대로 존재해야), 미컴파일 컨셉, 메타데이터, 낡음 |
-| `llm-wiki board` / `board report` | 파생 칸반 뷰(텍스트만, 플래그 없음) / 대시보드(done:abandoned 비율, 추세, QA 리버트, 대기열) |
+| `llm-wiki board` / `board report` | 파생 칸반 뷰(텍스트만, 플래그 없음) / 대시보드(done:abandoned 비율, 추세, QA 리버트, 대기열, **review 노화** — 가장 오래된 대기 일수·7일 초과 건수 — 및 마일스톤 경과일(생성일 기준)) |
 | `llm-wiki board video` | `activity.jsonl`을 보드 타임랩스 MP4로 재생(`video/` Remotion 프로젝트 필요; CPU 렌더, GPU 불필요) |
 | `llm-wiki monitor [--port <n>]` | 라이브 읽기 전용 보드 뷰 — `http://127.0.0.1:<n>`(기본 4747). 누가 뭘 클레임했고 얼마나 됐는지(`zcode · 14분`), 클레임 만료, REVIEW 질문, 게이트/의존성 대기, 종결 적체(최신 done/superseded/abandoned + 타임스탬프), 활동 스트림. **마일스톤 패널**(목적 축, plan.md 3.8)은 진행 중 마일스톤을 멤버 카드까지 펼치고 완료된 것은 진행률과 함께 접는다 — 마일스톤을 클릭하면 Goal(계획의 대의)과 전체 멤버 목록을 읽는다. 칼럼·종결 적체·활동 행의 아무 카드나 클릭하면 카드 파일 전문을 볼 수 있다. 2초마다 폴링(바뀔 때만 재렌더); 페이지는 에이전트 작성 텍스트를 `textContent`로만 렌더한다. **같은 보드의** 모니터가 이미 듣는 중에 시작하면 **멱등** — exit 0, 같은 URL. **다른 프로젝트의** 모니터가 포트를 잡고 있으면: 기본 실행은 다음 빈 포트로 넘어간다(4747→4748→…, 보드마다 자기 URL; 헤더에 프로젝트 이름 표시). 명시적 `--port`는 소유자 이름과 함께 실패. **`--all`**은 **플릿 뷰** 시작 — 이 머신의 모든 llm-wiki 프로젝트를 타일로(WIP, 리뷰 대기열, 마일스톤 진행, 마지막 활동), 각 프로젝트의 전체 보드는 클릭 한 번; 프로젝트는 명령 실행 시 머신 로컬 등록부(`~/.llm-wiki/projects.json`)에 자기 자신을 등록한다. **CLI는 여전히 유일한 작성자** — GET이 아닌 메서드는 전부 405; 서버는 상태를 갖지 않는다 |
-| `llm-wiki card new/show/edit` | 카드 생성·편집 — CLI가 유일한 작성자(센티넬 보호 섹션). `--kind milestone`은 마일스톤 카드 생성(계획의 대의는 그 Goal에 산다; 픽 불가, 멤버 전체 종결 시 자동 완료); `--milestone "<제목>"`은 카드를 마일스톤에 붙인다 — 소속은 프론트매터, 마일스톤 진행률은 저장하지 않고 파생한다(plan.md 3.8) |
+| `llm-wiki card new/show/edit` | 카드 생성·편집 — CLI가 유일한 작성자(센티넬 보호 섹션). `--kind milestone`은 마일스톤 카드 생성(계획의 대의는 그 Goal에 산다; 픽 불가, 멤버 전체 종결 시 자동 완료); `--milestone "<제목>"`은 카드를 마일스톤에 붙인다 — 소속은 프론트매터, 마일스톤 진행률은 저장하지 않고 파생한다(plan.md 3.8). **범위 봉인(2026-09-21):** 마일스톤 멤버는 계획 시점(kanban-plan 분해)의 카드가 전부다 — 멤버가 있는 마일스톤에 `card edit --milestone` 으로 카드를 붙이는 건 범위 변경이라 `--scope-amend "<사유>"` 없이는 거부되고 사유는 카드 Notes에 '범위 변경'으로 남는다; 인터럽트 카드(follow-up·사용자 요청·버그)는 대신 무소속 백로그로 |
 | `llm-wiki pick --claim <name> [--card <title>]` | 다음 자격 카드를 원자적으로 클레임(락, WIP 제한, 의존성, 클레임 만료). `--card`는 제목으로 특정 카드 클레임 — 모든 게이트는 여전히 적용: 막힌 픽은 이유를 출력하고 파일은 하나도 안 건드리며, 모르는 제목은 실패(exit 1) |
+| `llm-wiki unpick <제목> --why "…"` | doing 카드를 todo로 반납 — `pick`의 역수: 클레임을 해제하고 WIP 칸을 즉시 비우며, 사유(필수)는 Notes에 `UNPICKED`로 기록된다. 집기 취소·아직 못 할 카드에 쓴다 — `handoff` 오용 금지(사람 판정용 파킹이라 review 큐를 오염시킨다) |
 | `llm-wiki handoff <title> --question "…"` | 카드를 사람 판정 대기로 주차하고 클레임 해제 |
 | `llm-wiki done <title> --result "…"` | 카드 완료 — Result 필수. 마지막 멤버를 완료하면 소속 마일스톤 자동 완료 |
 | `llm-wiki supersede <title> --by a,b` | 카드를 자식들로 대체; 부모는 `superseded/`로 녹는다 |

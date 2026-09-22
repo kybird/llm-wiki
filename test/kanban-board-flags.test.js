@@ -10,6 +10,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const kanban = require('../lib/kanban');
+const { localToday } = require('../lib/local-today');
 
 const CLI = path.join(__dirname, '..', 'bin', 'llm-wiki.js');
 
@@ -55,6 +56,21 @@ test('board report --json — report는 --json을 계속 받는다(폐지는 뷰
     const r = b.run(['board', 'report', '--json']);
     assert.equal(r.status, 0);
     assert.equal(JSON.parse(r.stdout).kind, 'kanban-board-report');
+  } finally { b.cleanup(); }
+});
+
+test('board report 헤더 — 날짜가 로컬 오늘과 일치한다(UTC 슬라이싱 하루 앞섬 회귀, 2026-09-22)', () => {
+  const b = makeBoard();
+  try {
+    // 자정 경계 이중 확인 — 명령 실행 전후 날짜가 같으면 헤더도 그날이어야 한다.
+    // (전후가 다르면 날짜가 넘어간 찰나라 어느 쪽이든 정상 — 통과.)
+    const before = localToday();
+    const r = b.run(['board', 'report']);
+    const after = localToday();
+    assert.equal(r.status, 0);
+    const m = r.stdout.match(/Board report \((\d{4}-\d{2}-\d{2})\)/);
+    assert.ok(m, '헤더 날짜 형식');
+    if (before === after) assert.equal(m[1], before, '헤더 = 로컬 오늘');
   } finally { b.cleanup(); }
 });
 

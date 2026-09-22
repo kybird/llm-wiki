@@ -50,11 +50,18 @@ Kanban (cards are files; CLI is the only writer):
                                      --check-ac/--note/--renew-claim/--depends/
                                      --add-depends/--remove-depends/--milestone)
                                      --milestone (re)groups an active card under a
-                                     milestone card
+                                     milestone card — a milestone that already has
+                                     members is scope-sealed: adding needs
+                                     --scope-amend "<reason>" (recorded in Notes as
+                                     범위 변경); memberless milestones attach freely
   llm-wiki pick --claim <name> [--card <title>]
                                      Atomically claim the next eligible card (locks, WIP, deps);
                                      --card names a specific card — gates are never bypassed;
                                      milestone cards are never picked (plan.md 3.8)
+  llm-wiki unpick <title> --why "…"        Return a doing card to todo — the inverse of pick:
+                                     claim released, reason (required) recorded in Notes;
+                                     frees the WIP slot immediately. Don't misuse handoff
+                                     for this — that parks for human judgment (review queue)
   llm-wiki handoff <title> --question "…"   Park for human judgment, release claim
   llm-wiki done <title> --result "…"        Complete (Result required). Completing the
                                      last member auto-completes its milestone (3.8)
@@ -98,7 +105,7 @@ const args = rest.filter(a => a !== '--json');
 // 전체 사용법으로 대신한다. return으로 자연 종료한다 — Windows 파이프 stdout은
 // 비동기라 process.exit은 마지막 줄을 지울 수 있다(kanban-wait 교훈).
 const KNOWN_SUBCOMMANDS = ['search', 'compile', 'lint', 'init', 'skills', 'board', 'monitor', 'card',
-  'pick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'wait'];
+  'pick', 'unpick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'wait'];
 if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.includes('-h'))) {
   const usageKey = subcommand === 'card' && ['new', 'show', 'edit'].includes(args[0]) ? `card ${args[0]}` : subcommand;
   const usage = kanbanCmd.USAGE[usageKey];
@@ -112,7 +119,7 @@ if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.i
 // wait도 빠진다 — 백그라운드 관측 명령이라 동기화를 몰고 올 이유가 없고, 무엇보다
 // stdout이 "이벤트 한 줄 or 침묵" 계약이라 auto-update 배너가 그 계약을 깬다.
 // 실패는 maybeAutoUpdate 안에서 삼켜진다 — 갱신 실패가 명령을 막지 않는다.
-if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'handoff',
+if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'unpick', 'handoff',
   'done', 'supersede', 'abandon', 'reopen', 'resume'].includes(subcommand)) {
   maybeAutoUpdate();
 }
@@ -155,6 +162,9 @@ switch (subcommand) {
     break;
   case 'pick':
     kanbanCmd.pick({ rest: args, json: jsonRequested });
+    break;
+  case 'unpick':
+    kanbanCmd.unpick({ rest: args });
     break;
   case 'handoff':
     kanbanCmd.handoff({ rest: args });

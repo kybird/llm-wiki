@@ -15,7 +15,7 @@ aliases: [탐색용 호출, pick --help 사고, help가 카드를 집는다, pro
 
 ### Grounding
 - Git Context: `hash:864bc67` (탐색 가드) · `hash:6c5e0f2` (플래그 검증) · `hash:f3fcca8` (`pick --card`)
-- Evidence: doc/raw/2026-09-12.md Case 4 — 2026-09-11과 2026-09-12 **두 번** 발생. sugarScan 실보드에서 엉뚱한 카드에 클레임이 찍혀 handoff로 반납. 두 번째는 첫 사고가 REVIEW 카드에 기록된 뒤에 났다
+- Evidence: doc/raw/2026-09-12.md Case 4 — 2026-09-11과 2026-09-12 **두 번** 발생. sugarScan 실보드에서 엉뚱한 카드에 클레임이 찍혀 handoff로 반납. 두 번째는 첫 사고가 REVIEW 카드에 기록된 뒤에 났다. 당시엔 doing→todo 반납 명령이 없어 handoff가 유일한 수습책이었다 — 2026-09-22 `unpick <제목> --why` 도입 후 사고 수습은 이쪽이 정석(handoff는 판정 목록 전용)
 - 자매 케이스: doc/raw/2026-09-12.md Case 5 — 존재하지 않는 `pick --card`를 검증 없이 위임 프롬프트에 넣었고, `pick`이 모르는 플래그를 조용히 버린 뒤 ordinal 최저 카드를 집었다
 - Confidence: 5/5 (두 번 실측, 가드 도입 후 임시 보드에서 재현 불가 확인 — 게이트 6종 해시 비교)
 
