@@ -119,3 +119,6 @@
 {"ts":"2026-09-22T19:37:43.211Z","action":"claimed","title":"시맨틱 검색 부활 — execFileSync import 누락 수습 + QMD 에러 삼킴 제거","actor":"zcode"}
 {"ts":"2026-09-22T19:42:15.098Z","action":"done","title":"시맨틱 검색 부활 — execFileSync import 누락 수습 + QMD 에러 삼킴 제거"}
 {"ts":"2026-09-22T19:42:25.655Z","action":"created","title":"시맨틱 검색 qmd query 전환 — 질의 자동 확장으로 어휘 불일치 흡수"}
+{"ts":"2026-09-24T20:56:29.617Z","action":"created","title":"쿼터 워치독 이식 — 밤샘 작업 자동 인계"}
+{"ts":"2026-09-24T20:56:46.073Z","action":"claimed","title":"쿼터 워치독 이식 — 밤샘 작업 자동 인계","actor":"unnamed-agent"}
+{"ts":"2026-09-24T21:01:15.027Z","action":"done","title":"쿼터 워치독 이식 — 밤샘 작업 자동 인계"}

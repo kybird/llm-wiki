@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 10
+skill-version: 11
 ---
 # When to use
 
@@ -27,6 +27,17 @@ skill-version: 10
 프로젝트 밤에도 각자의 보드가 각자의 URL에 뜬다. 백그라운드 실행이 안 되는
 환경이면 건너뛴다 — 모니터는 관측이지 의존성이 아니다. 정지 규칙에서도 모니터는
 끄지 않는다(아침의 사람이 본다) — 읽기 전용이라 남겨두는 비용이 없다.
+
+# Overnight control file (쿼터 워치독) — 제어 파일이 있는 워크스페이스만
+
+밤샘 무인 실행(호스트 스케줄러 시작 포함)으로 이 스킬을 돌리는 세션은 제어 파일 규약을 밟는다.
+워치독 자동화가 등록된 워크스페이스에만 TASK.md가 있으므로 — **파일이 없으면 이 섹션 전체를
+무시한다.** 시작 시: TASK.md의 status를 `running`으로, "현재 작업"과 "resume 지침"(체크포인트 =
+진행 중 카드와 활동 로그, 이어가는 방법)을 채운다. 루프 중: 카드 1장을 마칠 때마다(한 카드가
+15분을 넘으면 중간 단계마다도) heartbeat.txt에 현재 시각(`YYYY-MM-DD HH:MM:SS`) 한 줄을
+append한다 — 쿼터 소진으로 세션이 죽어도 워치독이 쿼터 복구 후 이 파일들로 인계한다. 정지
+규칙으로 루프를 끝낼 때 status를 `done`으로 돌려놓는다. 경로와 세부 규칙은 해당 워크스페이스의
+AGENTS.md와 TASK.md 사용 규칙 섹션을 따른다.
 
 # Loop graph
 

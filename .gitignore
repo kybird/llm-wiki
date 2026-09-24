@@ -6,6 +6,8 @@ refs/
 # (일반 소비 레포에서는 .agents/skills, .claude/skills를 커밋하는 것이 정책이다)
 .agents/
 .claude/
+# ZCode 워크스페이스 상태(에이전트·자동화 데이터, .zcode/overnight/ 밤샘 제어 파일 포함) — 기계 로컬
+.zcode/
 
 video/node_modules/
 doc/kanban/board-timelapse.mp4
