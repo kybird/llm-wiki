@@ -12,8 +12,10 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 | 개념 | 설명 | 별칭 |
 |------|------|------|
 | [[agent-cli-contract]] | 이 CLI의 1차 사용자는 종료 코드와 출력으로만 판단하는 에이전트다 — 성공 보고는 실제 변경에 묶인다. | CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그 거부, unknown flag rejection, validateFlags |
+| [[auto-update-copy-source]] | auto-update의 사본 동기화 소스는 **실행 중인 바이너리의 패키지 루트**다. | 사본 핑퐁, skill copy ping-pong, modified since read, 사본 재동기화, skill-version 회귀, auto-update 사본 동기화, 커밋 훅 사본 회귀 |
 | [[card-file-anatomy]] | 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를 결정한다. | 카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드 |
 | [[qmd-optional-dependency]] | @tobilu/qmd는 선택 의존성 — 없으면 grep으로 강하하고, 있으면 시맨틱이 더해진다. | semantic search optional, findQmd, QMD 설치 위치 |
+| [[quota-watchdog]] | 5시간 rolling 쿼터 소진으로 밤샘 무인 세션이 죽었을 때, 쿼터 복구 후 예약 자동화 발사가 제어 | 쿼터 워치독, quota watchdog, usage limit reached, 5 hour rolling window, 쿼터 소진, 밤샘 작업 자동 인계, 발사 프로브 |
 
 ---
 
@@ -52,7 +54,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 
 ## Statistics
 
-- Total concepts: 3
+- Total concepts: 5
 - Total patterns: 8
 - Total anti-patterns: 4
 - Total answers: 0
