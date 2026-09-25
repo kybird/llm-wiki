@@ -51,6 +51,7 @@ confidence: 4
 ## Related
 
 - [[auto-update-copy-source]] — 즉시 필요한 시작 규칙을 AGENTS.md에 심은 근거
+- [[publish-channel-separation]] — v12 전파는 git 채널로, publish는 0.6.0까지 유보(raw Case 5)
 - [[probing-side-effect-commands]] — 무해 탐색 호출 전제와 대비되는 "실패하는 발사" 프로브
 
 ## Grounding (References)
@@ -58,5 +59,6 @@ confidence: 4
 - [[2026-09-24]] Case 1 — 5h rolling window 실측·훅 불가·헤드리스 불가 (confidence 5)
 - [[2026-09-24]] Case 2 — 프로브 원리·상태 규약·CLAIM 2차 방어 설계 (confidence 4)
 - [[2026-09-24]] Case 4 — 전파 단위 교정: 소비 레포 자가등록 부트스트랩 (confidence 5)
+- [[2026-09-24]] Case 5 — publish 유보 결정(스킬 단독 변경, 보드 카드로 추적)
 - 도그푸드 인스턴스: 정본 워크스페이스 자동화 automation-7848ae37(2026-09-24 등록) +
   `skills/work-loop/SKILL.md` v12

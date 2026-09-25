@@ -34,9 +34,11 @@ auto-update의 사본 동기화 소스는 **실행 중인 바이너리의 패키
 
 ## Related
 
+- [[publish-channel-separation]] — publish가 핑퐁을 끝낸다; 유보 중엔 지속(raw Case 5)
 - [[quota-watchdog]] — 사본 회귀와 무관하게 살아 있어야 하는 규칙의 배치 원칙 사례
 
 ## Grounding (References)
 
 - [[2026-09-24]] Case 3 — skill-version v8→v10→v8 추이 실측, npm ls -g = 0.4.2 (confidence 5)
+- [[2026-09-24]] Case 5 — publish 유보 확정 → 핑퐁 지속 수용(0.6.0에서 소멸 예정)
 - lib/auto-update.js — 사본 동기화 구현
