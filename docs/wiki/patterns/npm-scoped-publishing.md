@@ -17,6 +17,7 @@ aliases: [403 two-factor, cannot publish over, 스코프 패키지 배포, npm 4
 - Git Context: `hash:d3ba05e`
 - Evidence: doc/raw/2026-08-30.md Case 1
 - 확장(2026-09-19): v0.4.1·v0.4.2 발행 시도 — doc/raw/2026-09-18.md Case 5 — `whoami kybird`가 통과하는 세션에서도 publish는 EOTP로 실패, 비-TTY 출력의 인증 URL이 리터럴 `***`로 레드닥트돼 감시자·브라우저 자동화 불가
+- 확장(2026-10-03): 0.6.0 발행(사용자 TTY 성공) — doc/raw/2026-10-03.md Case 1 — 발행 직후 npm 캐시 지연(view·update가 수 분간 구 latest·notarget), --prefer-online 우회, 소비 레포 전파 실측(PocketGauage 발화·LossFunction 보류)
 - Confidence: 5/5
 
 ### Error
@@ -46,6 +47,11 @@ npm error   https://www.npmjs.com/auth/cli/******
   previously published versions"가 뜨면 그 버전이 존재하는 것이다.
 - 기존 비공개 발행을 공개로 뒤집으려면 재발행 말고 access 변경 — 단, npm 11에서
   `npm access public`은 폐기되었다(하위 명령 변경 확인할 것).
+- **발행 직후 npm 캐시 지연(2026-10-03 실측)**: `npm view`와 `npm update`가 수 분간
+  발행 전 packument를 서빙한다 — view는 구 latest(0.4.2), 정확 버전 지정 설치는
+  `notarget "a package version that doesn't exist"`로 실패. 발행 검증·전역 업데이트는
+  `--prefer-online` 또는 레지스트리 JSON 직접 조회(curl)로 우회한다. "update했는데
+  안 됐다"류 소비 레포 접수의 유력 원인.
 
 ### Related Knowledge
-- Concepts: [[qmd-optional-dependency]]
+- Concepts: [[qmd-optional-dependency]], [[layout-migration]]

@@ -10,8 +10,15 @@ const { spawnSync } = require('node:child_process');
 
 const BIN = path.resolve(__dirname, '..', 'bin', 'llm-wiki.js');
 
+// spawn되는 board·search가 recordProject(~/.llm-wiki/projects.json 등록부)를 때리지
+// 않게 state 디렉터리를 밀폐한다 — 등록부 오염 사고(2026-09-19)의 재발 방지 관례.
+const STATE = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-migrate-state-'));
+
 function run(args, cwd) {
-  return spawnSync(process.execPath, [BIN, ...args], { cwd, encoding: 'utf8', timeout: 60000 });
+  return spawnSync(process.execPath, [BIN, ...args], {
+    cwd, encoding: 'utf8', timeout: 60000,
+    env: { ...process.env, LLM_WIKI_STATE_DIR: STATE },
+  });
 }
 
 function tmp(name) {
@@ -113,4 +120,8 @@ test('관련 없는 docs/가 이미 있으면 덮지 않고 보류 안내한다'
   assert.ok(fs.existsSync(path.join(repo, 'docs', 'unrelated.txt')), '기존 docs/를 건드리면 안 된다');
   assert.ok(r.stdout.includes('보류'), `보류 안내가 출력돼야 한다:\n${r.stdout}`);
   fs.rmSync(repo, { recursive: true, force: true });
+});
+
+test.after(() => {
+  try { fs.rmSync(STATE, { recursive: true, force: true }); } catch { /* 정리 실패 무시 */ }
 });

@@ -31,6 +31,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 | [[kill-the-tree-not-the-wrapper]] | Windows에선 래퍼(셸·작업)만 죽여도 node 자식이 살아 포트를 계속 잡는다 — 정지 피드백을 믿지 말고 포트를 확인한다. | 고아 프로세스, 포트 점유, EADDRINUSE 대응, taskkill, 작업 정지 잔존 |
 | [[npm-scoped-publishing]] | 스코프 패키지 배포의 네 함정 — 2FA 강제(비-TTY에선 인증 URL 마스킹), private 기본값, 404여도 존재하는 패키지, whoami≠발행권한. | 403 two-factor, cannot publish over, 스코프 패키지 배포, npm 404 private, EOTP, one-time password publish, 토큰 없는 publish 404 |
 | [[question-timing-follows-answerability]] | 질문 타이밍은 "누가 대답할 수 있는가"가 결정한다 — 사람 있으면 시작 전, 무인이면 벽에서 park. | 질문 타이밍, handoff 질문, 시작 전 질문, pre-work question |
+| [[tests-isolate-machine-state]] | llm-wiki 명령을 spawn하는 테스트는 반드시 `LLM_WIKI_STATE_DIR`을 임시 디렉터리로 밀폐한다 — | LLM_WIKI_STATE_DIR 밀폐, 등록부 오염, 테스트 state 격리, recordProject 오염 |
 | [[ui-changes-need-browser-verification]] | 임베디드 페이지 JS의 런타임 오류는 노드 테스트가 못 잡는다 — UI를 손대는 커밋의 게이트는 브라우저 실측이다. | 페이지 JS 테스트 공백, 브라우저 실측, 클라이언트 JS 검증, client JS |
 | [[write-validation-matches-read-semantics]] | 쓰기 경로의 검증은 읽는 쪽(pick)의 판정과 정확히 같아야 한다 — 더 엄격하면 합법 상태를 입력할 길이 없고, 더 느슨하면 읽는 쪽이 영원히 못 푼다. | 의존성 검증, depends_on 후기 등록, --add-depends, --remove-depends, 순환 거부, cycle rejection, validateDepTargets |
 
@@ -58,7 +59,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 ## Statistics
 
 - Total concepts: 7
-- Total patterns: 8
+- Total patterns: 9
 - Total anti-patterns: 5
 - Total answers: 0
-- Last updated: 2026-10-02
+- Last updated: 2026-10-03
