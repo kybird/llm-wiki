@@ -1,7 +1,7 @@
 ---
 name: kanban-plan
 description: Planning loop — turn a plan into board cards the work-loop can consume. Cards are written only via the CLI; decompose with divergence guards, gate what isn't ready, group multi-card plans under a milestone.
-skill-version: 5
+skill-version: 6
 ---
 # When to use
 
@@ -95,7 +95,7 @@ Abandoning a milestone requires its members to be terminal first (CLI enforces, 
   (나) an explicit scope change (`--scope-amend` + reason), or (다) `abandon` — '나중에'는
   결과가 아니다.
 - Plan changed? `supersede` the stale cards. Direction abandoned? `abandon --reason` —
-  the reason is mandatory and flows into `doc/raw/` as anti-pattern material.
+  the reason is mandatory and flows into `docs/raw/` as anti-pattern material.
 - Do not start cards yourself in a planning session — leave them in `todo` for the
   work-loop. 계획과 실행이 같은 세션에 섞이면 파편화가 돌아온다.
 
@@ -107,4 +107,4 @@ Abandoning a milestone requires its members to be terminal first (CLI enforces, 
   cards. During execution the board is the source of truth.
 - When a milestone closes, the morning session (or QA pass) gathers member `Result`s into a
   human-readable completion record (`DONE.md` 류) — a **summary**: the cards already rest in
-  `doc/kanban/done/`, so promotion is summarization, not information movement.
+  `docs/kanban/done/`, so promotion is summarization, not information movement.

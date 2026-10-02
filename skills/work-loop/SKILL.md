@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 12
+skill-version: 13
 ---
 # When to use
 
@@ -135,7 +135,7 @@ pick → work → 판정 ─ done / handoff / abandon / supersede / unpick(반�
 
 7. **Worktrees share one board.** The board is a project resource, not a branch resource:
    from a linked worktree, every `pick`/`done`/`card` writes the **primary worktree's**
-   `doc/kanban/`. If this loop runs in a linked worktree, its card changes appear as
+   `docs/kanban/`. If this loop runs in a linked worktree, its card changes appear as
    uncommitted changes in the primary worktree — leave them there (the primary's next
    commit picks them up); do not chase them into this worktree's commits, and do not
    commit in the primary from here. `LLM_WIKI_WORKTREE_LOCAL=1` restores per-worktree
@@ -158,7 +158,7 @@ dissolves; its history stays in `superseded/`.
 
 Run at the end of the night, or in a separate morning session:
 
-- Walk recent `doc/kanban/done/` cards newest-first. For each: does `Result` state a real
+- Walk recent `docs/kanban/done/` cards newest-first. For each: does `Result` state a real
   verification, and are checked ACs backed by evidence in Notes or the diff?
 - Evidence-thin → `llm-wiki reopen <제목> --why "…"` (reverts to doing). A temporary
   increase in card count is the price of a real convergence curve (plan.md 2.4).
@@ -168,4 +168,4 @@ Run at the end of the night, or in a separate morning session:
   gets answered (`resume --note`) or discarded (`abandon --reason`), 사람이 답한다/버린다.
 - A milestone that closed during the night → gather its member `Result`s into a
   human-readable completion record (`DONE.md` 류). The cards already rest in
-  `doc/kanban/done/` — promotion is a **summary**, not information movement (2026-09-21 규약).
+  `docs/kanban/done/` — promotion is a **summary**, not information movement (2026-09-21 규약).

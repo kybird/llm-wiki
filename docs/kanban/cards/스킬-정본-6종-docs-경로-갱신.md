@@ -1,9 +1,11 @@
 ---
 title: 스킬 정본 6종 docs/ 경로 갱신
-status: todo
+status: doing
 ordinal: 13000
 created: 2026-10-02
 milestone: docs/ 레이아웃 전환
+claimed_by: unnamed-agent
+claimed_at: 2026-10-02T14:52+09:00
 ---
 
 ## Goal
