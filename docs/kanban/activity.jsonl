@@ -149,3 +149,4 @@
 {"ts":"2026-10-02T06:10:47.561Z","action":"created","title":"쿼터 워치독 자동 무장·해제"}
 {"ts":"2026-10-02T06:10:47.698Z","action":"created","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다"}
 {"ts":"2026-10-02T07:46:38.621Z","action":"created","title":"lint가 raw 날짜 링크를 깨진 것으로 판정한다"}
+{"ts":"2026-10-02T14:02:51.115Z","action":"claimed","title":"0.6.0 publish — 쿼터 워치독 v12 스킬 실어 올리기","actor":"unnamed-agent"}
