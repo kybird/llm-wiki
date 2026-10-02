@@ -2,7 +2,7 @@
 
 <!-- Seeded by `llm-wiki init`. This file is YOURS — edit freely; init never overwrites it. -->
 
-This repo uses **llm-wiki**: `doc/` is the knowledge base, `doc/kanban/` is the work board.
+This repo uses **llm-wiki**: `docs/` is the knowledge base, `docs/kanban/` is the work board.
 Files are the source of truth. Kanban card files are written ONLY via the CLI — people read them.
 
 ## 산출물 삼분법 — SSOT (2026-09-21)
@@ -13,7 +13,7 @@ Files are the source of truth. Kanban card files are written ONLY via the CLI �
 2. **다른 에이전트에게 넘기는 임시 문서 — 협업 요청서.** 넘긴 세션에서만 유효하고 회신되면
    폐기한다. 지속성 있는 일은 카드로만 존재한다. CLADE_TASKS/GLM_TASKS 류의 상주 태스크
    목록은 금지 — 그건 이중 SSOT다.
-3. **칸반 보드 (`doc/kanban/`) — 상태 기계이자 남은 일의 유일한 목록.**
+3. **칸반 보드 (`docs/kanban/`) — 상태 기계이자 남은 일의 유일한 목록.**
 
 ## Milestones — 범위 봉인 (scope seal)
 
@@ -37,7 +37,7 @@ Files are the source of truth. Kanban card files are written ONLY via the CLI �
 ## 마일스톤 닫힘 승격과 계획 문서 수명
 
 - 마일스톤이 닫히면 아침 세션(또는 QA pass)이 멤버 Result 를 모아 사람이 읽는 완료
-  기록(`DONE.md` 류)으로 승격한다. 카드는 `doc/kanban/done/` 에 이미 남는다 — 승격은
+  기록(`DONE.md` 류)으로 승격한다. 카드는 `docs/kanban/done/` 에 이미 남는다 — 승격은
   **요약**이지 정보 이동이 아니다.
 - 세션 계획 문서(plan.md 류)는 카드로 소비된 뒤 **병행 갱신 금지**. 종결 시 1회 결과
   회신 후 폐기한다. 실행 중 계획이 바뀌면 문서를 고쳐 맞추지 않고 카드를 `supersede`
@@ -53,8 +53,8 @@ Note 지시서(`card edit --note`)는 필수 세 항목을 갖춘다:
 | Moment | Skill / command |
 |---|---|
 | Before starting any task | `llm-wiki search "<keywords>"` — paste the verbatim error string when debugging |
-| After fixing a bug / making a decision / discovering something | `wiki-log` skill → a Case in `doc/raw/YYYY-MM-DD.md` with verbatim error + `hash:` grounding |
-| When raw logs have accumulated | `wiki-compile` skill → promote to `doc/wiki/` pages, then `llm-wiki compile index` |
+| After fixing a bug / making a decision / discovering something | `wiki-log` skill → a Case in `docs/raw/YYYY-MM-DD.md` with verbatim error + `hash:` grounding |
+| When raw logs have accumulated | `wiki-compile` skill → promote to `docs/wiki/` pages, then `llm-wiki compile index` |
 | Sanity check of the knowledge base | `wiki-lint` skill or `llm-wiki lint` |
 | Planning work (person present) | `kanban-plan` skill → cards via `llm-wiki card new "<title>"`. A plan that splits into 2+ cards gets **one milestone card** (`--kind milestone`; members carry `--milestone` at creation — scope is sealed at plan time); milestones are never picked and auto-complete when all members terminate |
 | Unattended execution | `work-loop` skill → `llm-wiki pick --claim <name>`, park judgment calls with `handoff` |
@@ -63,10 +63,10 @@ Note 지시서(`card edit --note`)는 필수 세 항목을 갖춘다:
 ## Rules
 
 - Quote error messages **character-for-character** in logs and wiki pages — `llm-wiki lint`
-  back-checks every quote and `hash:` against `doc/raw/`.
+  back-checks every quote and `hash:` against `docs/raw/`.
 - Follow `status: deprecated` → `superseded_by` when reading wiki pages.
 - The board is a **project** resource, not a branch resource: from any git linked worktree,
-  `llm-wiki` reads and writes the **primary worktree's** `doc/kanban/`. `pick`/`done` run in
+  `llm-wiki` reads and writes the **primary worktree's** `docs/kanban/`. `pick`/`done` run in
   a secondary worktree leave uncommitted changes in the primary worktree — intended, commit
   them there. Opt out with `LLM_WIKI_WORKTREE_LOCAL=1`.
 - Expand this file with this repo's own conventions. Keep it short — it loads every session.

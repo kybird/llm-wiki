@@ -1,10 +1,12 @@
 ---
 title: init·templates docs/ 스캐폴드
-status: todo
+status: doing
 ordinal: 12000
 created: 2026-10-02
 depends_on: ["find-doc-root — docs/ 우선 이중 해석"]
 milestone: docs/ 레이아웃 전환
+claimed_by: unnamed-agent
+claimed_at: 2026-10-02T14:46+09:00
 ---
 
 ## Goal
