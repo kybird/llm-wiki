@@ -61,13 +61,20 @@ test('git 아닌 곳 상위 탐색 — docs/wiki 조상 발견', () => {
   fs.rmSync(base, { recursive: true, force: true });
 });
 
+// 드라이브 문자 대소 차이 흡수용 — realpath 없는 문자열 비교(폴백 경로는 존재하지 않을 수 있다).
+function norm(p) {
+  const r = path.resolve(p);
+  return process.platform === 'win32' ? r.toLowerCase() : r;
+}
+
 test('init 전 폴백은 cwd/docs다(새 골격 예고) — 폴백은 startDir이 아니라 process.cwd() 기준(종전 동작)', () => {
   const empty = tmp('empty');
   const inner = fs.mkdtempSync(path.join(empty, 'sub-'));
   const prevCwd = process.cwd();
   process.chdir(inner);
   try {
-    assert.equal(real(findDocRoot()), real(path.join(inner, 'docs')));
+    // 폴백은 디렉토리를 만들지 않는다 — 존재 검증(realpath)이 아니라 경로 문자열 비교.
+    assert.equal(norm(findDocRoot()), norm(path.join(inner, 'docs')));
   } finally {
     process.chdir(prevCwd);
   }

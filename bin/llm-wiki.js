@@ -11,6 +11,7 @@ const kanbanMonitor = require('../lib/kanban-monitor');
 const kanbanWait = require('../lib/kanban-wait');
 const skills = require('../lib/skills');
 const { findDocRoot } = require('../lib/find-doc-root');
+const { maybeMigrateDocDir } = require('../lib/migrate-doc-dir');
 const { maybeAutoUpdate } = require('../lib/auto-update');
 const { version } = require('../package.json');
 
@@ -121,6 +122,9 @@ if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.i
 // 실패는 maybeAutoUpdate 안에서 삼켜진다 — 갱신 실패가 명령을 막지 않는다.
 if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'unpick', 'handoff',
   'done', 'supersede', 'abandon', 'reopen', 'resume'].includes(subcommand)) {
+  // doc/ → docs/ 레이아웃 전환(0.6.0) — auto-update와 같은 트리거·같은 제외 사유.
+  // 성공 요약 몇 줄은 배너 선례(search에서의 auto-update 안내)로 허용된다.
+  maybeMigrateDocDir(process.cwd());
   maybeAutoUpdate();
 }
 
