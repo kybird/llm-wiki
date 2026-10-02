@@ -23,7 +23,7 @@ Usage:
   llm-wiki compile list              Show raw logs modified since last compile
   llm-wiki compile index             Rebuild wiki index.md + sync QMD search index
   llm-wiki lint                      Validate wiki integrity (links, metadata, evidence)
-  llm-wiki init [--check]            Scaffold doc/ + skills/ + hooks (--check: report only)
+  llm-wiki init [--check]            Scaffold docs/ + skills/ + hooks (--check: report only)
 
 Skills (git channel — prompt edits without npm publish, plan.md 6.2):
   llm-wiki skills add <url>          Register a skill repo (owner/repo → GitHub)
@@ -84,7 +84,7 @@ Optional:
                                      or LLM_WIKI_NO_AUTO_UPDATE=1, to opt out)
   --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
                                      (search, lint, compile list|index, board report, pick)
-  LLM_WIKI_ROOT=/path                Override doc/ root location
+  LLM_WIKI_ROOT=/path                Override docs/ root location
   llm-wiki.config.json               { "projectName": "...", "collections": {...},
                                        "hooksPath": "templates/githooks",
                                        "skills": { "sources": ["<git-url>"], "enabled": ["<name>"] } }`);

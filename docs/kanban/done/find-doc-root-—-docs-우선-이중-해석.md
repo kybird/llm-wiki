@@ -22,6 +22,7 @@ docs/를 정본으로 찾고 레거시 doc/은 폴백으로 해석해 이중 레
 
 ## Notes
 - 2026-10-02T14:27+09:00 — 지시: 무엇을 — lib/find-doc-root.js 해석 3단계(주 워크트리·상위 탐색·폴백) 모두 docs/wiki 우선, doc/wiki 폴백. 건드리지 말 것 — LLM_WIKI_ROOT 오버라이드 의미(그대로 반환), LLM_WIKI_WORKTREE_LOCAL, defaultCollectionNames(경로 무관). 틀리기 쉬운 것 — 존재 신호는 doc/wiki와 동일하게 docs/wiki로만 판정(다른 doc/ 폴더를 건드리지 않는 안전장치의 기저), test/find-doc-root-worktree.test.js·auto-update.test.js가 여전히 통과해야 한다.
+- 2026-10-02T14:46+09:00 — 정정: C1 Result의 'npm test 88종 전부 통과'는 사실이지만 신규 레이아웃 테스트 파일이 npm test 명시 목록 밖이었다(스위트 미포함 상태로 통과 표기 — 과장). C2 커밋 38b8f5d에서 목록 편입 + 폴백 테스트 realpath 결함(존재하지 않는 경로) 수정으로 완전 편입됐다. npm test 100종 기준 재검증 완료.
 
 ## Handoff
 

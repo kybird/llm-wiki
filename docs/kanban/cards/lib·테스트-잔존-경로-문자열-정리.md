@@ -1,10 +1,12 @@
 ---
 title: lib·테스트 잔존 경로 문자열 정리
-status: todo
+status: doing
 ordinal: 14000
 created: 2026-10-02
 depends_on: ["첫 명령 자동 마이그레이션 — doc을 docs로"]
 milestone: docs/ 레이아웃 전환
+claimed_by: unnamed-agent
+claimed_at: 2026-10-02T14:53+09:00
 ---
 
 ## Goal

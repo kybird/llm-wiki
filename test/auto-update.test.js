@@ -13,10 +13,10 @@ const { version: PKG_VERSION } = require('../package.json');
 
 const PKG_ROOT = path.join(__dirname, '..');
 
-// 임시 소비 레포 — doc/wiki + 칸반 골격. 스탬프 상태는 임시 state 디렉터리에 둔다.
-function makeRepo() {
+// 임시 소비 레포 — wiki + 칸반 골격(레이아웃 지정 가능). 스탬프 상태는 임시 state 디렉터리에 둔다.
+function makeRepo(layout = 'doc') {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-au-'));
-  const docRoot = path.join(tmp, 'doc');
+  const docRoot = path.join(tmp, layout);
   fs.mkdirSync(path.join(docRoot, 'wiki'), { recursive: true });
   require('../lib/kanban').scaffold(docRoot);
   const state = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-au-state-'));
@@ -63,6 +63,22 @@ test('버전이 바뀌면 다음 명령이 사본을 자동 갱신하고 스탬�
     assert.equal(fs.readFileSync(sp, 'utf8').trim(), PKG_VERSION, '스탬프에 설치 버전이 찍혀야 한다');
     assert.ok(r.stdout.includes('자동 반영'), `보고 줄이 없다: ${r.stdout}`);
     assert.ok(r.stdout.includes('updated 1'), `갱신 수를 보고해야 한다: ${r.stdout}`);
+  } finally { cleanup(b.tmp, b.state); }
+});
+
+test('docs/ 레이아웃 레포도 자동 갱신 대상이다(0.6.0 전환 — init 흔적 인정 확대)', () => {
+  const b = makeRepo('docs');
+  try {
+    fs.mkdirSync(path.join(b.tmp, '.agents', 'skills', 'work-loop'), { recursive: true });
+    fs.writeFileSync(path.join(b.tmp, '.agents', 'skills', 'work-loop', 'SKILL.md'),
+      'old prompt\nskill-version: 1\n');
+
+    const r = b.run(['board']);
+    assert.equal(r.status, 0, `board 실패: ${r.stderr}`);
+    const fresh = fs.readFileSync(path.join(PKG_ROOT, 'skills', 'work-loop', 'SKILL.md'), 'utf8');
+    assert.equal(
+      fs.readFileSync(path.join(b.tmp, '.agents', 'skills', 'work-loop', 'SKILL.md'), 'utf8'),
+      fresh, 'docs/ 레이아웃에서도 낡은 사본이 갱신돼야 한다');
   } finally { cleanup(b.tmp, b.state); }
 });
 
