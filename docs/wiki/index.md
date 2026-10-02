@@ -14,6 +14,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 | [[agent-cli-contract]] | 이 CLI의 1차 사용자는 종료 코드와 출력으로만 판단하는 에이전트다 — 성공 보고는 실제 변경에 묶인다. | CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그 거부, unknown flag rejection, validateFlags |
 | [[auto-update-copy-source]] | auto-update의 사본 동기화 소스는 **실행 중인 바이너리의 패키지 루트**다. | 사본 핑퐁, skill copy ping-pong, modified since read, 사본 재동기화, skill-version 회귀, auto-update 사본 동기화, 커밋 훅 사본 회귀 |
 | [[card-file-anatomy]] | 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를 결정한다. | 카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드 |
+| [[layout-migration]] | 문서 루트를 `doc/`에서 `docs/`로 전환(0.6.0)하고, 기존 레포는 **첫 llm-wiki 명령에서 자동으로 | docs 전환, doc→docs, layout transition, 레이아웃 전환, 자동 마이그레이션, migrateDocDir, migrate-doc-dir |
 | [[publish-channel-separation]] | 스킬 프롬프트 변경은 git 채널(push + 소비 레포 skills sync)로, CLI 코드 변경은 npm publish로 — | publish 분리, 스킬 채널 분리, 언제 퍼블리시, 배포 타이밍, publish timing, skills sync vs publish, 6.2 원칙 |
 | [[qmd-optional-dependency]] | @tobilu/qmd는 선택 의존성 — 없으면 grep으로 강하하고, 있으면 시맨틱이 더해진다. | semantic search optional, findQmd, QMD 설치 위치 |
 | [[quota-watchdog]] | 5시간 rolling 쿼터 소진으로 밤샘 무인 세션이 죽었을 때, 쿼터 복구 후 예약 자동화 발사가 제어 | 쿼터 워치독, quota watchdog, usage limit reached, 5 hour rolling window, 쿼터 소진, 밤샘 작업 자동 인계, 발사 프로브 |
@@ -43,6 +44,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 | [[destructuring-live-getters]] | 게터를 포함한 반환 객체를 구조 분해하면 그 순간 평가된 스냅샷 원시값이 복사된다 — 살아있는 값이 죽은 값으로 위장한다. | 게터 구조 분해, getter destructuring, out 스냅샷, 빈 stdout 오인, destructuring getter snapshot |
 | [[probing-side-effect-commands]] | 부작용 있는 명령을 확인용으로 실행하는 것 — `--help`는 무해하다는 관례를 전제로 에이전트가 실제 상태를 바꾼다. 기록으로는 막히지 않고 도구로만 막힌다. | 탐색용 호출, pick --help 사고, help가 카드를 집는다, probing for options, 안전한 탐색 경로 부재, 검증 없는 위임 플래그 |
 | [[shared-default-collection-names]] | 두 프로젝트가 QMD 기본 컬렉션 이름을 공유하면 에러 없이 검색이 교차 오염된다. | QMD 컬렉션 충돌, 검색 교차 오염, collection name collision |
+| [[test-manifest-swallows-new-tests]] | `npm test`가 `node --test test/a.test.js test/b.test.js …`처럼 **파일 목록을 명시**하면, | npm test 명시 목록, 테스트 파일 목록 함정, scripts.test 편입, 신규 테스트 미실행, realpathSync ENOENT, 폴백 경로 존재 검증 |
 
 ---
 
@@ -55,8 +57,8 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 
 ## Statistics
 
-- Total concepts: 6
+- Total concepts: 7
 - Total patterns: 8
-- Total anti-patterns: 4
+- Total anti-patterns: 5
 - Total answers: 0
 - Last updated: 2026-10-02

@@ -145,3 +145,7 @@
 {"ts":"2026-10-02T05:57:24.213Z","action":"done","title":"lib·테스트 잔존 경로 문자열 정리"}
 {"ts":"2026-10-02T05:57:39.595Z","action":"claimed","title":"이 레포 도그푸드 전환","actor":"unnamed-agent"}
 {"ts":"2026-10-02T06:01:28.227Z","action":"done","title":"이 레포 도그푸드 전환"}
+{"ts":"2026-10-02T06:10:47.439Z","action":"created","title":"쿼터 워치독 트리거 호스트 추상화"}
+{"ts":"2026-10-02T06:10:47.561Z","action":"created","title":"쿼터 워치독 자동 무장·해제"}
+{"ts":"2026-10-02T06:10:47.698Z","action":"created","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다"}
+{"ts":"2026-10-02T07:46:38.621Z","action":"created","title":"lint가 raw 날짜 링크를 깨진 것으로 판정한다"}
