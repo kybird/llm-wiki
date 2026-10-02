@@ -2,7 +2,7 @@
 
 [English](README.md) | **한국어**
 
-AI 코딩 에이전트를 위한 **LLM 친화 지식 그래프 + 칸반 보드**. 에러·결정·발견을 일일 원시 로그로 남기고, 이를 컴파일해 에이전트가 코드를 쓰기 전에 참고하는 검색 가능한 위키(컨셉·패턴·안티패턴)로 만든다. 파일 기반 칸반(`doc/kanban/`)은 같은 레포를 무인 작업 큐로 바꾼다.
+AI 코딩 에이전트를 위한 **LLM 친화 지식 그래프 + 칸반 보드**. 에러·결정·발견을 일일 원시 로그로 남기고, 이를 컴파일해 에이전트가 코드를 쓰기 전에 참고하는 검색 가능한 위키(컨셉·패턴·안티패턴)로 만든다. 파일 기반 칸반(`docs/kanban/`)은 같은 레포를 무인 작업 큐로 바꾼다.
 
 [Karpathy의 Agentic Memory](https://github.com/karpathy/llm.c) 아이디어에서 영감 — *다음* 에이전트 세션이 *직전* 에이전트의 실수를 반복하지 않게 하는 설계.
 
@@ -24,7 +24,7 @@ npx @kybird/llm-wiki init
 
 ```bash
 cd my-project
-llm-wiki init          # doc/ 스캐폴딩(wiki + kanban), 스킬 + 훅 + 스크립트 복사
+llm-wiki init          # docs/ 스캐폴딩(wiki + kanban), 스킬 + 훅 + 스크립트 복사
 
 # git 훅 활성화(클론마다 1회):
 git config core.hooksPath githooks
@@ -35,8 +35,8 @@ npm install @tobilu/qmd
 
 그다음 AI 에이전트에게 지시한다(지시 파일 — `CLAUDE.md` / `AGENTS.md` 등 — 을 통해):
 - **모든 작업 전**: `llm-wiki search "<작업 키워드>"`을 실행해 매칭된 `status: active` 문서를 읽을 것.
-- **버그 수정 직후 / 설계 결정 직후**: `wiki-log` 스킬로 `doc/raw/YYYY-MM-DD.md`에 Case를 기록.
-- **주기적으로**: `wiki-compile`로 원시 Case를 `doc/wiki/` 문서로 승격.
+- **버그 수정 직후 / 설계 결정 직후**: `wiki-log` 스킬로 `docs/raw/YYYY-MM-DD.md`에 Case를 기록.
+- **주기적으로**: `wiki-compile`로 원시 Case를 `docs/wiki/` 문서로 승격.
 
 끝이다. 나머지는 에이전트가 한다.
 
@@ -44,11 +44,11 @@ npm install @tobilu/qmd
 
 | 명령 | 하는 일 |
 |---|---|
-| `llm-wiki init [--check]` | `doc/` 스캐폴딩(wiki + kanban), 스킬 + 훅 + 스크립트 복사. 마커 인식 — 재실행하면 사본을 갱신하고 당신의 수정은 보존. `--check`는 쓰지 않고 보고만 |
+| `llm-wiki init [--check]` | `docs/` 스캐폴딩(wiki + kanban), 스킬 + 훅 + 스크립트 복사. 마커 인식 — 재실행하면 사본을 갱신하고 당신의 수정은 보존. `--check`는 쓰지 않고 보고만 |
 | `llm-wiki search "<query>"` | grep 정확 매칭 + QMD 시맨틱 검색, **항상 병합**; 매칭 키워드 수 랭킹 + 라인 스니펫 |
 | `llm-wiki compile list` | 아직 컴파일 안 된 원시 로그 목록 — 헤더 날짜 **또는** 콘텐츠 해시(`compile-state.json`)라 같은 날 추가분도 잡는다 |
-| `llm-wiki compile index` | `doc/wiki/index.md` 재생성(별칭·답변 포함), `compile-state.json` 재생성, QMD 인덱스 동기화. **"컴파일 완료" 선언**이다 — wiki-compile 스킬의 페이즈 뒤에 실행할 것, 페이즈를 대신하는 게 아니다 |
-| `llm-wiki lint` | 깨진 링크, **증거 역매칭**(해시 참조와 `### Error` 인용이 `doc/raw/`에 문자 그대로 존재해야), 미컴파일 컨셉, 메타데이터, 낡음 |
+| `llm-wiki compile index` | `docs/wiki/index.md` 재생성(별칭·답변 포함), `compile-state.json` 재생성, QMD 인덱스 동기화. **"컴파일 완료" 선언**이다 — wiki-compile 스킬의 페이즈 뒤에 실행할 것, 페이즈를 대신하는 게 아니다 |
+| `llm-wiki lint` | 깨진 링크, **증거 역매칭**(해시 참조와 `### Error` 인용이 `docs/raw/`에 문자 그대로 존재해야), 미컴파일 컨셉, 메타데이터, 낡음 |
 | `llm-wiki board` / `board report` | 파생 칸반 뷰(텍스트만, 플래그 없음) / 대시보드(done:abandoned 비율, 추세, QA 리버트, 대기열, **review 노화** — 가장 오래된 대기 일수·7일 초과 건수 — 및 마일스톤 경과일(생성일 기준)) |
 | `llm-wiki board video` | `activity.jsonl`을 보드 타임랩스 MP4로 재생(`video/` Remotion 프로젝트 필요; CPU 렌더, GPU 불필요) |
 | `llm-wiki monitor [--port <n>]` | 라이브 읽기 전용 보드 뷰 — `http://127.0.0.1:<n>`(기본 4747). 누가 뭘 클레임했고 얼마나 됐는지(`zcode · 14분`), 클레임 만료, REVIEW 질문, 게이트/의존성 대기, 종결 적체(최신 done/superseded/abandoned + 타임스탬프), 활동 스트림. **마일스톤 패널**(목적 축, plan.md 3.8)은 진행 중 마일스톤을 멤버 카드까지 펼치고 완료된 것은 진행률과 함께 접는다 — 마일스톤을 클릭하면 Goal(계획의 대의)과 전체 멤버 목록을 읽는다. 칼럼·종결 적체·활동 행의 아무 카드나 클릭하면 카드 파일 전문을 볼 수 있다. 2초마다 폴링(바뀔 때만 재렌더); 페이지는 에이전트 작성 텍스트를 `textContent`로만 렌더한다. **같은 보드의** 모니터가 이미 듣는 중에 시작하면 **멱등** — exit 0, 같은 URL. **다른 프로젝트의** 모니터가 포트를 잡고 있으면: 기본 실행은 다음 빈 포트로 넘어간다(4747→4748→…, 보드마다 자기 URL; 헤더에 프로젝트 이름 표시). 명시적 `--port`는 소유자 이름과 함께 실패. **`--all`**은 **플릿 뷰** 시작 — 이 머신의 모든 llm-wiki 프로젝트를 타일로(WIP, 리뷰 대기열, 마일스톤 진행, 마지막 활동), 각 프로젝트의 전체 보드는 클릭 한 번; 프로젝트는 명령 실행 시 머신 로컬 등록부(`~/.llm-wiki/projects.json`)에 자기 자신을 등록한다. **CLI는 여전히 유일한 작성자** — GET이 아닌 메서드는 전부 405; 서버는 상태를 갖지 않는다 |
@@ -58,7 +58,7 @@ npm install @tobilu/qmd
 | `llm-wiki handoff <title> --question "…"` | 카드를 사람 판정 대기로 주차하고 클레임 해제 |
 | `llm-wiki done <title> --result "…"` | 카드 완료 — Result 필수. 마지막 멤버를 완료하면 소속 마일스톤 자동 완료 |
 | `llm-wiki supersede <title> --by a,b` | 카드를 자식들로 대체; 부모는 `superseded/`로 녹는다 |
-| `llm-wiki abandon <title> --reason "…"` | 폐기 — 사유 필수, 안티패턴 재료로 `doc/raw/`에 자동 기록 |
+| `llm-wiki abandon <title> --reason "…"` | 폐기 — 사유 필수, 안티패턴 재료로 `docs/raw/`에 자동 기록 |
 | `llm-wiki reopen <title> --why "…"` | QA: 가짜 done 카드를 doing으로 되돌린다 |
 | `llm-wiki wait [--for handoff\|done\|any\|stall] [--since <ISO>] [--timeout <s>] [--stall-min <m>] [--json]` | 보드 이벤트까지 블록 후 종료 — **exit 코드가 계약: 0 = 이벤트(stdout 한 줄), 2 = 타임아웃(출력 없음), 1 = 에러**; 호출자는 2에서 재무장(re-arm)하고 0에서 행동한다. `--for`는 이벤트를 고른다(기본 `handoff`; `stall`은 `--stall-min`분 침묵 후 발화, 기본 20). `--since`(기본: 지금)은 대기 시작 *전*에 검사해서 호출자가 바쁜 동안 쌓인 이벤트도 즉시 돌려준다. 읽기 전용; 타임스탬프 기반(`activity.jsonl` 전면 재작성 생존), 깨진 줄 스킵, 파일 생김 대기, `fs.watch` + 5초 폴 폴백(접합부 안전) |
 
@@ -75,7 +75,7 @@ llm-wiki wait --for handoff --since 2026-09-12T00:00:00Z --timeout 3600 --json
 
 ```
 your-repo/
-├── doc/
+├── docs/
 │   ├── raw/               # 일일 로그(YYYY-MM-DD.md) — wiki-log가 여기에 쓴다
 │   ├── wiki/              # 컴파일된 지식
 │   │   ├── index.md       # `compile index`가 자동 재생성
@@ -88,7 +88,7 @@ your-repo/
 ├── AGENTS.md             # 없을 때 한 번 시딩 — 매 세션의 "어떤 스킬을 언제"
 ├── .agents/skills/        # 정본 스킬(ZCode, Cursor, …)
 ├── .claude/skills/        # Claude Code용 미러
-├── scripts/               # doc/스킬 동기화 스크립트(마커 보호 복사본)
+├── scripts/               # docs/스킬 동기화 스크립트(마커 보호 복사본)
 └── githooks/pre-commit    # CLAUDE.md 드리프트 가드 + 스킬 미러 + 미컴파일 로그 넛지
 ```
 
@@ -123,9 +123,9 @@ npm update -g @kybird/llm-wiki    # 그리고 아무 llm-wiki 명령 실행 — 
 - `collections` — QMD 컬렉션 이름(기본값은 레포 폴더 이름에서 파생; 유일한 이름이 중요 — 충돌하면 프로젝트 간 검색이 조용히 상호 오염된다).
 - `hooksPath` — 설정하면 `init`이 `githooks/` 복사본을 만들지 않는다; 레포가 그 경로를 직접 쓴다(자체 훅 소스를 벤더하는 레포용).
 
-`LLM_WIKI_ROOT=/path/to/doc-parent`로 레포 밖의 `doc/`을 가리킬 수도 있다.
+`LLM_WIKI_ROOT=/path/to/doc-parent`로 레포 밖의 `docs/`을 가리킬 수도 있다.
 
-**git 워크트리:** 보드는 브랜치 자원이 아니라 프로젝트 자원이다 — 링크 워크트리가 몇 개든 카드·클레임·활동 로그(`doc/kanban/`)는 한 곳, 주 워크트리의 `doc/`에 산다. `findDocRoot`가 링크 워크트리를 주 워크트리의 `doc/`로 해석한다(`git rev-parse --git-common-dir` 경유). 의도된 부작용: 부 워크트리에서 실행한 `pick`/`done`이 **주 워크트리의 파일**을 수정한다 — 그 변경은 주 워크트리에 미커밋으로 남고 거기서 커밋된다. 종전 동작(cwd 기준, 워크트리별)으로 돌리려면 `LLM_WIKI_WORKTREE_LOCAL=1`.
+**git 워크트리:** 보드는 브랜치 자원이 아니라 프로젝트 자원이다 — 링크 워크트리가 몇 개든 카드·클레임·활동 로그(`docs/kanban/`)는 한 곳, 주 워크트리의 `docs/`에 산다. `findDocRoot`가 링크 워크트리를 주 워크트리의 `docs/`로 해석한다(`git rev-parse --git-common-dir` 경유). 의도된 부작용: 부 워크트리에서 실행한 `pick`/`done`이 **주 워크트리의 파일**을 수정한다 — 그 변경은 주 워크트리에 미커밋으로 남고 거기서 커밋된다. 종전 동작(cwd 기준, 워크트리별)으로 돌리려면 `LLM_WIKI_WORKTREE_LOCAL=1`.
 
 ## 지식의 흐름
 
@@ -133,13 +133,13 @@ npm update -g @kybird/llm-wiki    # 그리고 아무 llm-wiki 명령 실행 — 
 에이전트가 버그를 고친다
       │
       ▼  wiki-log 스킬
-doc/raw/2026-07-24.md   (Case: 그라운딩 + 에러 + 수정 + 분석)
+docs/raw/2026-07-24.md   (Case: 그라운딩 + 에러 + 수정 + 분석)
       │
       ▼  wiki-compile 스킬 (LLM이 추출·종합)
-doc/wiki/patterns/foo.md   doc/wiki/antipatterns/bar.md
+docs/wiki/patterns/foo.md   docs/wiki/antipatterns/bar.md
       │
       ▼  llm-wiki compile index
-doc/wiki/index.md   + QMD 임베딩
+docs/wiki/index.md   + QMD 임베딩
       │
       ▼  다음 에이전트 세션
 llm-wiki search "foo"   →  패턴을 읽고 같은 실수의 반복을 피한다
@@ -176,9 +176,9 @@ llm-wiki init     # 스킬 + 스크립트를 이 레포로 동기화(마커 인�
 git config core.hooksPath templates/githooks
 ```
 
-여기의 `llm-wiki.config.json`은 `"hooksPath": "templates/githooks"`를 선언해서 `init`이 `githooks/` 복사본을 만들지 않는다 — 활성 훅이 곧 정본 템플릿이다. 로드맵 상태는 [doc/improvement-plan.md](doc/improvement-plan.md), 설계 기록은 [doc/plan.md](doc/plan.md).
+여기의 `llm-wiki.config.json`은 `"hooksPath": "templates/githooks"`를 선언해서 `init`이 `githooks/` 복사본을 만들지 않는다 — 활성 훅이 곧 정본 템플릿이다. 로드맵 상태는 [docs/improvement-plan.md](docs/improvement-plan.md), 설계 기록은 [docs/plan.md](docs/plan.md).
 
-회귀 테스트(왕복 직렬화, 중복 제목, 카드 아닌 것 픽, 동시 쓰기)는 버려지는 보드에서 돈다 — 이 레포의 `doc/`은 절대 건드리지 않는다: `npm test`.
+회귀 테스트(왕복 직렬화, 중복 제목, 카드 아닌 것 픽, 동시 쓰기)는 버려지는 보드에서 돈다 — 이 레포의 `docs/`은 절대 건드리지 않는다: `npm test`.
 
 ## 라이선스
 

@@ -43,7 +43,7 @@ CLI 설치 → knest link → repo join(초대코드) → 서버 기동 → wiki
 파일이면 이 문제가 존재하지 않는다 — `git clone`이면 끝이고, 에이전트는
 Read/Grep으로 그냥 읽는다. CLI도 로그인도 네트워크도 필요 없다.
 
-`knest wiki index --out doc/wiki/`가 존재하고 스킬에 "생성물, 커밋 금지"라고
+`knest wiki index --out docs/wiki/`가 존재하고 스킬에 "생성물, 커밋 금지"라고
 적혀 있는 것이 방향이 뒤집혔다는 증거였다 — md가 export고 DB가 정본이면
 **레포에 지식이 안 들어간다.**
 
@@ -157,7 +157,7 @@ Z.AI 오프피크 요금이 근거다. 사람이 자는 시간에 돌리면 같�
 반복해서 부딪힌다.
 
 그리고 이건 위키와 그대로 이어진다 — **폐기 사유가 안티패턴의 원재료다.**
-`doc/wiki/antipatterns/`가 존재하는 이유가 정확히 이것이다.
+`docs/wiki/antipatterns/`가 존재하는 이유가 정확히 이것이다.
 
 ## 3.4 [제안] 어휘는 이미 이 레포에 있다
 

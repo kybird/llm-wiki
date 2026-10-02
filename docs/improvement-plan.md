@@ -52,7 +52,7 @@ plan.md 5.1의 넷 중 (1)(2). **완료 전까지 다른 어떤 검색 품질 �
 |---|---|---|---|
 | 0-1 | QMD+grep 항상 병합 | `lib/wiki-search.js` | `qmdSucceeded`가 grep을 건너뛰는 분기 제거. QMD 결과와 grep 결과를 **항상 둘 다** 모아 출력(보완재, 대체재 아님 — refs-comparison에서도 재확인된 원칙) |
 | 0-2 | grep 순위 + 매칭 줄 | `lib/wiki-search.js` | 키워드별 Set 합치기를 **매칭 키워드 수 내림차순 정렬**로. 파일명만 출력하던 것을 매칭된 줄 스니펫과 함께 |
-| 0-3 | compile index 갱신 넛지 | `templates/githooks/pre-commit` | 커밋에 `doc/raw/*.md`가 포함되면 `llm-wiki compile list`를 돌려 "미컴파일 로그 N건" 경고만 출력(무거운 QMD embed은 훅에서 돌리지 않는다). 4.4 "아무도 안 부른다"의 최소 해결 |
+| 0-3 | compile index 갱신 넛지 | `templates/githooks/pre-commit` | 커밋에 `docs/raw/*.md`가 포함되면 `llm-wiki compile list`를 돌려 "미컴파일 로그 N건" 경고만 출력(무거운 QMD embed은 훅에서 돌리지 않는다). 4.4 "아무도 안 부른다"의 최소 해결 |
 
 **완료 기준:** 위키에 확실히 있는 지식을 실제 에러 메시지로 검색해 매번 찾는다(재현율 100%가 아니라 "정확 문자열이 못 걸리는 일이 없음"). 이 레포 자체 doc/로 측정.
 
@@ -62,10 +62,10 @@ plan.md 5.1의 넷 중 (1)(2). **완료 전까지 다른 어떤 검색 품질 �
 
 | # | 작업 | 위치 | 근거·내용 |
 |---|---|---|---|
-| 1-1 | **근거 역매칭 검증** | `lib/wiki-lint.js` | karpathy-llm-wiki `check_evidence.py` 방식. 위키 페이지의 `hash:xxx`(7~40 hex)와 `### Error` 인용 문자열을 추출해 `doc/raw/` 전체에 문자 그대로 존재하는지 기계 검사. 우리 grounding은 구조화 필드라 그들보다 쉽다. **단, grounding 발행 비용이 0에 가까워야 한다는 그들의 실패 기록(file:line 포기)을 존중 — 스킬 요구 필드는 늘리지 않는다** |
+| 1-1 | **근거 역매칭 검증** | `lib/wiki-lint.js` | karpathy-llm-wiki `check_evidence.py` 방식. 위키 페이지의 `hash:xxx`(7~40 hex)와 `### Error` 인용 문자열을 추출해 `docs/raw/` 전체에 문자 그대로 존재하는지 기계 검사. 우리 grounding은 구조화 필드라 그들보다 쉽다. **단, grounding 발행 비용이 0에 가까워야 한다는 그들의 실패 기록(file:line 포기)을 존중 — 스킬 요구 필드는 늘리지 않는다** |
 | 1-2 | 어휘 통일 | `skills/wiki-log/SKILL.md`, `lib/wiki-compile.js` | plan.md 5.1(3). frontmatter `aliases: [...]` 권장 추가, **에러 메시지 원문 보존** 규칙(compile 시 요약으로 걸릴 문자열이 사라지지 않게 raw 원문 인용 유지) |
 | 1-3 | lint를 연구 의제로 | `lib/wiki-lint.js` | raw 로그의 `[[링크]]` 빈도를 세서 **N회 이상 언급됐는데 wiki 페이지가 없는 개념**을 "Uncompiled knowledge" 섹션으로 보고. 원조 gist·karpathy-llm-wiki 공통 기능 |
-| 1-4 | 답변 아카이빙 | `skills/wiki-search/SKILL.md` | gist의 미이식 아이디어. 유용했던 종합 답변을 `doc/wiki/answers/`로 승격(스킬 절차만; index 재구축 시 answers 섹션 포함) |
+| 1-4 | 답변 아카이빙 | `skills/wiki-search/SKILL.md` | gist의 미이식 아이디어. 유용했던 종합 답변을 `docs/wiki/answers/`로 승격(스킬 절차만; index 재구축 시 answers 섹션 포함) |
 | 1-5 | compile 분류(disposition) | `skills/wiki-compile/SKILL.md` | ingest마다 New/Update/Merge/**No material** 분류 강제 — 얇은 케이스가 페이지가 되는 발산을 프롬프트로 차단 |
 | 1-6 | `--json` 스키마 계약 | `lib/*.js`, `bin/llm-wiki.js` | `{schemaVersion: 1, kind: ...}` 봉투. CLI가 커질수록 스킬 프롬프트가 깨지지 않는 보험. 지금(CLI 827줄)이 가장 싸다 |
 | 1-7 | 스킬 버전 마커 | `skills/*/SKILL.md`, `lib/init.js` | 각 스킬 첫머리에 `skill-version: N`. `llm-wiki init --check`가 레포에 복사된 스킬과 패키지 정본을 비교해 stale 보고. 6.1의 "손대면 건너뛴다" 규칙과 병존(마커가 살아있으면 미수정 판정) |
@@ -100,7 +100,7 @@ plan.md 3.7의 원칙 세 개를 그대로 테스트해 통과하는 조합은 �
 ### 3.2 [제안] 디렉터리와 카드 포맷
 
 ```
-doc/kanban/
+docs/kanban/
   board.yml            # statuses, wip_limits, claim_timeout
   cards/               # 활성: todo / doing / review (frontmatter status)
   done/                # 완료 — move 시 폴더 이동 + 종결

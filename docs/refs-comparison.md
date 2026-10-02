@@ -82,7 +82,7 @@
 
 ### 원조 gist — 우리가 아직 안 가져온 두 아이디어
 
-1. **좋은 검색 답변을 위키에 다시 파일링**("good answers can be filed back into the wiki") — 탐색이 소스처럼 복리로 쌓이게 하는 장치. `doc/wiki/answers/` 4번째 분류 후보.
+1. **좋은 검색 답변을 위키에 다시 파일링**("good answers can be filed back into the wiki") — 탐색이 소스처럼 복리로 쌓이게 하는 장치. `docs/wiki/answers/` 4번째 분류 후보.
 2. **lint를 연구 의제로** — "raw에 반복 등장하는데 위키 페이지 없는 개념" 같은 결핍 탐지 모드. 우리 wiki-lint는 정합성에만 보고 있다.
 
 ---
@@ -96,7 +96,7 @@
 5. **근거 검증 스크립트** (karpathy-llm-wiki) — 위키 페이지의 git hash/에러 문자열/file:line이 링크된 raw 로그에 실제로 존재하는지 **LLM 없이** 검사. 우리 grounding 필드는 문자 그대로 역매칭이 가능해서 그들보다 검증이 쉽다. 단 file:line은 발행 비용이 0에 가워야 한다는 그들의 실패 기록을 존중.
 6. **AC 안정 인덱스 + DoD/AC 분리** (Backlog.md) — 카드의 완료 판정을 "결과 중심 AC"와 "프로젝트 위생 DoD"로 나누고, 체크 항목에 `#1` 인덱스를 박아 재정렬에 강하게.
 7. **`--plain`/`--json`(스키마 버전) / non-TTY 자동 전환** (Backlog.md, kanban-md의 `--compact`) — CLI가 에이전트에게 안정적 계약을 주는 방식. 토큰 비용을 설계 지표로 삼은 kanban-md의 태도까지.
-8. **답변 아카이빙 + lint-as-research** (원조 gist) — wiki-search의 좋은 답을 `doc/wiki/answers/`로 승격; wiki-lint에 "raw에 자주 나오는데 페이지 없는 개념" 결핍 보고.
+8. **답변 아카이빙 + lint-as-research** (원조 gist) — wiki-search의 좋은 답을 `docs/wiki/answers/`로 승격; wiki-lint에 "raw에 자주 나오는데 페이지 없는 개념" 결핍 보고.
 9. **주기 큐레이션 스킬 + "archive, never delete"** (basic-memory) — wiki-defrag/wiki-curate를 정기 작업으로. 폐기 사유 보존 원칙과 정확히 같은 마음.
 
 ## 5. [제안] 피할 것들

@@ -2,7 +2,7 @@
 
 **English** | [한국어](README.ko.md)
 
-An **LLM-friendly knowledge graph + kanban board** for AI coding agents. Capture errors, decisions, and discoveries as raw daily logs, then compile them into a searchable wiki of concepts, patterns, and anti-patterns that agents consult before writing code. A file-based kanban (`doc/kanban/`) turns the same repo into an unattended work queue.
+An **LLM-friendly knowledge graph + kanban board** for AI coding agents. Capture errors, decisions, and discoveries as raw daily logs, then compile them into a searchable wiki of concepts, patterns, and anti-patterns that agents consult before writing code. A file-based kanban (`docs/kanban/`) turns the same repo into an unattended work queue.
 
 Inspired by [Karpathy's Agentic Memory](https://github.com/karpathy/llm.c) ideas — designed so the *next* agent session doesn't repeat the *last* agent's mistakes.
 
@@ -24,7 +24,7 @@ npx @kybird/llm-wiki init
 
 ```bash
 cd my-project
-llm-wiki init          # scaffolds doc/ (wiki + kanban), copies skills + hooks + scripts
+llm-wiki init          # scaffolds docs/ (wiki + kanban), copies skills + hooks + scripts
 
 # Enable git hooks (run once per clone):
 git config core.hooksPath githooks
@@ -35,8 +35,8 @@ npm install @tobilu/qmd
 
 Then tell your AI agent (via its instructions file — `CLAUDE.md` / `AGENTS.md` / etc.):
 - **Before any task**: run `llm-wiki search "<task keywords>"` and read matching `status: active` pages.
-- **After fixing a bug / making a design decision**: use the `wiki-log` skill to record a Case in `doc/raw/YYYY-MM-DD.md`.
-- **Periodically**: use `wiki-compile` to promote raw cases into `doc/wiki/` pages.
+- **After fixing a bug / making a design decision**: use the `wiki-log` skill to record a Case in `docs/raw/YYYY-MM-DD.md`.
+- **Periodically**: use `wiki-compile` to promote raw cases into `docs/wiki/` pages.
 
 That's it. The agent does the rest.
 
@@ -44,11 +44,11 @@ That's it. The agent does the rest.
 
 | Command | What it does |
 |---|---|
-| `llm-wiki init [--check]` | Scaffold `doc/` (wiki + kanban), copy skills + hooks + scripts. Marker-aware — re-running updates copies and preserves your edits. `--check` reports without writing |
+| `llm-wiki init [--check]` | Scaffold `docs/` (wiki + kanban), copy skills + hooks + scripts. Marker-aware — re-running updates copies and preserves your edits. `--check` reports without writing |
 | `llm-wiki search "<query>"` | Grep exact matching + QMD semantic search, **always merged**; ranked by matched-keyword count with line snippets |
 | `llm-wiki compile list` | Show raw logs not yet compiled — header date **or** content hash (`compile-state.json`), so same-day appends are caught too |
-| `llm-wiki compile index` | Rebuild `doc/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
-| `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `doc/raw/`), uncompiled concepts, metadata, staleness |
+| `llm-wiki compile index` | Rebuild `docs/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
+| `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `docs/raw/`), uncompiled concepts, metadata, staleness |
 | `llm-wiki board` / `board report` | Derived kanban view (text only, no flags) / dashboard (done:abandoned ratio, trend, QA reverts, waiting queue, **review aging** — oldest waiting days & count over 7 days — and milestone elapsed days since creation) |
 | `llm-wiki board video` | Replay `activity.jsonl` into a board timelapse MP4 (requires the `video/` Remotion project; CPU render, no GPU) |
 | `llm-wiki monitor [--port <n>]` | Live read-only board view at `http://127.0.0.1:<n>` (default 4747) — who claimed what and for how long (`zcode · 14분`), claim expiry, REVIEW questions, gates/dependency waits, the terminal pile (종결 적체 — newest done/superseded/abandoned with timestamps), and an activity stream. A **milestone panel** (purpose axis, plan.md 3.8) shows in-progress milestones expanded with their member cards and completed ones collapsed with progress — click a milestone to read its Goal (the plan's 대의) and full member list. Click any card (columns, terminal pile, activity rows) to read the full card file. Polls every 2s (re-renders only on change); the page renders agent-authored text via `textContent` only. Starting one while **the same board's** monitor already listens is **idempotent** — exit 0, same URL. A port held by **another project's** monitor: default execution walks to the next free port (4747→4748→…, each board gets its own URL; the header shows the project name); an explicit `--port` fails with the owner's name. **`--all`** starts a **fleet view** — every llm-wiki project on this machine as tiles (WIP, review queue, milestone progress, last activity) with each project's full board one click away; projects register themselves in a machine-local registry (`~/.llm-wiki/projects.json`) as they run commands. **The CLI stays the only writer** — every non-GET method gets a 405; the server keeps no state |
@@ -58,7 +58,7 @@ That's it. The agent does the rest.
 | `llm-wiki handoff <title> --question "…"` | Park a card for human judgment and release the claim |
 | `llm-wiki done <title> --result "…"` | Complete a card — Result is required. Completing the last member auto-completes its milestone |
 | `llm-wiki supersede <title> --by a,b` | Replace a card by children; the parent dissolves into `superseded/` |
-| `llm-wiki abandon <title> --reason "…"` | Discard — reason required, and auto-logged to `doc/raw/` as anti-pattern material |
+| `llm-wiki abandon <title> --reason "…"` | Discard — reason required, and auto-logged to `docs/raw/` as anti-pattern material |
 | `llm-wiki reopen <title> --why "…"` | QA: revert a fake-done card back to doing |
 | `llm-wiki wait [--for handoff\|done\|any\|stall] [--since <ISO>] [--timeout <s>] [--stall-min <m>] [--json]` | Block until a board event, then exit — **exit codes are the contract: 0 = event (one line to stdout), 2 = timeout (nothing printed), 1 = error**; callers re-arm on 2 and act on 0. `--for` picks the event (`handoff` default; `stall` fires after `--stall-min` minutes of silence, default 20). `--since` (default: now) is checked *before* waiting starts, so events that piled up while the caller was busy are returned immediately. Read-only; timestamp-based (survives wholesale `activity.jsonl` rewrites), skips broken lines, waits for the file to exist, `fs.watch` + 5s poll fallback (junction-safe) |
 
@@ -75,7 +75,7 @@ llm-wiki wait --for handoff --since 2026-09-12T00:00:00Z --timeout 3600 --json
 
 ```
 your-repo/
-├── doc/
+├── docs/
 │   ├── raw/               # daily logs (YYYY-MM-DD.md) — wiki-log writes here
 │   ├── wiki/              # compiled knowledge
 │   │   ├── index.md       # auto-rebuilt by `compile index`
@@ -88,7 +88,7 @@ your-repo/
 ├── AGENTS.md             # seeded once if absent — "which skill when" for every session
 ├── .agents/skills/        # canonical skills (ZCode, Cursor, …)
 ├── .claude/skills/        # mirror for Claude Code
-├── scripts/               # doc/skill sync scripts (marker-protected copies)
+├── scripts/               # docs/skill sync scripts (marker-protected copies)
 └── githooks/pre-commit    # CLAUDE.md drift guard + skill mirror + uncompiled-log nudge
 ```
 
@@ -123,9 +123,9 @@ Create `llm-wiki.config.json` in your repo root:
 - `collections` — QMD collection names (defaults derive from your repo's folder name; unique names matter — colliding names silently cross-contaminate search across projects).
 - `hooksPath` — set it and `init` won't create a `githooks/` copy; your repo uses that path directly (for repos that vendor their own hook source).
 
-You can also set `LLM_WIKI_ROOT=/path/to/doc-parent` to point at a `doc/` outside the repo.
+You can also set `LLM_WIKI_ROOT=/path/to/doc-parent` to point at a `docs/` outside the repo.
 
-**Git worktrees:** the board is a project resource, not a branch resource — no matter how many linked worktrees you have, cards, claims and the activity log (`doc/kanban/`) live in one place, the primary worktree's `doc/`. `findDocRoot` resolves a linked worktree to the primary worktree's `doc/` (via `git rev-parse --git-common-dir`). Intended side effect: `pick`/`done` run from a secondary worktree modify files in the primary worktree — those changes stay uncommitted there and are committed there. Set `LLM_WIKI_WORKTREE_LOCAL=1` to restore the old cwd-based (per-worktree) behavior.
+**Git worktrees:** the board is a project resource, not a branch resource — no matter how many linked worktrees you have, cards, claims and the activity log (`docs/kanban/`) live in one place, the primary worktree's `docs/`. `findDocRoot` resolves a linked worktree to the primary worktree's `docs/` (via `git rev-parse --git-common-dir`). Intended side effect: `pick`/`done` run from a secondary worktree modify files in the primary worktree — those changes stay uncommitted there and are committed there. Set `LLM_WIKI_WORKTREE_LOCAL=1` to restore the old cwd-based (per-worktree) behavior.
 
 ## How the knowledge flows
 
@@ -133,13 +133,13 @@ You can also set `LLM_WIKI_ROOT=/path/to/doc-parent` to point at a `doc/` outsid
 agent fixes a bug
       │
       ▼  wiki-log skill
-doc/raw/2026-07-24.md   (Case: grounding + error + fix + analysis)
+docs/raw/2026-07-24.md   (Case: grounding + error + fix + analysis)
       │
       ▼  wiki-compile skill (LLM extracts & synthesizes)
-doc/wiki/patterns/foo.md   doc/wiki/antipatterns/bar.md
+docs/wiki/patterns/foo.md   docs/wiki/antipatterns/bar.md
       │
       ▼  llm-wiki compile index
-doc/wiki/index.md   + QMD embeddings
+docs/wiki/index.md   + QMD embeddings
       │
       ▼  next agent session
 llm-wiki search "foo"   →  reads the pattern, avoids repeating the mistake
@@ -176,9 +176,9 @@ llm-wiki init     # syncs skills + scripts into this repo (marker-aware)
 git config core.hooksPath templates/githooks
 ```
 
-`llm-wiki.config.json` here declares `"hooksPath": "templates/githooks"`, so `init` never creates a `githooks/` copy — the active hook *is* the canonical template. See [doc/improvement-plan.md](doc/improvement-plan.md) for the roadmap state and [doc/plan.md](doc/plan.md) for the design record.
+`llm-wiki.config.json` here declares `"hooksPath": "templates/githooks"`, so `init` never creates a `githooks/` copy — the active hook *is* the canonical template. See [docs/improvement-plan.md](docs/improvement-plan.md) for the roadmap state and [docs/plan.md](docs/plan.md) for the design record.
 
-Regression tests (round-trip serialization, duplicate titles, non-card pick, concurrent writes) run on throwaway boards — never touch this repo's `doc/`: `npm test`.
+Regression tests (round-trip serialization, duplicate titles, non-card pick, concurrent writes) run on throwaway boards — never touch this repo's `docs/`: `npm test`.
 
 ## License
 

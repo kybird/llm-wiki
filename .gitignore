@@ -10,5 +10,5 @@ refs/
 .zcode/
 
 video/node_modules/
-doc/kanban/board-timelapse.mp4
-doc/kanban/board-timeline.json
+docs/kanban/board-timelapse.mp4
+docs/kanban/board-timeline.json

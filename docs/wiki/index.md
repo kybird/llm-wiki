@@ -3,7 +3,7 @@ tags: [index]
 
 # Wiki Index
 
-llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로그에서 추출한 핵심 개념과 패턴을 정리했습니다.
+llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로그에서 추출한 핵심 개념과 패턴을 정리했습니다.
 
 ---
 
@@ -59,4 +59,4 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `doc/raw/` 로�
 - Total patterns: 8
 - Total anti-patterns: 4
 - Total answers: 0
-- Last updated: 2026-09-24
+- Last updated: 2026-10-02
