@@ -126,3 +126,14 @@
 {"ts":"2026-09-25T02:29:35.003Z","action":"claimed","title":"쿼터 워치독 전파 단위 교정 — 소비 레포 자가등록 부트스트랩","actor":"unnamed-agent"}
 {"ts":"2026-09-25T02:31:06.346Z","action":"done","title":"쿼터 워치독 전파 단위 교정 — 소비 레포 자가등록 부트스트랩"}
 {"ts":"2026-09-25T03:29:41.743Z","action":"created","title":"0.6.0 publish — 쿼터 워치독 v12 스킬 실어 올리기"}
+{"ts":"2026-10-02T05:26:16.254Z","action":"created","title":"docs/ 레이아웃 전환"}
+{"ts":"2026-10-02T05:26:54.039Z","action":"created","title":"find-doc-root — docs/ 우선 이중 해석"}
+{"ts":"2026-10-02T05:26:54.171Z","action":"created","title":"첫 명령 자동 마이그레이션 — doc을 docs로"}
+{"ts":"2026-10-02T05:26:54.300Z","action":"created","title":"init·templates docs/ 스캐폴드"}
+{"ts":"2026-10-02T05:27:12.507Z","action":"created","title":"스킬 정본 6종 docs/ 경로 갱신"}
+{"ts":"2026-10-02T05:27:12.614Z","action":"created","title":"lib·테스트 잔존 경로 문자열 정리"}
+{"ts":"2026-10-02T05:27:12.735Z","action":"created","title":"이 레포 도그푸드 전환"}
+{"ts":"2026-10-02T05:29:00.494Z","action":"claimed","title":"find-doc-root — docs/ 우선 이중 해석","actor":"unnamed-agent"}
+{"ts":"2026-10-02T05:32:38.193Z","action":"done","title":"find-doc-root — docs/ 우선 이중 해석"}
+{"ts":"2026-10-02T05:33:36.502Z","action":"claimed","title":"첫 명령 자동 마이그레이션 — doc을 docs로","actor":"unnamed-agent"}
+{"ts":"2026-10-02T05:44:25.466Z","action":"done","title":"첫 명령 자동 마이그레이션 — doc을 docs로"}
