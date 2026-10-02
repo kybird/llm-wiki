@@ -1,12 +1,10 @@
 ---
 title: lib·테스트 잔존 경로 문자열 정리
-status: doing
+status: done
 ordinal: 14000
 created: 2026-10-02
 depends_on: ["첫 명령 자동 마이그레이션 — doc을 docs로"]
 milestone: docs/ 레이아웃 전환
-claimed_by: unnamed-agent
-claimed_at: 2026-10-02T14:53+09:00
 ---
 
 ## Goal
@@ -16,9 +14,9 @@ claimed_at: 2026-10-02T14:53+09:00
 
 ## Acceptance Criteria
 <!-- kanban:ac:begin -->
-- [ ] #1 npm test 전부 통과
-- [ ] #2 node bin/llm-wiki.js board 헤더가 docs/kanban을 정본으로 가리킨다
-- [ ] #3 wiki-compile 기본 index.md 설명 문구가 docs/raw를 언급한다
+- [x] #1 npm test 전부 통과
+- [x] #2 node bin/llm-wiki.js board 헤더가 docs/kanban을 정본으로 가리킨다
+- [x] #3 wiki-compile 기본 index.md 설명 문구가 docs/raw를 언급한다
 <!-- kanban:ac:end -->
 
 ## Plan
@@ -29,3 +27,4 @@ claimed_at: 2026-10-02T14:53+09:00
 ## Handoff
 
 ## Result
+- 2026-10-02T14:57+09:00 — 커밋 7d9a05d. AC#1: npm test 104종 통과(auto-update docs/ 레이아웃 신규 1종 포함). AC#2: node bin/llm-wiki.js board 헤더 '정본은 docs/kanban/ 카드 파일들' 실측. AC#3: lib/wiki-compile.js 기본 index.md 설명 문구 docs/raw 언급(소스 grep + 두 템플릿 문자열 모두). 부수: auto-update init 흔적 판정이 docs/·doc/ 양쪽 보게 한 행위 결함 예방(전환 레포 자동갱신 스킵 방지), 잔존 doc/은 migrate-doc-dir 자기 문서의 레거시 판정 서술뿐(의도).
