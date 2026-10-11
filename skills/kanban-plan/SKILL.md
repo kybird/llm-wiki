@@ -1,7 +1,7 @@
 ---
 name: kanban-plan
 description: Planning loop — turn a plan into board cards the work-loop can consume. Cards are written only via the CLI; decompose with divergence guards, gate what isn't ready, group multi-card plans under a milestone.
-skill-version: 6
+skill-version: 7
 ---
 # When to use
 
@@ -42,6 +42,12 @@ axis. One-card work needs no milestone (과잉이다).
 3. The milestone is never picked and never closed by hand: `done`/`supersede`/`abandon`
    of the last member auto-completes it (review-parked milestones only report).
    Milestone progress is **derived**, never stored — don't manage its state.
+4. Auto-completion is **work finished, not a verdict** (2026-10-11 TTSTextViewer
+   incident: a follow-up session read `milestone-done` as adoption success and
+   misreported — the route was actually rejected 3 days after closure). The
+   route/product judgment arrives later and is **attached, never by reopening**:
+   `llm-wiki verdict <제목> --outcome adopted|rejected|superseded --why "…"` —
+   status/folder untouched, append-only; re-verdicts stack, latest wins.
 
 Rules: milestones stay **flat** (a milestone never belongs to another milestone — CLI
 rejects it). Gates don't propagate — each member carries its own `--not-before`.

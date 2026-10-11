@@ -1,10 +1,10 @@
 ---
 title: card-file-anatomy
-description: 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를 결정한다.
+description: 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를, outcome·outcome_at은 종결 카드의 사후 판정을 결정한다.
 status: active
 version_context: "llm-wiki 0.4.x, lib/kanban.js parseBody"
 tags: [kanban, concept]
-aliases: [카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드]
+aliases: [카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드, outcome 필드, verdict 명령, 사후 판정]
 created: 2026-09-16
 confidence: 5
 ---
@@ -39,6 +39,12 @@ sections Map에는 없다 — "헤더=섹션"이라는 자연스러운 모델이
   바꾸는 길(설정·재지정·해제)은 **활성 카드에만** 열려 있다 — 종결 카드의 소속과 종결
   마일스톤 자체는 회고 뷰가 읽는 이력이다. 가드는 쌍 경로(set/remove) 모두에 붙어야
   한다(2026-09-19: remove 경로 누락을 회귀 테스트가 포착).
+- **판정 필드(2026-10-11)**: `outcome`(adopted|rejected|superseded)·`outcome_at`은
+  `verdict` 명령이 **종결 카드에만** 심는다 — 상태·폴더는 불변이고, 재판정은 최신이
+  frontmatter를 이기며 이력은 Result 라인(`VERDICT: …`)으로 누적된다. "전원 종결
+  자동 반영"은 작업 완결(lifecycle)이지 노선/제품 판정(outcome)이 아니다 — 두 사건이
+  같은 필드를 공유하지 않는 것이 이 스키마의 요점(TTSTextViewer 오독 사고의 수습).
+  `board report`는 이 필드가 있는 마일스톤을 done 카운트에서 분리 집계한다.
 
 ## Related
 
@@ -50,4 +56,5 @@ sections Map에는 없다 — "헤더=섹션"이라는 자연스러운 모델이
 - Git Context: `hash:fac5062` (/api/card 구현 중 발견)
 - Evidence: doc/raw/2026-09-16.md Case 6 — 디버그 실측 `sections keys: [ 'Plan', 'Notes', 'Handoff', 'Result' ]`, `sections.get('Goal')` → undefined
 - 확장(2026-09-19): `hash:281d97d` — doc/raw/2026-09-18.md Case 2 — kind·milestone 필드 문서화 + 종결 소속 가드(쌍 경로)
+- 확장(2026-10-11): `hash:d9423be` — docs/raw/2026-10-11.md Case 1 — 판정 필드 outcome·outcome_at 문서화(verdict 명령, 종결 카드 사후 판정 경로)
 - 구조 실장: lib/kanban.js parseBody·serializeCard

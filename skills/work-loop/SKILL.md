@@ -1,7 +1,7 @@
 ---
 name: work-loop
 description: Unattended kanban loop — pick a card, resolve it with objective evidence, park judgment calls and move on. Board is the only task list; converge, don't diverge.
-skill-version: 13
+skill-version: 14
 ---
 # When to use
 
@@ -123,7 +123,11 @@ pick → work → 판정 ─ done / handoff / abandon / supersede / unpick(반�
    Milestone cards are **never pickable** (they are grouping, not work — plan.md 3.8):
    if the No-pickable detail lists them, that is normal — don't `done` or `abandon` a
    milestone by hand; it auto-completes when its last member terminates (a `done` that
-   prints `◉ milestone 완료` closed it for you).
+   prints `◉ milestone 완료` closed it for you). That closure is **work finished, not a
+   verdict** — do not report a closed milestone as adopted/successful. The route/product
+   judgment often arrives days later and is attached without touching state:
+   `llm-wiki verdict <제목> --outcome adopted|rejected|superseded --why "…"` (append-only;
+   never `reopen` just to record a judgment — reopen is for fake dones only).
 
 5. **Search before work.** `llm-wiki search "<keywords>"` before starting a card. If the
    wall you are about to hit already has an abandoned card or an anti-pattern page, skip
@@ -169,3 +173,6 @@ Run at the end of the night, or in a separate morning session:
 - A milestone that closed during the night → gather its member `Result`s into a
   human-readable completion record (`DONE.md` 류). The cards already rest in
   `docs/kanban/done/` — promotion is a **summary**, not information movement (2026-09-21 규약).
+  Closure means the work finished; if the route/product judgment has since arrived
+  (사람 판정·재실험 결과), attach it with `llm-wiki verdict <제목> --outcome … --why "…"`
+  — `board report` then counts it under adopted/rejected/superseded, apart from done.
