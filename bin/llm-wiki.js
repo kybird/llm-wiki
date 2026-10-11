@@ -70,6 +70,17 @@ Kanban (cards are files; CLI is the only writer):
   llm-wiki abandon <title> --reason "…"     Discard (reason required, never deleted)
   llm-wiki reopen <title> --why "…"         QA: revert a fake-done card to doing
   llm-wiki resume <title> [--note "…"]      Return a review (parked) card to todo
+  llm-wiki verdict <title> --outcome adopted|rejected|superseded --why "…"
+                                     Attach a post-hoc route/product verdict to a
+                                     TERMINATED card (done/superseded/abandoned) — status
+                                     and folder untouched, append-only (frontmatter
+                                     outcome/outcome_at + Result line + activity
+                                     verdict/milestone-verdict; re-verdicts stack as
+                                     lines, latest wins in frontmatter). Milestone
+                                     auto-completion means WORK FINISHED, not a verdict —
+                                     this is where the late-arriving judgment lives.
+                                     Active cards are rejected: put their verdict in
+                                     done --result
   llm-wiki wait [--for <필터>] [--since <ISO ts>] [--timeout <초>] [--stall-min <분>] [--json]
                                      Block until a board event, then exit. 종료 코드가 계약:
                                      0 = 이벤트(stdout 한 줄), 2 = 타임아웃(출력 없음 — 조용히
@@ -106,7 +117,7 @@ const args = rest.filter(a => a !== '--json');
 // 전체 사용법으로 대신한다. return으로 자연 종료한다 — Windows 파이프 stdout은
 // 비동기라 process.exit은 마지막 줄을 지울 수 있다(kanban-wait 교훈).
 const KNOWN_SUBCOMMANDS = ['search', 'compile', 'lint', 'init', 'skills', 'board', 'monitor', 'card',
-  'pick', 'unpick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'wait'];
+  'pick', 'unpick', 'handoff', 'done', 'supersede', 'abandon', 'reopen', 'resume', 'verdict', 'wait'];
 if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.includes('-h'))) {
   const usageKey = subcommand === 'card' && ['new', 'show', 'edit'].includes(args[0]) ? `card ${args[0]}` : subcommand;
   const usage = kanbanCmd.USAGE[usageKey];
@@ -121,7 +132,7 @@ if (KNOWN_SUBCOMMANDS.includes(subcommand) && (args.includes('--help') || args.i
 // stdout이 "이벤트 한 줄 or 침묵" 계약이라 auto-update 배너가 그 계약을 깬다.
 // 실패는 maybeAutoUpdate 안에서 삼켜진다 — 갱신 실패가 명령을 막지 않는다.
 if (['search', 'compile', 'lint', 'skills', 'board', 'card', 'pick', 'unpick', 'handoff',
-  'done', 'supersede', 'abandon', 'reopen', 'resume'].includes(subcommand)) {
+  'done', 'supersede', 'abandon', 'reopen', 'resume', 'verdict'].includes(subcommand)) {
   // doc/ → docs/ 레이아웃 전환(0.6.0) — auto-update와 같은 트리거·같은 제외 사유.
   // 성공 요약 몇 줄은 배너 선례(search에서의 auto-update 안내)로 허용된다.
   maybeMigrateDocDir(process.cwd());
@@ -187,6 +198,9 @@ switch (subcommand) {
     break;
   case 'resume':
     kanbanCmd.resume({ rest: args });
+    break;
+  case 'verdict':
+    kanbanCmd.verdict({ rest: args });
     break;
   case 'wait':
     kanbanWait.wait({ rest: args, json: jsonRequested });

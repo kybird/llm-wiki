@@ -152,3 +152,6 @@
 {"ts":"2026-10-02T14:02:51.115Z","action":"claimed","title":"0.6.0 publish — 쿼터 워치독 v12 스킬 실어 올리기","actor":"unnamed-agent"}
 {"ts":"2026-10-02T23:34:27.506Z","action":"done","title":"0.6.0 publish — 쿼터 워치독 v12 스킬 실어 올리기"}
 {"ts":"2026-10-02T23:34:27.520Z","action":"milestone-done","title":"docs/ 레이아웃 전환","detail":"멤버 7장 전원 종결"}
+{"ts":"2026-10-11T09:49:58.263Z","action":"created","title":"종결 카드 사후 판정 경로 — verdict 명령"}
+{"ts":"2026-10-11T09:50:03.069Z","action":"claimed","title":"종결 카드 사후 판정 경로 — verdict 명령","actor":"zcode"}
+{"ts":"2026-10-11T09:54:40.761Z","action":"done","title":"종결 카드 사후 판정 경로 — verdict 명령"}

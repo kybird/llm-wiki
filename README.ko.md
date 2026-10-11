@@ -60,6 +60,7 @@ npm install @tobilu/qmd
 | `llm-wiki supersede <title> --by a,b` | 카드를 자식들로 대체; 부모는 `superseded/`로 녹는다 |
 | `llm-wiki abandon <title> --reason "…"` | 폐기 — 사유 필수, 안티패턴 재료로 `docs/raw/`에 자동 기록 |
 | `llm-wiki reopen <title> --why "…"` | QA: 가짜 done 카드를 doing으로 되돌린다 |
+| `llm-wiki verdict <제목> --outcome adopted\|rejected\|superseded --why "…"` | 종결(done/superseded/abandoned) 카드에 노선/제품 판정을 **사후 부착** — 상태·폴더 불변, append-only(프론트매터 `outcome`/`outcome_at` + Result 라인 + 활동 로그 `verdict`/`milestone-verdict`). 재판정은 최신이 frontmatter를 이기고 이력은 Result 라인으로 누적. **마일스톤 전원 종결 자동완료는 "작업 완결"이지 채택 성공이 아니다** — 판정은 늦게 도착하고 이 명령이 그 자리다. 활성 카드는 거부(살아 있는 카드의 판정은 `done --result`에 담는다). `board report`는 판정 붙은 마일스톤을 done 카운트에서 분리해 adopted/rejected/superseded로 집계한다 |
 | `llm-wiki wait [--for handoff\|done\|any\|stall] [--since <ISO>] [--timeout <s>] [--stall-min <m>] [--json]` | 보드 이벤트까지 블록 후 종료 — **exit 코드가 계약: 0 = 이벤트(stdout 한 줄), 2 = 타임아웃(출력 없음), 1 = 에러**; 호출자는 2에서 재무장(re-arm)하고 0에서 행동한다. `--for`는 이벤트를 고른다(기본 `handoff`; `stall`은 `--stall-min`분 침묵 후 발화, 기본 20). `--since`(기본: 지금)은 대기 시작 *전*에 검사해서 호출자가 바쁜 동안 쌓인 이벤트도 즉시 돌려준다. 읽기 전용; 타임스탬프 기반(`activity.jsonl` 전면 재작성 생존), 깨진 줄 스킵, 파일 생김 대기, `fs.watch` + 5초 폴 폴백(접합부 안전) |
 
 `search`, `lint`, `compile list|index`, `board report`, `pick`은 `--json` 지원(스크립트·스킬용 `{schemaVersion: 1, kind: …}` 봉투). `wait --json`은 설계상 다르다: 호출자가 그 줄을 직접 파싱하기에, 매칭된 이벤트 자체를 한 JSON 줄로 출력한다(또는 `{action: "stall", …}` 줄).
