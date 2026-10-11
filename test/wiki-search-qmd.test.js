@@ -19,6 +19,30 @@ fs.writeFileSync(okStub, `console.log('STUB-OK', process.argv.slice(2).join(' ')
 const failStub = path.join(tmp, 'stub-fail.js');
 fs.writeFileSync(failStub, `console.error('STUB-FAIL boom'); process.exit(1);\n`);
 
+// 신·구 qmd stub — query 지원 여부는 --help 판별(기능 탐지)이므로 help 출력으로
+// 세대를 흉내낸다(2026-09-22 카드 AC#1·AC#2).
+const newQmdStub = path.join(tmp, 'stub-new-qmd.js');
+fs.writeFileSync(newQmdStub, [
+  'const args = process.argv.slice(2);',
+  'if (args[0] === \'--help\') {',
+  '  console.log(\'qmd query <query>  - Hybrid search with auto expansion + reranking\');',
+  '  console.log(\'qmd search <query> - Full-text BM25 keywords (no LLM)\');',
+  '  process.exit(0);',
+  '}',
+  'console.log(\'STUB-NEW-QMD\', args.join(\' \'));',
+  '',
+].join('\n'));
+const oldQmdStub = path.join(tmp, 'stub-old-qmd.js');
+fs.writeFileSync(oldQmdStub, [
+  'const args = process.argv.slice(2);',
+  'if (args[0] === \'--help\') {',
+  '  console.log(\'qmd search <query> - Full-text BM25 keywords (no LLM)\');',
+  '  process.exit(0);',
+  '}',
+  'console.log(\'STUB-OLD-QMD\', args.join(\' \'));',
+  '',
+].join('\n'));
+
 // search()는 사람용/JSON 출력을 console.log로 찍는다 — 테스트 출력 오염 방지.
 function quietSearch(query) {
   const orig = console.log;
@@ -39,6 +63,27 @@ test('정상 경로 — stub qmd 결과가 시맨틱 봉투에 실린다 (import
   // undefined였다는 신호(214e8c2의 재발)다.
   assert.equal(r.semantic.collections.length, 2, JSON.stringify(r.semantic));
   assert.ok(r.semantic.collections[0].output.includes('STUB-OK'));
+});
+
+test('query 지원 qmd — 시맨틱층이 qmd query(자동 확장)를 호출한다', () => {
+  process.env.QMD_CLI_PATH = newQmdStub;
+  const r = quietSearch('어휘 불일치 질의');
+  assert.equal(r.semantic.mode, 'query', '봉투에 모드 기록');
+  assert.equal(r.semantic.errors.length, 0, JSON.stringify(r.semantic.errors));
+  assert.equal(r.semantic.collections.length, 2);
+  // stub은 받은 인자를 그대로 되돌린다 — 서브커맨드가 query임을 목격한다.
+  assert.ok(r.semantic.collections[0].output.includes('STUB-NEW-QMD query 어휘 불일치 질의'),
+    `query 서브커맨드가 아니었다: ${r.semantic.collections[0].output}`);
+});
+
+test('구버전 qmd — 기능 탐지로 search(BM25)로 폴백, 에러 아님', () => {
+  process.env.QMD_CLI_PATH = oldQmdStub;
+  const r = quietSearch('어휘 불일치 질의');
+  assert.equal(r.semantic.mode, 'search', '폴백 모드');
+  assert.equal(r.semantic.errors.length, 0, '폴백은 고장이 아니다 — errors 비어 있어야');
+  assert.equal(r.semantic.collections.length, 2);
+  assert.ok(r.semantic.collections[0].output.includes('STUB-OLD-QMD search 어휘 불일치 질의'),
+    `search 서브커맨드가 아니었다: ${r.semantic.collections[0].output}`);
 });
 
 test('고장 경로 — qmd 실패가 조용히 사라지지 않고 errors에 드러난다', () => {

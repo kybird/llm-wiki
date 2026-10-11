@@ -45,7 +45,7 @@ That's it. The agent does the rest.
 | Command | What it does |
 |---|---|
 | `llm-wiki init [--check]` | Scaffold `docs/` (wiki + kanban), copy skills + hooks + scripts. Marker-aware — re-running updates copies and preserves your edits. `--check` reports without writing |
-| `llm-wiki search "<query>"` | Grep exact matching + QMD semantic search, **always merged**; ranked by matched-keyword count with line snippets |
+| `llm-wiki search "<query>"` | Grep exact matching + QMD semantic search, **always merged**; ranked by matched-keyword count with line snippets. Semantic uses `qmd query` (2.8.3+ hybrid + **auto query expansion** + reranking — absorbs cross-language/descriptive queries); older qmd falls back to BM25 `search` via feature detection |
 | `llm-wiki compile list` | Show raw logs not yet compiled — header date **or** content hash (`compile-state.json`), so same-day appends are caught too |
 | `llm-wiki compile index` | Rebuild `docs/wiki/index.md` (with aliases and answers), regenerate `compile-state.json`, and sync the QMD index. **This is a "compile complete" declaration** — run it after the wiki-compile skill's phases, not instead of them |
 | `llm-wiki lint` | Broken links, **evidence back-matching** (hash refs & `### Error` quotes must exist verbatim in `docs/raw/`), uncompiled concepts, metadata, staleness |

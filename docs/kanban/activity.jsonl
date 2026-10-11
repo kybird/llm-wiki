@@ -159,3 +159,5 @@
 {"ts":"2026-10-11T10:49:27.678Z","action":"done","title":"lint가 raw 날짜 링크를 깨진 것으로 판정한다"}
 {"ts":"2026-10-11T10:49:56.396Z","action":"claimed","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다","actor":"zcode"}
 {"ts":"2026-10-11T10:52:44.355Z","action":"done","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다"}
+{"ts":"2026-10-11T10:52:55.813Z","action":"claimed","title":"시맨틱 검색 qmd query 전환 — 질의 자동 확장으로 어휘 불일치 흡수","actor":"zcode"}
+{"ts":"2026-10-11T11:08:40.210Z","action":"done","title":"시맨틱 검색 qmd query 전환 — 질의 자동 확장으로 어휘 불일치 흡수"}

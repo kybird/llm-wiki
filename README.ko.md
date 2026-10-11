@@ -45,7 +45,7 @@ npm install @tobilu/qmd
 | 명령 | 하는 일 |
 |---|---|
 | `llm-wiki init [--check]` | `docs/` 스캐폴딩(wiki + kanban), 스킬 + 훅 + 스크립트 복사. 마커 인식 — 재실행하면 사본을 갱신하고 당신의 수정은 보존. `--check`는 쓰지 않고 보고만 |
-| `llm-wiki search "<query>"` | grep 정확 매칭 + QMD 시맨틱 검색, **항상 병합**; 매칭 키워드 수 랭킹 + 라인 스니펫 |
+| `llm-wiki search "<query>"` | grep 정확 매칭 + QMD 시맨틱 검색, **항상 병합**; 매칭 키워드 수 랭킹 + 라인 스니펫. 시맨틱은 `qmd query`(2.8.3+ 하이브리드 + **질의 자동 확장** + 재순위 — 교차언어·설명투 질의 흡수)를 쓰고 구버전은 기능 탐지로 BM25 `search` 폴백 |
 | `llm-wiki compile list` | 아직 컴파일 안 된 원시 로그 목록 — 헤더 날짜 **또는** 콘텐츠 해시(`compile-state.json`)라 같은 날 추가분도 잡는다 |
 | `llm-wiki compile index` | `docs/wiki/index.md` 재생성(별칭·답변 포함), `compile-state.json` 재생성, QMD 인덱스 동기화. **"컴파일 완료" 선언**이다 — wiki-compile 스킬의 페이즈 뒤에 실행할 것, 페이즈를 대신하는 게 아니다 |
 | `llm-wiki lint` | 깨진 링크, **증거 역매칭**(해시 참조와 `### Error` 인용이 `docs/raw/`에 문자 그대로 존재해야), 미컴파일 컨셉, 메타데이터, 낡음 |
