@@ -29,6 +29,10 @@
 - 패키지: **`@kybird/llm-wiki`** (스코프 — `llm-wiki`는 선점됨).
 - 배포: `npm version minor && npm publish --access public` → 브라우저 웹 인증.
   스코프는 기본이 **비공개**라 플래그를 빼면 성공 출력이 나도 외부엔 404다.
+  **분업(2026-10-11 실측):** 에이전트 셸(비대화형)은 발행 승인의 브라우저 대기를
+  못 한다(ENEEDAUTH·EOTP로 즉시 사망) — 에이전트는 `npm version minor`까지,
+  `npm publish --access public`은 사용자 터미널에서 친다(승인 클릭 한 번).
+  레지스트리 반영은 수 분 지연 — `npm view`가 구버전을 내면 기다렸다 재확인.
 - 사용자 레포 반영: npm update만 하면 된다 — 다음 명령이 버전 스탬프(~/.llm-wiki/auto-update,
   lib/auto-update.js)를 보고 사본을 자동 동기화한다. 옵트아웃 config `autoUpdate: false`.
 - 스킬 프롬프트 반복 수정은 git 채널(skills add/sync) — publish와 분리가 원칙(6.2).
