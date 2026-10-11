@@ -157,3 +157,5 @@
 {"ts":"2026-10-11T09:54:40.761Z","action":"done","title":"종결 카드 사후 판정 경로 — verdict 명령"}
 {"ts":"2026-10-11T10:48:44.802Z","action":"claimed","title":"lint가 raw 날짜 링크를 깨진 것으로 판정한다","actor":"zcode"}
 {"ts":"2026-10-11T10:49:27.678Z","action":"done","title":"lint가 raw 날짜 링크를 깨진 것으로 판정한다"}
+{"ts":"2026-10-11T10:49:56.396Z","action":"claimed","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다","actor":"zcode"}
+{"ts":"2026-10-11T10:52:44.355Z","action":"done","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다"}
