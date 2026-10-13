@@ -43,6 +43,23 @@ fs.writeFileSync(oldQmdStub, [
   '',
 ].join('\n'));
 
+// CUDA 크래시 stub — vulkan 강하(QMD_LLAMA_GPU=vulkan)로만 살아나는 자식.
+// 2026-10-13 win32 CUDA 리랭커 가짜 OOM(상류 llama.cpp 결함)의 강하 회수 게이트.
+const cudaCrashStub = path.join(tmp, 'stub-cuda-crash.js');
+fs.writeFileSync(cudaCrashStub, [
+  'const args = process.argv.slice(2);',
+  'if (args[0] === \'--help\') {',
+  '  console.log(\'qmd query <query>  - Hybrid search with auto expansion + reranking\');',
+  '  process.exit(0);',
+  '}',
+  'if (process.env.QMD_LLAMA_GPU !== \'vulkan\') {',
+  '  console.error(\'llama.cpp\\ggml\\src\\ggml-cuda\\ggml-cuda.cu:106: CUDA error\');',
+  '  process.exit(127);',
+  '}',
+  'console.log(\'STUB-VULKAN-OK\', args.join(\' \'));',
+  '',
+].join('\n'));
+
 // search()는 사람용/JSON 출력을 console.log로 찍는다 — 테스트 출력 오염 방지.
 function quietSearch(query) {
   const orig = console.log;
@@ -96,6 +113,16 @@ test('고장 경로 — qmd 실패가 조용히 사라지지 않고 errors에 �
     assert.ok(e.collection, '컬렉션 이름이 실려야 한다');
     assert.ok(e.message.includes('Command failed'), `실패 사유가 담겨야 한다: ${e.message}`);
   }
+});
+
+test('CUDA 크래시 — 같은 수집을 vulkan 강하로 재시도해 회수한다', () => {
+  process.env.QMD_CLI_PATH = cudaCrashStub;
+  const r = quietSearch('cuda 강하 질의');
+  assert.equal(r.semantic.errors.length, 0, `강하 후에도 에러가 남았다: ${JSON.stringify(r.semantic.errors)}`);
+  assert.equal(r.semantic.collections.length, 2);
+  // stub은 QMD_LLAMA_GPU=vulkan일 때만 결과를 낸다 — 실렸다는 것 자체가 강하 증거.
+  assert.ok(r.semantic.collections[0].output.includes('STUB-VULKAN-OK'),
+    `vulkan 강하 결과가 아니었다: ${r.semantic.collections[0].output}`);
 });
 
 test.after(() => {
