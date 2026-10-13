@@ -104,6 +104,18 @@ Removing `.targets` does **not** delete the CUDA 11.8 toolkit itself — other p
 3. Compare `nvcc --version` against the VS 2022 MSVC version (`cl.exe` 19.44+ needs CUDA 12.4+).
 4. Final result `✓ Done!` means embedding succeeded (functionally OK, only performance degraded).
 
+## 다른 기기 진단 체크리스트 (2026-10-13 사용자 정리 — 드라이버 교체 전에)
+
+에러 **메시지**가 모드를 가린다 — 순서대로 짝지어라:
+
+1. `falling back to using Vulkan` / 로드 시 크래시 → **prebuilt DLL 충돌(최빈원인)**.
+   prebuilt가 기대하는 cublas 버전 확인:
+   `grep -aoE 'cublas64_[0-9]+\.dll' <qmd>/node_modules/@node-llama-cpp/win-x64-cuda/bins/win-x64-cuda/ggml-cuda.dll`
+   → 그 버전의 **런타임 DLL**을 가진 툴킷 하나를 PATH 선두에. 런타임 DLL을 가진 CUDA가 2개 이상이면 그것부터 정리한다 — nvcc 등 툴킷 잔재만 있는 공존은 prebuilt 경로에 무하다(2026-10-13 실측).
+2. `STL1002` / `expected CUDA 12.4+` → MSVC(cl 19.44+)↔툴킷 불일치. **빌드타임** 문제라 드라이버와 무관.
+3. 런타임 `CUDA error: out of memory`(여유 VRAM에서도) → **일시적 드라이버/VRAM 상태 모드**. 그 실행만 `QMD_LLAMA_GPU=false`. llm-wiki의 search 경로는 자동 vulkan 강하(lib/wiki-search.js, efe4c14)가 회수한다 — CPU 리랭크는 ~650s/21청크라 120s 타임아웃을 넘으니 `false` 처방은 직접 qmd CLI에만.
+4. `nvidia-smi`의 "CUDA Version"은 드라이버가 지원하는 **최대 런타임** — 설치한 툴킷/런타임이 이것을 초과하면 안 된다.
+
 ## Anti-patterns (do not do)
 
 - ❌ `NODE_LLAMA_CPP_GPU=false` — read by nothing; ineffective.
