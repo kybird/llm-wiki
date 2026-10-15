@@ -172,3 +172,5 @@
 {"ts":"2026-10-15T05:08:18.475Z","action":"done","title":"무소속 자동 생성과 기본 부착"}
 {"ts":"2026-10-15T05:08:51.434Z","action":"claimed","title":"사후 편입 경로와 소속 해제 환원","actor":"session-1015"}
 {"ts":"2026-10-15T05:13:35.590Z","action":"done","title":"사후 편입 경로와 소속 해제 환원"}
+{"ts":"2026-10-15T05:13:47.400Z","action":"claimed","title":"무소속 뷰·리포트·lint","actor":"session-1015"}
+{"ts":"2026-10-15T05:20:09.658Z","action":"done","title":"무소속 뷰·리포트·lint"}

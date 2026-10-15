@@ -151,11 +151,9 @@ test('board report — review 노화(가장 오래된 대기·7일 초과)와 �
     const fresh = j.waitingQueue.find(w => w.title === '새대기');
     assert.equal(old.waitingDays, 8, '대기 큐 항목별 노화');
     assert.equal(fresh.waitingDays, 1);
-    // 무소속(기본 소속 생성)도 활성 마일스톤이라 2개 — 통계 분리(무소속 뷰·리포트
-    // 카드) 전까지의 잠정 기대치다.
-    assert.equal(j.milestoneAges.length, 2, '늙은계획 + 자동 생성된 무소속');
-    const oldMs = j.milestoneAges.find(m => m.title === '늙은계획');
-    assert.equal(oldMs.elapsedDays, 12, '마일스톤 경과일(생성일 기준)');
+    assert.equal(j.milestoneAges.length, 1, '무소속(never)은 통계에서 분리(2026-10-15)');
+    assert.equal(j.milestoneAges[0].title, '늙은계획');
+    assert.equal(j.milestoneAges[0].elapsedDays, 12, '마일스톤 경과일(생성일 기준)');
 
     // 텍스트 보고서에도 같은 지표가 뜬다 — 아침의 사람이 보는 한 화면.
     const text = b.run(['board', 'report']).stdout;
