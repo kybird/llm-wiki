@@ -4,7 +4,7 @@
 
 An **LLM-friendly knowledge graph + kanban board** for AI coding agents. Capture errors, decisions, and discoveries as raw daily logs, then compile them into a searchable wiki of concepts, patterns, and anti-patterns that agents consult before writing code. A file-based kanban (`docs/kanban/`) turns the same repo into an unattended work queue.
 
-Inspired by [Karpathy's Agentic Memory](https://github.com/karpathy/llm.c) ideas — designed so the *next* agent session doesn't repeat the *last* agent's mistakes.
+Inspired by [Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) ideas — designed so the *next* agent session doesn't repeat the *last* agent's mistakes.
 
 ## Why
 
