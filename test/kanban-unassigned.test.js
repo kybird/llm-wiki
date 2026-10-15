@@ -101,3 +101,20 @@ test('기본 종료 규칙(members) 마일스톤은 여전히 전원 종결 시 
     assert.ok(b.activity().includes('milestone-done'), 'milestone-done 활동');
   } finally { b.cleanup(); }
 });
+
+test('card edit 환원 — 무소속이 없으면 자동 생성 후 부착한다(마이그레이션 경로)', () => {
+  const b = makeBoard();
+  try {
+    // 무소속이 없는 보드를 만든다 — kind milestone과 명시 소속만 쓰면 자동 생성이 안 걸린다
+    assert.equal(b.run(['card', 'new', '계획', '--kind', 'milestone', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '레거시 멤버', '--milestone', '계획', '--goal', 'g']).status, 0);
+    assert.ok(!fs.existsSync(b.cardPath('무소속')), '아직 무소속 없음');
+
+    const r = b.run(['card', 'edit', '레거시 멤버', '--milestone', '무소속']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.ok(r.stdout.includes('무소속 마일스톤 자동 생성'), '생성 보고');
+    const ms = fs.readFileSync(b.cardPath('무소속'), 'utf8');
+    assert.ok(ms.includes('conclusion: never'), '종료 규칙까지 갖춘 생성');
+    assert.ok(fs.readFileSync(b.cardPath('레거시 멤버'), 'utf8').includes('milestone: 무소속'), '부착 완료');
+  } finally { b.cleanup(); }
+});

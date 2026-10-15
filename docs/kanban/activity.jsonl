@@ -174,3 +174,7 @@
 {"ts":"2026-10-15T05:13:35.590Z","action":"done","title":"사후 편입 경로와 소속 해제 환원"}
 {"ts":"2026-10-15T05:13:47.400Z","action":"claimed","title":"무소속 뷰·리포트·lint","actor":"session-1015"}
 {"ts":"2026-10-15T05:20:09.658Z","action":"done","title":"무소속 뷰·리포트·lint"}
+{"ts":"2026-10-15T05:20:45.018Z","action":"claimed","title":"무소속 마이그레이션과 규약 전파","actor":"session-1015"}
+{"ts":"2026-10-15T05:21:11.683Z","action":"created","title":"무소속","detail":"무소속 마일스톤 자동 생성(conclusion: never, 2026-10-15 규약)"}
+{"ts":"2026-10-15T05:22:23.545Z","action":"done","title":"무소속 마이그레이션과 규약 전파"}
+{"ts":"2026-10-15T05:22:23.554Z","action":"milestone-done","title":"무소속 마일스톤과 사후 편입","detail":"멤버 4장 전원 종결 — 작업 완결·판정 별도(verdict)"}
