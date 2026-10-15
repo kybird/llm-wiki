@@ -161,3 +161,11 @@
 {"ts":"2026-10-11T10:52:44.355Z","action":"done","title":"compile index 선행이 compile list의 미승격 raw를 은폐한다"}
 {"ts":"2026-10-11T10:52:55.813Z","action":"claimed","title":"시맨틱 검색 qmd query 전환 — 질의 자동 확장으로 어휘 불일치 흡수","actor":"zcode"}
 {"ts":"2026-10-11T11:08:40.210Z","action":"done","title":"시맨틱 검색 qmd query 전환 — 질의 자동 확장으로 어휘 불일치 흡수"}
+{"ts":"2026-10-15T05:02:20.800Z","action":"created","title":"무소속 마일스톤과 사후 편입"}
+{"ts":"2026-10-15T05:02:20.976Z","action":"created","title":"무소속 자동 생성과 기본 부착"}
+{"ts":"2026-10-15T05:02:41.876Z","action":"created","title":"사후 편입 경로와 소속 해제 환원"}
+{"ts":"2026-10-15T05:02:48.779Z","action":"created","title":"무소속 뷰·리포트·lint"}
+{"ts":"2026-10-15T05:02:48.957Z","action":"created","title":"무소속 마이그레이션과 규약 전파"}
+{"ts":"2026-10-15T05:02:59.791Z","action":"claimed","title":"웹 뷰 — 드래그 이동","actor":"unnamed-agent"}
+{"ts":"2026-10-15T05:03:28.486Z","action":"unpicked","title":"웹 뷰 — 드래그 이동","detail":"잘못 집음 — pick 위치 인자 무시로 ordinal 첫 카드가 선택됨(2026-10-15 세션). --card 플래그 사용해 재지정 예정"}
+{"ts":"2026-10-15T05:03:28.674Z","action":"claimed","title":"무소속 자동 생성과 기본 부착","actor":"session-1015"}
