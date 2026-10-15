@@ -44,7 +44,9 @@ Kanban (cards are files; CLI is the only writer):
                                      only writer (405 on any write method)
   llm-wiki card new "<title>"        Create card (--goal, --ac, --depends, --not-before;
                                      --kind milestone = milestone card, --milestone "<t>"
-                                     attaches to one — plan-level grouping, plan.md 3.8)
+                                     attaches to one — plan-level grouping, plan.md 3.8;
+                                     without --milestone a normal card is born into
+                                     무소속, creating the parking-lot milestone if absent)
   llm-wiki card show <title>         Print card file
   llm-wiki card edit <title>         Sentinel-safe edits; unknown/blank flags fail, output
                                      says what changed (--goal/--plan/--ac/--add-ac/
@@ -54,7 +56,14 @@ Kanban (cards are files; CLI is the only writer):
                                      milestone card — a milestone that already has
                                      members is scope-sealed: adding needs
                                      --scope-amend "<reason>" (recorded in Notes as
-                                     범위 변경); memberless milestones attach freely
+                                     범위 변경); memberless milestones attach freely;
+                                     무소속(conclusion: never) has no finish line —
+                                     attach freely. A TERMINAL card joins an ACTIVE
+                                     milestone only via --retro "<reason>" (사후 편입,
+                                     audited; concluded milestones are immutable).
+                                     --remove-milestone parks the card back in 무소속
+                                     (terminal cards need --retro; concluded-milestone
+                                     membership never changes)
   llm-wiki pick --claim <name> [--card <title>]
                                      Atomically claim the next eligible card (locks, WIP, deps);
                                      --card names a specific card — gates are never bypassed;

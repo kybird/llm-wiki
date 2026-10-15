@@ -72,7 +72,7 @@ test('--milestone 검증 — 존재·kind=milestone·평면 위반을 쓰기 전
   } finally { b.cleanup(); }
 });
 
-test('card edit --milestone — 활성 카드만 재지정, 종결·평면은 거부', () => {
+test('card edit --milestone — 활성 재지정·평면 거부·종결은 사후 편입 경로만(2026-10-15)', () => {
   const b = makeBoard();
   try {
     assert.equal(b.run(['card', 'new', '계획 A', '--kind', 'milestone', '--goal', 'g']).status, 0);
@@ -89,12 +89,12 @@ test('card edit --milestone — 활성 카드만 재지정, 종결·평면은 �
     assert.equal(flat.status, 1);
     assert.ok(flat.stderr.includes('평면'));
 
-    // 종결 카드의 소속은 회고 이력 — 재편 거부
+    // 종결 카드의 소속 변경은 사후 편입 — 사유 없는 재편은 거부
     assert.equal(b.run(['pick', '--claim', 't', '--card', '작업']).status, 0);
     assert.equal(b.run(['done', '작업', '--result', '끝']).status, 0);
     const term = b.run(['card', 'edit', '작업', '--milestone', '계획 A']);
     assert.equal(term.status, 1);
-    assert.ok(term.stderr.includes('회고'), '종결 소속 보호');
+    assert.ok(term.stderr.includes('--retro'), '사후 편입 사유 없으면 거부');
   } finally { b.cleanup(); }
 });
 
@@ -233,15 +233,17 @@ test('종결 마일스톤 가드 — 종결된 계획에 새 소속을 못 건�
     const lateEdit = b.run(['card', 'edit', '늦은멤버', '--milestone', '끝난계획']); // 카드 자체가 없다 — 못 찾음 실패
     assert.equal(lateEdit.status, 1);
 
-    // --remove-milestone — 없는 소속 지우기는 실패(오타 규칙), 있는 것은 해제
+    // --remove-milestone — 없는 소속 지우기는 실패(오타 규칙), 활성 해제는 무소속
+    // 환원이다(2026-10-15: 소속 없음 상태는 데이터에 없다)
     assert.equal(b.run(['card', 'new', '활성계획', '--kind', 'milestone', '--goal', 'g']).status, 0);
     assert.equal(b.run(['card', 'new', '해제대상', '--milestone', '활성계획', '--goal', 'g']).status, 0);
     const noMs = b.run(['card', 'edit', '마지막일', '--remove-milestone']);
-    assert.equal(noMs.status, 1); // 종결 카드 + 소속 없음 — 어느 쪽이든 거부
+    assert.equal(noMs.status, 1); // 종결 카드 해제는 --retro 사유 없이 거부
+    assert.ok(noMs.stderr.includes('--retro'), '오분류 정정 사유');
     const rm = b.run(['card', 'edit', '해제대상', '--remove-milestone']);
     assert.equal(rm.status, 0, rm.stderr);
-    assert.ok(rm.stdout.includes('milestone -해제'), '변경 요약');
-    assert.ok(!fs.readFileSync(b.cardPath('해제대상'), 'utf8').includes('milestone:'), '파일에서 소속 제거');
+    assert.ok(rm.stdout.includes('milestone 환원=무소속'), '변경 요약');
+    assert.ok(fs.readFileSync(b.cardPath('해제대상'), 'utf8').includes('milestone: 무소속'), '무소속 환원(필드 삭제 아님)');
   } finally { b.cleanup(); }
 });
 
