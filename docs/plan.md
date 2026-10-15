@@ -362,6 +362,14 @@ Protection"은 *기존 이름을 재사용하라*는 것뿐이고 **별칭 요�
 - **에러 메시지 원문 보존.** 실무 검색어는 보통 에러 메시지 붙여넣기인데,
   raw의 `### Error` 원문이 compile되며 요약되면 걸릴 문자열이 사라진다
 
+**2026-10-15 개정(확정)**: 어휘 갭의 원천 해결은 **검색 단서**다 — Case를 쓰는
+순간에만 존재하는 "모르던 내가 칠 검색어"(에러 문자열 조각·파일명·명령어·증상어)를
+raw Case 고정 섹션 `### 검색 단서`로 남긴다(작성 직후 증발하는 정보). aliases는
+2차 안전망으로 내려간다. 함께 확정된 Case 골격(헤더 라인 `## [날짜 type] Case N:
+제목` + Grounding/검색 단서/상황/가설/판정/조치, 본문 자유 산문)과 질의 로깅
+(docs/raw/search-queries.jsonl → compile list가 0결과 질의 환류)의 정본:
+docs/superpowers/specs/2026-10-15-episode-memory-retrieval-design.md.
+
 ### (4) 색인이 갱신 안 된다
 
 4.4 참고. `compile index`를 아무도 안 부르면 최근 지식이 임베딩에 아예 없다.
