@@ -37,7 +37,7 @@ function makeDocs() {
     tmp, docRoot, run,
     writeRaw: (date, body = '내용') => fs.writeFileSync(path.join(docRoot, 'raw', `${date}.md`), `# ${date}\n${body}\n`),
     writeWiki: (name, body) => fs.writeFileSync(path.join(docRoot, 'wiki', 'concepts', `${name}.md`), `---\nstatus: active\ncreated: 2026-10-11\n---\n# ${name}\n\n${body}\n`),
-    list: () => JSON.parse(run(['compile', 'list', '--json']).stdout),
+    list: () => JSON.parse(run(['compile', 'list', '--json', '--json']).stdout),
     cleanup: () => fs.rmSync(tmp, { recursive: true, force: true }),
   };
 }
@@ -56,7 +56,7 @@ test('승격 없이 compile index만 돌린 raw — list가 unpromoted로 계속
     assert.equal(entry.reason, 'unpromoted', '이유는 unpromoted');
 
     // 텍스트 렌더에도 보고된다
-    const text = b.run(['compile', 'list']).stdout;
+    const text = b.run(['compile', 'list', '--json']).stdout;
     assert.ok(text.includes(`${date}.md`), '텍스트 출력에 raw 이름');
   } finally { b.cleanup(); }
 });
@@ -88,4 +88,24 @@ test('기존 변경 감지 회귀 — index 후 raw를 고치면 modified로 보
     assert.ok(entry, '수정된 raw는 보고');
     assert.equal(entry.reason, 'modified', '이유는 modified');
   } finally { b.cleanup(); }
+});
+
+// ── 회수 실패 질의 환류(2026-10-15 설계 §3) ──────────────────────────────
+test('compile list — 0결과 질의를 단서·alias 후보로 보고한다', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-qfb-'));
+  const docRoot = path.join(tmp, 'doc');
+  fs.mkdirSync(path.join(docRoot, 'raw'), { recursive: true });
+  fs.writeFileSync(path.join(docRoot, 'raw', 'search-queries.jsonl'), [
+    JSON.stringify({ ts: 't1', query: '카드 추가 거부됨', grep: 0, semantic: 0 }),
+    JSON.stringify({ ts: 't2', query: '카드 추가 거부됨', grep: 0, semantic: 0 }),
+    JSON.stringify({ ts: 't3', query: '왕복', grep: 1, semantic: 0 }),
+  ].join('\n') + '\n');
+  const env = { ...process.env, LLM_WIKI_ROOT: docRoot, LLM_WIKI_NO_AUTO_UPDATE: '1' };
+  const r = spawnSync('node', [path.join(__dirname, '..', 'bin', 'llm-wiki.js'), 'compile', 'list', '--json'], { env, encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  const j = JSON.parse(r.stdout);
+  assert.equal(j.missedQueries.length, 1);
+  assert.equal(j.missedQueries[0].query, '카드 추가 거부됨');
+  assert.equal(j.missedQueries[0].count, 2, '빈도 집계');
+  fs.rmSync(tmp, { recursive: true, force: true });
 });

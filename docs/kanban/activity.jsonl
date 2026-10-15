@@ -190,6 +190,8 @@
 {"ts":"2026-10-15T14:40:28.057Z","action":"done","title":"wiki-log 스킬 재작성"}
 {"ts":"2026-10-15T14:42:54.388Z","action":"claimed","title":"raw 골격 lint 검사","actor":"session-1015"}
 {"ts":"2026-10-15T14:44:32.336Z","action":"done","title":"raw 골격 lint 검사"}
+{"ts":"2026-10-15T14:44:32.653Z","action":"claimed","title":"compile 환류와 pick 검색 훅","actor":"session-1015"}
+{"ts":"2026-10-15T14:46:00.942Z","action":"done","title":"compile 환류와 pick 검색 훅"}
 {"ts":"2026-11-07T06:46:17.479Z","action":"created","title":"QMD 컬렉션 경로 드리프트 자가치유"}
 {"ts":"2026-11-08T04:09:09.289Z","action":"claimed","title":"웹 뷰 — 드래그 이동","actor":"unnamed-agent"}
 {"ts":"2026-11-08T04:32:48.484Z","action":"claimed","title":"QMD 컬렉션 경로 드리프트 자가치유","actor":"unnamed-agent"}
