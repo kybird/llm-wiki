@@ -169,3 +169,4 @@
 {"ts":"2026-10-15T05:02:59.791Z","action":"claimed","title":"웹 뷰 — 드래그 이동","actor":"unnamed-agent"}
 {"ts":"2026-10-15T05:03:28.486Z","action":"unpicked","title":"웹 뷰 — 드래그 이동","detail":"잘못 집음 — pick 위치 인자 무시로 ordinal 첫 카드가 선택됨(2026-10-15 세션). --card 플래그 사용해 재지정 예정"}
 {"ts":"2026-10-15T05:03:28.674Z","action":"claimed","title":"무소속 자동 생성과 기본 부착","actor":"session-1015"}
+{"ts":"2026-10-15T05:08:18.475Z","action":"done","title":"무소속 자동 생성과 기본 부착"}

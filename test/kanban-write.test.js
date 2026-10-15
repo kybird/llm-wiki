@@ -77,7 +77,9 @@ test('동시 done 경쟁 — 정확히 하나만 성공하고 이중 상태가 �
     const codes = await Promise.all(procs.map(p => new Promise(res => p.on('exit', res))));
     assert.equal(codes.filter(c => c === 0).length, 1, `성공은 정확히 하나: ${codes}`);
     assert.equal(fs.readdirSync(b.doneDir).filter(f => f.endsWith('.md')).length, 1, 'done/에 1파일');
-    assert.equal(fs.readdirSync(b.cardsDir).filter(f => f.endsWith('.md')).length, 0, 'cards/에 잔여 없음(이중 상태 없음)');
+    // cards/ 잔여 검사는 경쟁 카드 자체를 본다 — 무소속 마일스톤(기본 소속 생성)은
+    // 당연히 cards/에 산다(2026-10-15).
+    assert.ok(!fs.existsSync(path.join(b.cardsDir, '경주.md')), '경쟁 카드는 cards/에 잔여 없음(이중 상태 없음)');
   } finally { b.cleanup(); }
 });
 
