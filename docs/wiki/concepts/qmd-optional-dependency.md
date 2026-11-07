@@ -22,6 +22,17 @@ aliases: [semantic search optional, findQmd, QMD 설치 위치]
   **Anti-Patterns**: [[shared-default-collection-names]] (init이 폴더명 기본값 + 충돌 경고).
 - embed는 GPU를 쓴다(선택): 빌드/실행 문제는 TROUBLESHOOTING.md,
   **Anti-Patterns**: [[cuda-version-coexistence]].
+- **등록 검증의 인터페이스 지도**(2026-11-07 실측, qmd 2.8.3): `collection list`는 이름
+  (qmd:// URI)·Pattern·Files·Updated만 노출하고 **경로가 없다** — syncQmd가 경로 드리프트에
+  장님이 된 구조적 이유. 경로는 `collection show <name>`의 `Path:` 행에만 있다. `collection
+  list`의 `Files: N`(컬렉션별 색인 파일 수)는 update 직후 재조회로 "디렉터리에 .md 있는데
+  0건 색인" 경고를 update 출력 캡처 없이 검출하는 통로다. 하위명령: add/list/remove/rename/show.
+  관련 사고: [[layout-migration]]의 9일 조용한 실패 — 경로·카운트 검증 없는 "✓ synced"는
+  성공이 아니라 침묵이다.
+
+### Grounding
+- Evidence: lib/find-qmd.js · `qmd collection list`/`collection show ttswiki` 실측 출력
+- [[2026-11-07]] Case 2 — list 미노출·show 노출 분리 발견, Files 파싱 통로 (confidence 5)
 
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]]

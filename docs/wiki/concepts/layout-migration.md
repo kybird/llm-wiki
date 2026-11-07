@@ -1,6 +1,6 @@
 ---
 status: active
-version_context: "llm-wiki 0.6.0 (미발행 — 0.6.0 publish와 함께 소비 레포 전파)"
+version_context: "llm-wiki 0.6.0–0.8.0 (qmd 경로 드리프트 무완화 상태 — 자가치유 카드 대기)"
 tags: [operations, concept]
 aliases: [docs 전환, doc→docs, layout transition, 레이아웃 전환, 자동 마이그레이션, migrateDocDir, migrate-doc-dir]
 created: 2026-10-02
@@ -39,8 +39,15 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
 - auto-update의 init 흔적 판정도 docs/·doc/ 양쪽을 본다 — docs/만 보던 상태로 두면 전환 레포의
   사본 자동 동기화가 조용히 스킵되는 행위 결함이 된다.
 - qmd 사용 레포: 컬렉션 이름은 그대로라 syncQmd가 "이미 등록됨"으로 건너뛰고 **경로만 썩는다**
-  (조용한 실패). 마이그레이션이 index.yml의 구 경로를 발견하면 재등록 안내 한 줄을 출력한다 —
-  수동 절차: `qmd collection remove <name>-wiki <name>-wiki-raw` → `llm-wiki compile index`.
+  (조용한 실패 — 2026-11-07 소비 레포 실측으로 구조 확정). 완화는 **자동 마이그레이션 순간에 1회
+  발화하는 재등록 안내 한 줄뿐**이라 구조적 허점이 있다: 수동 마이그레이션(git mv 직접)은 안내가
+  발화할 기회 자체가 없고, 안내를 놓치면 이후 어떤 명령도 재검사하지 않는다. TTSTextViewer가
+  2026-10-29 수동 전환 후 9일간 `Indexed: 0 new, 0 updated, 0 unchanged, 0 removed` ·
+  `✓ QMD search index synced.` 를 출력하며 의미검색이 누락된 채 방치됐다(카드 "QMD 컬렉션 경로
+  드리프트 자가치유" — syncQmd가 `collection show`로 경로를 검증·업서트하는 계통 수정).
+  수동 수습 절차: `qmd collection remove <name>-wiki <name>-wiki-raw` → `llm-wiki compile index`.
+  수동 전환의 전형적 흔적: `doc/`에 **미추적 파일만** 남는다(자동 `git mv doc docs`는 디렉터리
+  rename이라 미추적 파일도 통째 이동) — 잔해가 있으면 안내 없이 넘어갔다고 읽으면 된다.
 
 ## Related
 
@@ -53,3 +60,6 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
 - [[2026-10-02]] Case 1 — 설계 결정 3축(트리거 게이트·판정 신호·책임 분리) + 대안 기각 (confidence 5)
 - [[2026-10-02]] Case 4 — 도그푸드 실측: done 명령 1발이 정본 레포 자신을 전환(92 rename 스테이징),
   보드 연속성·qmd 재등록 완주. 소비 레포 10곳이 겪을 경험의 선견 (confidence 5)
+- [[2026-11-07]] Case 1 — 1회성 안내의 구조적 허점 실측: 수동 마이그레이션 경로는 안내 발화
+  기회 자체가 없었다(9일간 조용한 실패). 귀속 정정 2건 — "안내가 묻혔다" 아님, "스킬 템플릿
+  원본"도 부재(소비 레포 scripts/compile.js는 lib의 원조 레거시) (confidence 5)
