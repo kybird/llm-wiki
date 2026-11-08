@@ -158,9 +158,18 @@ switch (subcommand) {
   case 'lint':
     lint({ json: jsonRequested });
     break;
-  case 'init':
+  case 'init': {
+    // init은 위치인자를 받지 않는다(pick 2026-11-08 계열) — `init check`가 --check의
+    // 오타인 줄 모르고 풀 init(스캐폴딩 쓰기)을 조용히 돌린다. 모르는 토큰은 실패.
+    const stray = args.filter(a => !a.startsWith('--'));
+    if (stray.length) {
+      console.error(`✗ init은 위치인자를 받지 않는다: ${stray.join(' ')} — 사용법: llm-wiki init [--check]`);
+      process.exitCode = 1;
+      break;
+    }
     init({ check: args.includes('--check') });
     break;
+  }
   case 'skills':
     // sync는 diff 제시 후 승인 프롬프트를 위해 async다.
     skills.dispatch(args, findDocRoot()).catch(e => {
