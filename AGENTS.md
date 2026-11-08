@@ -27,7 +27,13 @@
 
 ## 배포 (npm) — 항상 참조
 - 패키지: **`@kybird/llm-wiki`** (스코프 — `llm-wiki`는 선점됨).
-- 배포: `npm version minor && npm publish --access public` → 브라우저 웹 인증.
+- 배포: `npm version minor && git push origin main --tags && npm publish --access public`
+  → 브라우저 웹 인증. **프리플라이트 `npm whoami`** — 토큰은 머신 단위다(0.7.0을
+  낸 머신과 이 머신은 다르다). whoami 401이면 토큰이 죽은 것 — 이 상태로 publish를
+  치면 **E404 "could not be found or you do not have permission"으로 위장한다**
+  (2026-11-08 실측 — 이름 문제로 오진하지 말 것). `npm login`으로 갱신 후 재발행.
+  push를 publish 앞에 두는 이유: 발행 실패 시 git이 앞서가도 커밋·태그로 수습 가능,
+  반대(npm-only)는 0.7.0 사고의 재현이다.
   스코프는 기본이 **비공개**라 플래그를 빼면 성공 출력이 나도 외부엔 404다.
   **분업(2026-10-11 실측):** 에이전트 셸(비대화형)은 발행 승인의 브라우저 대기를
   못 한다(ENEEDAUTH·EOTP로 즉시 사망) — 에이전트는 `npm version minor`까지,
