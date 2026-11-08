@@ -249,3 +249,26 @@ test('pick --card 없이 — 종전대로 ordinal 최저를 집는다', () => {
     assert.equal(parse('둘째.md').status, 'todo');
   } finally { b.cleanup(); }
 });
+
+// ── 가드 — 위치인자 함정(2026-11-08 재발) ─────────────────────────────────
+// `pick "<제목>"`의 제목이 조용히 무시돼 ordinal 최저 카드를 집는다(10-15 실측,
+// 이날 오클레임으로 2회차). 위치인자는 이름을 말하고 실패해야 한다(에이전트 CLI 계약).
+
+test('pick "<제목>" 위치인자 — 조용히 무시하지 않고 실패한다(ordinal 최저 오클레임 방지)', () => {
+  const b = makeBoard();
+  try {
+    assert.equal(b.run(['card', 'new', '먼저', '--goal', 'g']).status, 0);
+    assert.equal(b.run(['card', 'new', '타겟', '--goal', 'g']).status, 0);
+    const r = b.run(['pick', '타겟']);
+    assert.notEqual(r.status, 0, '위치인자는 실패');
+    const combined = r.stdout + r.stderr; // fail()은 stderr로 말한다
+    assert.ok(combined.includes('위치인자'), `사유가 출력돼야 한다:\n${combined}`);
+    const parse = f => kanban.parseFrontmatter(fs.readFileSync(path.join(b.cardsDir, f), 'utf8'));
+    assert.equal(parse('먼저.md').status, 'todo', 'ordinal 최저를 집지 않는다');
+    assert.equal(parse('타겟.md').status, 'todo', '아무 카드도 집히지 않는다');
+    // 지정 집기는 --card로 여전히 동작
+    const ok = b.run(['pick', '--card', '타겟']);
+    assert.equal(ok.status, 0);
+    assert.equal(parse('타겟.md').status, 'doing', '--card 지정 집기는 불변');
+  } finally { b.cleanup(); }
+});
