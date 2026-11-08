@@ -1,6 +1,6 @@
 ---
 title: QMD 컬렉션 경로 드리프트 자가치유
-status: todo
+status: done
 ordinal: 18000
 created: 2026-11-07
 milestone: 무소속
@@ -13,10 +13,10 @@ milestone: 무소속
 
 ## Acceptance Criteria
 <!-- kanban:ac:begin -->
-- [ ] #1 드리프트 상태(등록 경로≠기대 경로)에서 llm-wiki compile index 1회로 경로 교정 + 실제 색인 발생(Files>0)
-- [ ] #2 0건 색인(대상 디렉터리에 .md 있는데 Files:0)이면 ⚠ 경고 출력, ✓ synced 금지, json 봉투 qmdSynced:false
-- [ ] #3 자동 마이그레이션 종료 시점에 레지스트리가 신규 docs/ 경로를 가리키거나 실패 시 다음 compile의 B가 치유하는 상태로 종료 — 옵트아웃·명령 불사 계약 유지
-- [ ] #4 기존 qmd 목킹 패턴(test/wiki-compile-unpromoted.test.js) 확장으로 B·C 단위 테스트 — 전역 등록부 쓰기 재현은 승인 후 국소적으로
+- [x] #1 드리프트 상태(등록 경로≠기대 경로)에서 llm-wiki compile index 1회로 경로 교정 + 실제 색인 발생(Files>0)
+- [x] #2 0건 색인(대상 디렉터리에 .md 있는데 Files:0)이면 ⚠ 경고 출력, ✓ synced 금지, json 봉투 qmdSynced:false
+- [x] #3 자동 마이그레이션 종료 시점에 레지스트리가 신규 docs/ 경로를 가리키거나 실패 시 다음 compile의 B가 치유하는 상태로 종료 — 옵트아웃·명령 불사 계약 유지
+- [x] #4 기존 qmd 목킹 패턴(test/wiki-compile-unpromoted.test.js) 확장으로 B·C 단위 테스트 — 전역 등록부 쓰기 재현은 승인 후 국소적으로
 <!-- kanban:ac:end -->
 
 ## Plan
@@ -26,3 +26,4 @@ milestone: 무소속
 ## Handoff
 
 ## Result
+- 2026-11-08T13:38+09:00 — B: syncQmd가 collection show로 등록 경로 검증→불일치 remove+add 업서트(lib/qmd-collections.js ensureCollections) — 수동·자동 마이그레이션 모두 compile 1회 치유(회귀테스트: 드리프트 시드→경로 교정+Files>0+멱등). C: update 뒤 list Files 검증 — .md 있는데 0건이면 ⚠·✓금지·qmdSynced:false(+파싱 불능 공허통과 차단). A: 마이그레이션이 안내 대신 재등록 수행, 감지는 죽은 doc 경로에 한정(형제레포 과대매치 수습), qmd 없으면 수동 안내 강하·실패해도 명령 불사. 검수: subagent 리뷰 수용조건부→P2 6건 전부 반영(공백이름 파싱·감지 경계·공허통과·stub 충실도·문구 구분·diff 위생). 별건: pick 위치인자 함정 재발(10-15 문서화 결함 2회차) — 위치인자 거부 가드 별도 커밋. 테스트 140/140.

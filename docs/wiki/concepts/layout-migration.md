@@ -1,6 +1,6 @@
 ---
 status: active
-version_context: "llm-wiki 0.6.0–0.8.0 (qmd 경로 드리프트 무완화 상태 — 자가치유 카드 대기)"
+version_context: "llm-wiki 0.8.0(HEAD+ — qmd 경로 자가치유 탑재, 미발행) / 0.6.0–0.8.0(발행판은 드리프트 무완화)"
 tags: [operations, concept]
 aliases: [docs 전환, doc→docs, layout transition, 레이아웃 전환, 자동 마이그레이션, migrateDocDir, migrate-doc-dir]
 created: 2026-10-02
@@ -48,6 +48,10 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
   수동 수습 절차: `qmd collection remove <name>-wiki <name>-wiki-raw` → `llm-wiki compile index`.
   수동 전환의 전형적 흔적: `doc/`에 **미추적 파일만** 남는다(자동 `git mv doc docs`는 디렉터리
   rename이라 미추적 파일도 통째 이동) — 잔해가 있으면 안내 없이 넘어갔다고 읽으면 된다.
+  **자가치유 탑재(2026-11-08, HEAD+)**: `compile index`의 syncQmd가 `collection show`로 등록
+  경로를 검증해 드리프트면 remove+add 업서트한다(수동·자동 이동 모두 다음 compile 1회로
+  치유), 0건 색인은 ⚠로 보고하며, 자동 마이그레이션도 재등록을 수행한다 — 발행판
+  (0.6.0~0.8.0)에는 아직 없다.
 
 ## Related
 
@@ -63,3 +67,5 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
 - [[2026-11-07]] Case 1 — 1회성 안내의 구조적 허점 실측: 수동 마이그레이션 경로는 안내 발화
   기회 자체가 없었다(9일간 조용한 실패). 귀속 정정 2건 — "안내가 묻혔다" 아님, "스킬 템플릿
   원본"도 부재(소비 레포 scripts/compile.js는 lib의 원조 레거시) (confidence 5)
+- [[2026-11-08]] Case 1 — 자가치유 구현(B 업서트·C 0건 경고·A 마이그레이션 재등록 수행) +
+  서브에이전트 검수 P2 6건 반영(공백 이름 파싱·감지 경계·공허 통과 차단 포함) (confidence 5)

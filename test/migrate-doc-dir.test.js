@@ -122,6 +122,49 @@ test('관련 없는 docs/가 이미 있으면 덮지 않고 보류 안내한다'
   fs.rmSync(repo, { recursive: true, force: true });
 });
 
+// qmd 등록부 재등록(A, 2026-11-07 계통 수정) — 이전엔 한 줄 안내뿐이었다. stub과
+// 감지용 index.yml을 tmp로 밀폐(QMD_CLI_PATH·QMD_CONFIG_DIR)해 전역 등록부를 건드리지
+// 않는다. 상태 저장 stub은 test/fixtures/qmd-stub.js를 tmp로 복사해 쓴다.
+test('qmd 등록부에 구 경로가 있으면 마이그레이션이 재등록을 수행한다(안내 아님)', () => {
+  const repo = gitRepo(tmp('qmd-rereg'));
+  legacyScaffold(repo);
+  commitAll(repo, 'legacy');
+  fs.writeFileSync(path.join(repo, 'llm-wiki.config.json'),
+    JSON.stringify({ collections: { wiki: 'migrate-wiki', raw: 'migrate-raw' } }));
+  commitAll(repo, 'config');
+
+  const qmdDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kb-migrate-qmd-'));
+  const stub = path.join(qmdDir, 'qmd-stub.js');
+  fs.copyFileSync(path.join(__dirname, 'fixtures', 'qmd-stub.js'), stub);
+  // 감지용 index.yml — 구 doc/ 경로를 등록부가 가리키는 사고 상태
+  fs.writeFileSync(path.join(qmdDir, 'index.yml'),
+    `collections:\n  migrate-wiki:\n    path: ${path.join(repo, 'doc', 'wiki')}\n    pattern: "**/*.md"\n  migrate-raw:\n    path: ${path.join(repo, 'doc', 'raw')}\n    pattern: "**/*.md"\n`);
+  fs.writeFileSync(path.join(qmdDir, 'qmd-state.json'), JSON.stringify({ collections: {
+    'migrate-wiki': { path: path.join(repo, 'doc', 'wiki'), pattern: '**/*.md', files: 0 },
+    'migrate-raw': { path: path.join(repo, 'doc', 'raw'), pattern: '**/*.md', files: 0 },
+  } }, null, 2));
+
+  const r = spawnSync(process.execPath, [BIN, 'board'], {
+    cwd: repo, encoding: 'utf8', timeout: 60000,
+    env: {
+      ...process.env,
+      LLM_WIKI_STATE_DIR: STATE,
+      LLM_WIKI_NO_AUTO_UPDATE: '1',
+      QMD_CONFIG_DIR: qmdDir,
+      QMD_CLI_PATH: stub,
+    },
+  });
+
+  assert.ok(fs.existsSync(path.join(repo, 'docs', 'wiki', 'index.md')), '이동 전제');
+  assert.ok(r.stdout.includes('등록 완료') && r.stdout.includes('구 경로 → docs/'), `수행 보고가 출력돼야 한다(안내 아님):\n${r.stdout}`);
+
+  const st = JSON.parse(fs.readFileSync(path.join(qmdDir, 'qmd-state.json'), 'utf8')).collections;
+  assert.equal(st['migrate-wiki'].path, path.join(repo, 'docs', 'wiki'), '등록부가 docs/wiki를 가리킨다');
+  assert.equal(st['migrate-raw'].path, path.join(repo, 'docs', 'raw'), '등록부가 docs/raw를 가리킨다');
+  fs.rmSync(repo, { recursive: true, force: true });
+  fs.rmSync(qmdDir, { recursive: true, force: true });
+});
+
 test.after(() => {
   try { fs.rmSync(STATE, { recursive: true, force: true }); } catch { /* 정리 실패 무시 */ }
 });
