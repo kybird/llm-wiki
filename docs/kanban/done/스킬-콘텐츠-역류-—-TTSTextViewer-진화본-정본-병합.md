@@ -13,10 +13,10 @@ TTSTextViewer에서 독자 진화한 스킬 지시문(work-loop 무소속/retro-
 
 ## Acceptance Criteria
 <!-- kanban:ac:begin -->
-- [ ] #1 skills/work-loop/SKILL.md가 무소속 자동편입(2026-10-15)·retro-bundle 금지 조항·8a pick 직후 검색을 포함하고 skill-version이 15다
-- [ ] #2 skills/kanban-plan/SKILL.md가 2026-10-15 규약(사후 편입 --retro·무소속 legal resting state·종결 마일스톤 불변)을 포함하고 skill-version이 8이다
-- [ ] #3 wiki-compile은 프로젝트 고유 기여(머신 특이 진단은 스킬 밖 규벝 문장)만 채택해 v4; wiki-log/wiki-lint/wiki-search는 무변경 — 프로젝트판이 구판 하위집합임을 diff로 실측 완료
-- [ ] #4 TTSTextViewer 쪽 파일은 읽기만 했다(쓰기 없음)
+- [x] #1 skills/work-loop/SKILL.md가 무소속 자동편입(2026-10-15)·retro-bundle 금지 조항·8a pick 직후 검색을 포함하고 skill-version이 15다
+- [x] #2 skills/kanban-plan/SKILL.md가 2026-10-15 규약(사후 편입 --retro·무소속 legal resting state·종결 마일스톤 불변)을 포함하고 skill-version이 8이다
+- [x] #3 wiki-compile은 프로젝트 고유 기여(머신 특이 진단은 스킬 밖 규벝 문장)만 채택해 v4; wiki-log/wiki-lint/wiki-search는 무변경 — 프로젝트판이 구판 하위집합임을 diff로 실측 완료
+- [x] #4 TTSTextViewer 쪽 파일은 읽기만 했다(쓰기 없음)
 <!-- kanban:ac:end -->
 
 ## Plan

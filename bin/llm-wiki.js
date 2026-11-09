@@ -29,7 +29,9 @@ Skills (git channel — prompt edits without npm publish, plan.md 6.2):
   llm-wiki skills add <url>          Register a skill repo (owner/repo → GitHub)
   llm-wiki skills remove <url>       Unregister
   llm-wiki skills list               Show registered sources
-  llm-wiki skills sync [--yes]       Clone, show diff, install after approval (6.5)
+  llm-wiki skills sync [--yes]       Clone, show diff, install after approval (6.5);
+                                     same-version content forks are reported and never
+                                     overwritten, --yes included (double-counter guard)
                                      [--skill <name>]   sync one skill only
 
 Kanban (cards are files; CLI is the only writer):

@@ -103,7 +103,26 @@ npm update -g @kybird/llm-wiki    # then run any llm-wiki command — copies aut
 
 The version stamp lives per-repo in `~/.llm-wiki/auto-update/` (override with `LLM_WIKI_STATE_DIR`), never inside your repo. Opt out with `"autoUpdate": false` in `llm-wiki.config.json`, or `LLM_WIKI_NO_AUTO_UPDATE=1` for a single run.
 
-The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — updates then treat it as yours and never overwrite it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`. The seeded `AGENTS.md` is yours forever — written once at `init`, never updated.
+The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — updates then treat it as yours and never overwrite it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`. The seeded `AGENTS.md` stays yours: only the block between `llm-wiki:section` markers (absent in old seeds) is package-managed; everything outside the markers is never touched.
+
+### Same-version divergence guard (0.11.0)
+
+If a copy carries the **same version number as the package but different content**, the copy has **forked** — both sides bumped their counters independently (a double counter). Treating "same version" as normal and overwriting is exactly how locally-evolved skills got silently rolled back to old templates (2026-10-13 / 2026-11-09 incidents). Since 0.11.0, `llm-wiki init`, the npm auto-update, and `llm-wiki skills sync` compare content (hash, EOL-normalized) before touching a copy: a same-or-higher-version copy with different content is reported as `diverged` with both hashes and **never overwritten — `--yes` included**.
+
+Resolve a divergence one of two ways:
+
+- **Local evolution is valuable** → backflow it: merge your version into the canonical skill repo (or `skills add` your own repo as a source) and let the canonical side bump the version — the version counter has a single source of truth.
+- **The package wins** → delete that skill directory (`rm -rf .agents/skills/<name> .claude/skills/<name>`) and run `llm-wiki init` (or `skills sync`) to install fresh.
+
+### Upgrading from ≤ 0.6.x (script-era skills)
+
+If your repo locally evolved skill prompts while on an old CLI, **order matters**:
+
+1. **Commit your current `.agents/skills/` (recovery point), and backflow any local evolution you care about** into the canonical repo first.
+2. Then `npm i -g @kybird/llm-wiki@latest`.
+3. Run any llm-wiki command (auto-update applies) and check `llm-wiki init --check` — un-backflowed local edits that kept an old marker version will be overwritten as a normal update; upgrading first and backflowing later is how the rollbacks happened.
+
+Old script-era skills (`node .claude/skills/*/scripts/*.js`) have no version marker: they are reported as `user-modified` and left alone until you delete them — the CLI-based skills shipped since 0.7.0 replace them.
 
 ## Configuration (optional)
 
