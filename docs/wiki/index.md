@@ -14,6 +14,7 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 | [[agent-cli-contract]] | 이 CLI의 1차 사용자는 종료 코드와 출력으로만 판단하는 에이전트다 — 성공 보고는 실제 변경에 묶인다. | CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그 거부, unknown flag rejection, validateFlags |
 | [[auto-update-copy-source]] | auto-update의 사본 동기화 소스는 **실행 중인 바이너리의 패키지 루트**다. | 사본 핑퐁, skill copy ping-pong, modified since read, 사본 재동기화, skill-version 회귀, auto-update 사본 동기화, 커밋 훅 사본 회귀 |
 | [[card-file-anatomy]] | 칸반 카드 파일의 내부 계약 — Goal·AC는 센티넬 특별 취급(card.goal·card.ac), sections Map은 나머지만 담는다. kind·milestone 필드는 소속/종류를, outcome·outcome_at은 종결 카드의 사후 판정을 결정한다. | 카드 구조, 카드 파일 형식, sections Map, parseBody, Goal 센티넬, AC 파싱, kind milestone, milestone 필드, 소속 가드, outcome 필드, verdict 명령, 사후 판정 |
+| [[instruct-propagation]] | 패키지가 소비 레포의 에이전트에게 **지시(계약 지식)**를 전달하는 채널 설계. | 지시 전파, 전파 채널, managed section, 관리 섹션, agentsMdSection, seed-time freeze, 시드 동결 |
 | [[layout-migration]] | 문서 루트를 `doc/`에서 `docs/`로 전환(0.6.0)하고, 기존 레포는 **첫 llm-wiki 명령에서 자동으로 | docs 전환, doc→docs, layout transition, 레이아웃 전환, 자동 마이그레이션, migrateDocDir, migrate-doc-dir |
 | [[publish-channel-separation]] | 스킬 프롬프트 변경은 git 채널(push + 소비 레포 skills sync)로, CLI 코드 변경은 npm publish로 — | publish 분리, 스킬 채널 분리, 언제 퍼블리시, 배포 타이밍, publish timing, skills sync vs publish, 6.2 원칙 |
 | [[qmd-optional-dependency]] | @tobilu/qmd는 선택 의존성 — 없으면 grep으로 강하하고, 있으면 시맨틱이 더해진다. | semantic search optional, findQmd, QMD 설치 위치 |
@@ -58,8 +59,8 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 
 ## Statistics
 
-- Total concepts: 7
+- Total concepts: 8
 - Total patterns: 9
 - Total anti-patterns: 5
 - Total answers: 0
-- Last updated: 2026-11-08
+- Last updated: 2026-11-09

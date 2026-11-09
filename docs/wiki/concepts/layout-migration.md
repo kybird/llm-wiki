@@ -1,6 +1,6 @@
 ---
 status: active
-version_context: "llm-wiki 0.8.0(HEAD+ — qmd 경로 자가치유 탑재, 미발행) / 0.6.0–0.8.0(발행판은 드리프트 무완화)"
+version_context: "llm-wiki HEAD+(자가치유·AGENTS.md 관리 섹션) / 0.9.0(qmd 경로 자가치유) / 0.6.0–0.8.0(드리프트 무완화·AGENTS.md 시드 동결)"
 tags: [operations, concept]
 aliases: [docs 전환, doc→docs, layout transition, 레이아웃 전환, 자동 마이그레이션, migrateDocDir, migrate-doc-dir]
 created: 2026-10-02
@@ -48,10 +48,17 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
   수동 수습 절차: `qmd collection remove <name>-wiki <name>-wiki-raw` → `llm-wiki compile index`.
   수동 전환의 전형적 흔적: `doc/`에 **미추적 파일만** 남는다(자동 `git mv doc docs`는 디렉터리
   rename이라 미추적 파일도 통째 이동) — 잔해가 있으면 안내 없이 넘어갔다고 읽으면 된다.
-  **자가치유 탑재(2026-11-08, HEAD+)**: `compile index`의 syncQmd가 `collection show`로 등록
+  **자가치유 탑재(2026-11-08, 0.9.0)**: `compile index`의 syncQmd가 `collection show`로 등록
   경로를 검증해 드리프트면 remove+add 업서트한다(수동·자동 이동 모두 다음 compile 1회로
-  치유), 0건 색인은 ⚠로 보고하며, 자동 마이그레이션도 재등록을 수행한다 — 발행판
-  (0.6.0~0.8.0)에는 아직 없다.
+  치유), 0건 색인은 ⚠로 보고하며, 자동 마이그레이션도 재등록을 수행한다.
+
+- **전파 갭(2026-11-09 사고 → 관리 섹션)**: 계약 변화가 코드·스킬·README에는 반영돼도
+  **시드 시점에 동결된 소비 레포 AGENTS.md에는 영영 도달하지 않았다** — 0.9.0 자가치유가
+  등록부를 고쳐도 진단하는 에이전트의 지식이 구계약(단수 doc)이면 오판한다(TTSTextViewer
+  실측). 계통 수정: `llm-wiki:section` 마커로 감싼 AGENTS.md 관리 블록을 syncCopies가
+  갱신(npm update 후 첫 명령 — 마커 밖 불가침, 마커 없는 기존 파일은 append 채택, 옵트아웃
+  `agentsMdSection: false`). 레이아웃 계약 문구가 이 섹션을 통해 모든 소비 레포의
+  "매 세션 읽는 면"에 자동 전파된다. 상세는 [[instruct-propagation]].
 
 ## Related
 
@@ -69,3 +76,5 @@ git mv**되는 마이그레이션 장치. 레거시 `doc/`은 폴백으로 계�
   원본"도 부재(소비 레포 scripts/compile.js는 lib의 원조 레거시) (confidence 5)
 - [[2026-11-08]] Case 1 — 자가치유 구현(B 업서트·C 0건 경고·A 마이그레이션 재등록 수행) +
   서브에이전트 검수 P2 6건 반영(공백 이름 파싱·감지 경계·공허 통과 차단 포함) (confidence 5)
+- [[2026-11-09]] Case 2 — 전파 갭 사고: 0.9.0 발행 후에도 진단 에이전트가 구계약으로 오판 —
+  지식 4곳 존재 vs 도달 0곳. AGENTS.md 관리 섹션으로 계통 수정 (confidence 5)

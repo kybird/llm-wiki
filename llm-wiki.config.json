@@ -1,4 +1,5 @@
 {
   "projectName": "llm-wiki",
-  "hooksPath": "templates/githooks"
+  "hooksPath": "templates/githooks",
+  "agentsMdSection": false
 }

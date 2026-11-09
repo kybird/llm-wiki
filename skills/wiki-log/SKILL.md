@@ -1,7 +1,7 @@
 ---
 name: wiki-log
 description: Record knowledge into raw memory with Karpathy-inspired Agentic Memory format. Captures errors, decisions, and discoveries with high-density grounding.
-skill-version: 2
+skill-version: 3
 ---
 # When to use
 - After an error occurs or a bug is fixed
@@ -28,6 +28,8 @@ skill-version: 2
 1. Determine Date Filename
 - Use current date in format: YYYY-MM-DD.md
 - File path: docs/raw/YYYY-MM-DD.md
+- **Layout contract**: `docs/` (plural) is the canonical doc root — a legacy `doc/` is a
+  fallback, never the write target. When both exist, judge by `docs/`.
 
 2. Concept Drift Protection (MANDATORY)
 - **Search before naming**: Use `llm-wiki search` or `ls docs/wiki/concepts/` to find existing concepts.

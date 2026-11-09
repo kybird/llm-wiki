@@ -1,9 +1,15 @@
 # AGENTS.md
 
-<!-- Seeded by `llm-wiki init`. This file is YOURS — edit freely; init never overwrites it. -->
+<!-- llm-wiki:section start — 이 블록은 llm-wiki 패키지가 갱신한다(npm update 후 첫 명령).
+     마커 사이를 지우면 다음 버전에서 다시 붙는다. 영구 거부는 llm-wiki.config.json
+     {"agentsMdSection": false}. 마커 밖 윗·아래 영역은 이 레포의 것이다. -->
 
 This repo uses **llm-wiki**: `docs/` is the knowledge base, `docs/kanban/` is the work board.
 Files are the source of truth. Kanban card files are written ONLY via the CLI — people read them.
+
+**레이아웃 계약**: 문서 루트는 `docs/`(복수)가 정본이다. 레거시 `doc/`은 폴백이며 다음 llm-wiki
+명령에서 자동 마이그레이션된다. 둘 다 있는 레포는 `docs/` 기준으로 판정한다 — `doc/` 잔재는
+구계약의 흔적이지 현재 문서 루트가 아니다.
 
 ## 산출물 삼분법 — SSOT (2026-09-21)
 
@@ -69,4 +75,7 @@ Note 지시서(`card edit --note`)는 필수 세 항목을 갖춘다:
   `llm-wiki` reads and writes the **primary worktree's** `docs/kanban/`. `pick`/`done` run in
   a secondary worktree leave uncommitted changes in the primary worktree — intended, commit
   them there. Opt out with `LLM_WIKI_WORKTREE_LOCAL=1`.
-- Expand this file with this repo's own conventions. Keep it short — it loads every session.
+
+<!-- llm-wiki:section end -->
+
+<!-- 마커 밖은 이 레포의 영역이다 — 이 밑에 자유롭게 추가하라. 짧게 유지: 이 파일은 매 세션 로드된다. -->

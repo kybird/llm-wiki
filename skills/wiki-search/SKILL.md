@@ -1,11 +1,15 @@
 ---
 name: wiki-search
 description: Retrieve relevant past knowledge. Filters out deprecated practices and follows migration trails.
-skill-version: 2
+skill-version: 3
 ---
 # When to use
 - BEFORE writing any code
 - At the start of every task
+
+# Layout contract
+- `docs/` (plural) is the canonical doc root — a legacy `doc/` is a fallback (auto-migrates
+  on the next llm-wiki command). When both exist, judge by `docs/`.
 
 # Input
 - current task description

@@ -437,6 +437,16 @@ llm-wiki skills sync             pull 받아 이 레포에 설치
 그래서 `AGENTS.md`는 각 레포가 직접 쓰는 짧은 파일로 두고 **합성 배관을 안
 만든다.** 기존 pre-commit 훅(CLAUDE.md 정본 + 미러 강제)도 손댈 게 없다.
 
+**관리 섹션(2026-11-09)**: 위 원칙의 유일한 예외로, AGENTS.md의 `llm-wiki:section`
+마커로 감싼 블록은 llm-wiki 패키지가 갱신한다(npm update 후 첫 명령 — syncCopies/
+auto-update 경유). 이건 합성 배관이 아니다: 저자는 llm-wiki 하나뿐이고 블록을 통째로
+갈아끼우므로 산문 충돌의 여지가 없다(스킬 사본과 같은 성격). 마커가 없는 기존 파일
+(구판 시드·손본)에는 append로 채택한다 — 덮어쓰기가 아니라 추가라 6.1과 양립한다.
+마커 밖은 여전히 레포 소유다. 계기: 0.6.0 doc→docs 전환 계약이 시드 시점에 얼어버린
+소비 레포 AGENTS.md에는 영영 전파되지 않아, 배포·수리 에이전트가 구계약으로 진단·
+오판한 2026-11-09 사고(TTSTextViewer — QMD 등록부 자가치유는 0.9.0이 이미 갖고
+있었으나 진단한 에이전트의 지식이 낡았다). 옵트아웃 `agentsMdSection: false`.
+
 ## 6.4 [확정] AGENTS.md에 무엇을 두는가
 
 | | AGENTS.md | 스킬 |
