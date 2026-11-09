@@ -184,3 +184,7 @@
 {"ts":"2026-11-08T04:33:04.618Z","action":"unpicked","title":"웹 뷰 — 드래그 이동","detail":"pick 위치인자 함정 오클레임(10-15 문서화된 결함 재발) — ordinal 최저 카드를 잘못 집었다. 드래그 카드 작업은 미착수, 게이트(09-28) 그대로"}
 {"ts":"2026-11-08T04:38:47.761Z","action":"done","title":"QMD 컬렉션 경로 드리프트 자가치유"}
 {"ts":"2026-11-08T04:47:20.877Z","action":"created","title":"CLI 위치인자·플래그 균일 계약"}
+{"ts":"2026-11-09T15:01:22.630Z","action":"created","title":"스킬 콘텐츠 역류 — TTSTextViewer 진화본 정본 병합"}
+{"ts":"2026-11-09T15:01:37.442Z","action":"created","title":"버전 마커 무결성 — 동일 버전 내용 분기 감지"}
+{"ts":"2026-11-09T15:01:53.642Z","action":"claimed","title":"스킬 콘텐츠 역류 — TTSTextViewer 진화본 정본 병합","actor":"glm"}
+{"ts":"2026-11-09T15:02:59.313Z","action":"done","title":"스킬 콘텐츠 역류 — TTSTextViewer 진화본 정본 병합"}
