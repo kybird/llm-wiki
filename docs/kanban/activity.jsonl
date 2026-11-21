@@ -205,3 +205,6 @@
 {"ts":"2026-11-21T05:38:49.247Z","action":"done","title":"qmd 리랭커 안정화 처방 적용"}
 {"ts":"2026-11-21T05:38:49.258Z","action":"milestone-done","title":"qmd 리랭커 CUDA 가짜 OOM 근본 수리","detail":"멤버 4장 전원 종결 — 작업 완결·판정 별도(verdict)"}
 {"ts":"2026-11-21T05:39:05.886Z","action":"milestone-verdict","title":"qmd 리랭커 CUDA 가짜 OOM 근본 수리","detail":"adopted — 처방(글로벌 qmd 2.9.0 업그레이드)이 3계층 실측으로 채택 확정: 하네스 S4 공존 3/5→0/5, S1 풀스택 4/5→0/10, llm-wiki search 종단 10연속 무크래시(2026-11-21). 원하는 부산물: 트리거 규명(임베드 컨텍스트 상주 중 rankAll)·소거 행렬 하네스(scripts/qmd-cuda-repro)·TROUBLESHOOTING/wiki-search 주석 정정."}
+{"ts":"2026-11-21T05:59:00.105Z","action":"created","title":"auto-update에 qmd 동반 갱신"}
+{"ts":"2026-11-21T05:59:00.456Z","action":"claimed","title":"auto-update에 qmd 동반 갱신","actor":"unnamed-agent"}
+{"ts":"2026-11-21T06:06:05.093Z","action":"done","title":"auto-update에 qmd 동반 갱신"}

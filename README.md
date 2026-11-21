@@ -103,6 +103,8 @@ npm update -g @kybird/llm-wiki    # then run any llm-wiki command — copies aut
 
 The version stamp lives per-repo in `~/.llm-wiki/auto-update/` (override with `LLM_WIKI_STATE_DIR`), never inside your repo. Opt out with `"autoUpdate": false` in `llm-wiki.config.json`, or `LLM_WIKI_NO_AUTO_UPDATE=1` for a single run.
 
+**qmd companion update.** If `@tobilu/qmd` (the optional semantic-search backend) is installed on the machine, the same auto-update pass also brings it to the latest version (`npm i -g @tobilu/qmd@latest` — e.g. the win32 CUDA reranker coexistence crash fixed in qmd 2.9.0). A machine-wide stamp means only the first repo to run a command pays the npm cost. Not installed → never installed by llm-wiki (the optional dependency stays optional). A failed update warns one line and retries on the next opportunity; `LLM_WIKI_STATE_DIR` isolation also isolates this global side effect.
+
 The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — updates then treat it as yours and never overwrite it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`. The seeded `AGENTS.md` stays yours: only the block between `llm-wiki:section` markers (absent in old seeds) is package-managed; everything outside the markers is never touched.
 
 ### Same-version divergence guard (0.11.0)

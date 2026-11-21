@@ -103,6 +103,8 @@ npm update -g @kybird/llm-wiki    # 그리고 아무 llm-wiki 명령 실행 — 
 
 버전 스탬프는 레포 안이 아니라 레포별 `~/.llm-wiki/auto-update/`에 산다(`LLM_WIKI_STATE_DIR`으로 오버라이드). 옵트아웃은 `llm-wiki.config.json`에 `"autoUpdate": false`, 또는 한 번만 끄려면 `LLM_WIKI_NO_AUTO_UPDATE=1`.
 
+**qmd 동반 갱신.** 머신에 `@tobilu/qmd`(선택 시맨틱 검색 백엔드)가 설치되어 있으면 같은 자동 반영 패스가 최신으로 끌어올린다(`npm i -g @tobilu/qmd@latest` — 예: qmd 2.9.0에서 수리된 win32 CUDA 리랭커 공존 크래시). 기계 단위 스탬프로 명령을 처음 친 레포 하나만 npm 비용을 낸다. 미설치면 설치하지 않는다(선택 의존성 유지). 갱신 실패는 경고 한 줄 후 다음 기회에 재시도하며, `LLM_WIKI_STATE_DIR` 격리는 이 전역 부작용도 격리한다.
+
 계약: 복사본은 수정되지 않은 동안만 버전 마커를 유지한다(스킬의 `skill-version:`, 훅·스크립트의 `llm-wiki-template-version:`). **사본을 커스터마이즈하려면 마커 줄을 지워라** — 그러면 업데이트가 그것을 당신 것으로 취급해 다시는 덮어쓰지 않는다. 자기 정본 훅을 유지하는 레포는 복사를 통째로 건너뛸 수 있다: `llm-wiki.config.json`에 `"hooksPath": "templates/githooks"` 설정. 시딩된 `AGENTS.md`는 영원히 당신 것이다 — init 때 1회 작성, 이후 갱신 없음.
 
 ## 설정(선택)
