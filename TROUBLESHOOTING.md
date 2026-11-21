@@ -19,7 +19,7 @@ These are two different failure modes:
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `CUDA error: out of memory` at runtime | Transient driver/VRAM state, GPU asleep | `QMD_LLAMA_GPU=false` for that run |
+| `CUDA error: out of memory` at runtime | ~~Transient driver/VRAM state~~ **규명(2026-11-21)**: 임베드 컨텍스트 상주 중 `rankAll` — ggml-cuda 상류 결함, VRAM 무관 | **qmd 2.9.0(n-l-c 3.22.3) 업그레이드로 수리 실측**(아래 해소 노트) |
 | `error STL1002: Unexpected compiler version, expected CUDA 12.4+` | MSVC + CUDA Toolkit mismatch at build time | Upgrade CUDA Toolkit (see below) |
 
 ## Variable name reminder

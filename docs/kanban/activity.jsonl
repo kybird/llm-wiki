@@ -198,3 +198,10 @@
 {"ts":"2026-11-21T03:37:58.721Z","action":"handoff","title":"qmd 리랭커 안정화 처방 적용","detail":"조건: 최소 재현(카드 1)·모델 판정(카드 2)·상류 재시험(카드 3) 중 하나가 안정 경로를 가리키면 resume --note '근거: …'로 todo로 돌아간다. 그 전까지 처방 후보를 미리 고르지 않는다."}
 {"ts":"2026-11-21T03:40:22.811Z","action":"claimed","title":"qmd 리랭커 CUDA 크래시 최소 재현 하네스","actor":"unnamed-agent"}
 {"ts":"2026-11-21T04:35:22.115Z","action":"done","title":"qmd 리랭커 CUDA 크래시 최소 재현 하네스"}
+{"ts":"2026-11-21T05:29:09.300Z","action":"resumed","title":"qmd 리랭커 안정화 처방 적용","detail":"근거: 카드 1 소거 행렬 S7 — 임베드 컨텍스트만 폐기해도 0/5로 안정 경로 실증(웨이트 상주 무관). 게이트 조건 '카드 1-3 중 하나가 안정 경로' 충족. 처방 1순위는 로컬 패치가 아닌 qmd 2.9.0 업그레이드(llama.cpp 갱신 포함, 2026-11-17 발행) 실측 후 잔여 크래시 시 패치"}
+{"ts":"2026-11-21T05:29:57.283Z","action":"abandoned","title":"qmd 리랭커 교체 실험 — 모델 특이성 판정","detail":"카드 1 소거 행렬이 원 질문을 기각: S3(리랭커 단독 0/5)·S4(공존 3/5)·S7(컨텍스트만 폐기 0/5)로 트리거는 모델이 아니라 '임베드 컨텍스트 상주'로 확정 — 모델 교체는 해소책이 될 수 없음(교체 모델도 공존하면 동일 축), 특이성 판정도 S3이 이미 답함. 처방은 카드 4로 이동"}
+{"ts":"2026-11-21T05:30:09.577Z","action":"claimed","title":"llama.cpp CUDA 크래시 상류 추적·재시험","actor":"unnamed-agent"}
+{"ts":"2026-11-21T05:37:51.549Z","action":"done","title":"llama.cpp CUDA 크래시 상류 추적·재시험"}
+{"ts":"2026-11-21T05:38:49.247Z","action":"done","title":"qmd 리랭커 안정화 처방 적용"}
+{"ts":"2026-11-21T05:38:49.258Z","action":"milestone-done","title":"qmd 리랭커 CUDA 가짜 OOM 근본 수리","detail":"멤버 4장 전원 종결 — 작업 완결·판정 별도(verdict)"}
+{"ts":"2026-11-21T05:39:05.886Z","action":"milestone-verdict","title":"qmd 리랭커 CUDA 가짜 OOM 근본 수리","detail":"adopted — 처방(글로벌 qmd 2.9.0 업그레이드)이 3계층 실측으로 채택 확정: 하네스 S4 공존 3/5→0/5, S1 풀스택 4/5→0/10, llm-wiki search 종단 10연속 무크래시(2026-11-21). 원하는 부산물: 트리거 규명(임베드 컨텍스트 상주 중 rankAll)·소거 행렬 하네스(scripts/qmd-cuda-repro)·TROUBLESHOOTING/wiki-search 주석 정정."}
