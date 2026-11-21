@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "startedAt": "2026-11-21T05:31:25.939Z",
+    "n": 5,
+    "driver": "610.47",
+    "node": "v24.14.1",
+    "scenarios": {
+      "S3": "리랭크만(1컨텍스트)",
+      "S4": "임베드→리랭크(공존)"
+    },
+    "qmd": "2.9.0",
+    "node-llama-cpp": "3.22.3"
+  },
+  "summary": {
+    "S3": {
+      "label": "리랭크만(1컨텍스트)",
+      "crashes": 0,
+      "runs": 5,
+      "nonzeroExit": 0,
+      "ggmlLines": [],
+      "lastEventOfCrash": null
+    },
+    "S4": {
+      "label": "임베드→리랭크(공존)",
+      "crashes": 0,
+      "runs": 5,
+      "nonzeroExit": 0,
+      "ggmlLines": [],
+      "lastEventOfCrash": null
+    }
+  },
+  "results": [
+    {
+      "scenario": "S3",
+      "run": 1,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6744,
+      "vramFreeAfterMB": 6725,
+      "ms": 4504,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:30.295Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S3\"}"
+    },
+    {
+      "scenario": "S3",
+      "run": 2,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6725,
+      "vramFreeAfterMB": 6763,
+      "ms": 3887,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:34.202Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S3\"}"
+    },
+    {
+      "scenario": "S3",
+      "run": 3,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6763,
+      "vramFreeAfterMB": 6740,
+      "ms": 3886,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:38.085Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S3\"}"
+    },
+    {
+      "scenario": "S3",
+      "run": 4,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6740,
+      "vramFreeAfterMB": 6760,
+      "ms": 3704,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:41.798Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S3\"}"
+    },
+    {
+      "scenario": "S3",
+      "run": 5,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6760,
+      "vramFreeAfterMB": 6796,
+      "ms": 4238,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:45.984Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S3\"}"
+    },
+    {
+      "scenario": "S4",
+      "run": 1,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6796,
+      "vramFreeAfterMB": 6742,
+      "ms": 5385,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:51.354Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S4\"}"
+    },
+    {
+      "scenario": "S4",
+      "run": 2,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6742,
+      "vramFreeAfterMB": 6755,
+      "ms": 6530,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:31:57.833Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S4\"}"
+    },
+    {
+      "scenario": "S4",
+      "run": 3,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6755,
+      "vramFreeAfterMB": 6778,
+      "ms": 7572,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:32:05.368Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S4\"}"
+    },
+    {
+      "scenario": "S4",
+      "run": 4,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6778,
+      "vramFreeAfterMB": 6769,
+      "ms": 7408,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:32:12.811Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S4\"}"
+    },
+    {
+      "scenario": "S4",
+      "run": 5,
+      "exitCode": 0,
+      "signal": null,
+      "crash": false,
+      "ggmlLines": [],
+      "vramFreeBeforeMB": 6765,
+      "vramFreeAfterMB": 6777,
+      "ms": 7218,
+      "lastEvent": "{\"ts\":\"2026-11-21T05:32:19.962Z\",\"event\":\"case.ok\",\"node\":\"v24.14.1\",\"versions\":{\"qmd\":\"2.9.0\",\"node-llama-cpp\":\"3.22.3\"},\"scenario\":\"S4\"}"
+    }
+  ]
+}
