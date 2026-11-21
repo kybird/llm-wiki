@@ -190,3 +190,11 @@
 {"ts":"2026-11-09T15:02:59.313Z","action":"done","title":"스킬 콘텐츠 역류 — TTSTextViewer 진화본 정본 병합"}
 {"ts":"2026-11-09T15:04:13.036Z","action":"claimed","title":"버전 마커 무결성 — 동일 버전 내용 분기 감지","actor":"glm"}
 {"ts":"2026-11-09T15:14:20.123Z","action":"done","title":"버전 마커 무결성 — 동일 버전 내용 분기 감지"}
+{"ts":"2026-11-21T03:36:53.187Z","action":"created","title":"qmd 리랭커 CUDA 가짜 OOM 근본 수리"}
+{"ts":"2026-11-21T03:37:15.672Z","action":"created","title":"qmd 리랭커 CUDA 크래시 최소 재현 하네스"}
+{"ts":"2026-11-21T03:37:16.309Z","action":"created","title":"qmd 리랭커 교체 실험 — 모델 특이성 판정"}
+{"ts":"2026-11-21T03:37:32.468Z","action":"created","title":"llama.cpp CUDA 크래시 상류 추적·재시험"}
+{"ts":"2026-11-21T03:37:33.048Z","action":"created","title":"qmd 리랭커 안정화 처방 적용"}
+{"ts":"2026-11-21T03:37:58.721Z","action":"handoff","title":"qmd 리랭커 안정화 처방 적용","detail":"조건: 최소 재현(카드 1)·모델 판정(카드 2)·상류 재시험(카드 3) 중 하나가 안정 경로를 가리키면 resume --note '근거: …'로 todo로 돌아간다. 그 전까지 처방 후보를 미리 고르지 않는다."}
+{"ts":"2026-11-21T03:40:22.811Z","action":"claimed","title":"qmd 리랭커 CUDA 크래시 최소 재현 하네스","actor":"unnamed-agent"}
+{"ts":"2026-11-21T04:35:22.115Z","action":"done","title":"qmd 리랭커 CUDA 크래시 최소 재현 하네스"}
