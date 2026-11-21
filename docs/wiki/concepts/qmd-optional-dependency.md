@@ -33,6 +33,8 @@ aliases: [semantic search optional, findQmd, QMD 설치 위치]
 ### Grounding
 - Evidence: lib/find-qmd.js · `qmd collection list`/`collection show ttswiki` 실측 출력
 - [[2026-11-07]] Case 2 — list 미노출·show 노출 분리 발견, Files 파싱 통로 (confidence 5)
+- [[2026-09-02]] Case 2 — 글로벌 설치=전 머신 활성화·'No semantic results' 3단 진단·버베이티 질의 91~94% 실측 (confidence 5)
+- [[2026-09-22]] Case 2 — `qmd search`=BM25 vs `qmd query`=확장+리랭크 분리, "Semantic" 라벨 실측 경고 (confidence 5)
 
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]]

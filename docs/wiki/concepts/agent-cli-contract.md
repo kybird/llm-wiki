@@ -79,6 +79,15 @@ aliases: [CLI 계약, silent no-op, 무조건 성공 보고, 모르는 플래그
   repo.docRoot) 같은 대상만 재사용하며, 다르면 소유자 이름을 말하라. 모니터의 기본 실행은
   포트를 워크(4747→)해 각자의 보드가 각자의 URL에 뜬다.
 
+- **위치인자 확장 가드**(2026-10-15 발화 → `hash:1d52fba` 구현): `pick "제목"`이 제목을
+  무시하고 ordinal 순 첫 eligible 카드를 집던 조용한 오집은 "위치인자 거부"로 전환됐다
+  (2026-11-21 실측: `✗ pick은 위치인자를 받지 않는다 — 지정 집기는 pick --card`).
+  문서화는 함정을 못 막고 가드만 막는다 — 같은 날 init 가드(0046723)도 함께.
+
+### Grounding
+- Evidence: 이 문서의 각 항목에 hash·날짜 명시(위 본문)
+- [[2026-10-15]] Case 3 — pick 위치인자 무시 오집 실측(가드 이전 행동)
+
 ### Related Knowledge
 - Patterns: [[always-merge-exact-matching]] · [[write-validation-matches-read-semantics]] · [[flush-before-exit]]
 - **Anti-Patterns**: [[destructuring-live-getters]] · [[probing-side-effect-commands]]

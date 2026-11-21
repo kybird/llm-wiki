@@ -45,6 +45,10 @@ confidence: 5
 - [[auto-update-copy-source]] — publish가 사본 핑퐁을 끝내는 지점
 - [[quota-watchdog]] — 유보 사례 본체(work-loop v12, raw Case 5)
 
+## publish와 push는 독립 이벤트다 (2026-10-13 실측)
+
+브라우저 승인으로 npm엔 발행돼도 원격 브랜치는 멈춰 있을 수 있다(0.7.0 사고: npm-only 발행 + 10커밋 미푸시 — 다른 기기가 "npm엔 0.7인데 소스는 0.6"이라 묘사). 소비 레포 접수의 유력 원인. 레시피: **push를 publish 앞에**(발행 실패 시 git이 앞서가도 태그·커밋으로 수습 가능, 반대는 0.7.0의 재현).
+
 ## Grounding (References)
 
 - [[2026-09-24]] Case 5 — publish 유보 결정 + 유보 비용 3가지 (confidence 5)

@@ -47,7 +47,12 @@ confidence: 5
 - [[destructuring-live-getters]] — "테스트가 통과했다"가 증거가 아닌 경우
 - [[kill-the-tree-not-the-wrapper]] — 옛 서버가 옛 페이지를 계속 줄 때 이 규칙과 겹침
 
+## 추가 규칙 — 임베디드 클라이언트 스크립트엔 백틱 금지 (2026-10-15)
+
+서버 파일 안 큰 템플릿 리터럴에 내장된 클라이언트 JS(예: `lib/kanban-monitor.js`)를 수정할 때 백틱을 넣으면 외부 리터럴이 거기서 닫혀 `SyntaxError: Unexpected identifier` — **bin이 로드 단계에서 죽는다**. 신호: 관련 없어 보이는 테스트 다수 동시 실패 = 로드 실패로 읽는다. 내장 스크립트에는 문자열 연결만 쓴다(실측: 한 줄 교체로 12개 테스트 동시 적화 → 연결로 즉시 133/133 복구).
+
 ## Grounding (References)
 
 - Git Context: `hash:fac5062` (수습 포함 커밋)
 - Evidence: doc/raw/2026-09-16.md Case 5 — 페이지 요약 줄 `연결 끊김 — 서버가 죽었거나 보드를 읽을 수 없다 (c is not defined)`, 실제 ReferenceError `c is not defined`
+- [[2026-10-15]] Case 2 — 임베디드 스크립트 백틱 → 외부 템플릿 조기 종료, bin 로드 사망(lib/kanban-monitor.js:607, 문자열 연결 수습 133/133)
