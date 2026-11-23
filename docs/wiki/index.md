@@ -66,4 +66,4 @@ llm-wiki 프로젝트의 구조화된 지식 베이스입니다. `docs/raw/` 로
 - Total patterns: 9
 - Total anti-patterns: 6
 - Total answers: 0
-- Last updated: 2026-11-21
+- Last updated: 2026-11-23

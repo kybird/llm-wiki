@@ -192,6 +192,8 @@
 {"ts":"2026-10-15T14:44:32.336Z","action":"done","title":"raw 골격 lint 검사"}
 {"ts":"2026-10-15T14:44:32.653Z","action":"claimed","title":"compile 환류와 pick 검색 훅","actor":"session-1015"}
 {"ts":"2026-10-15T14:46:00.942Z","action":"done","title":"compile 환류와 pick 검색 훅"}
+{"ts":"2026-10-15T14:46:01.271Z","action":"claimed","title":"raw 마이그레이션과 문서 정정","actor":"session-1015"}
+{"ts":"2026-10-15T14:49:08.323Z","action":"handoff","title":"raw 마이그레이션과 문서 정정","detail":"잔여: 레거시 raw 12개 파일(08-29·08-30·09-02·09-09·09-10·09-12·09-16·09-18·09-22·09-24·10-02·10-03)을 신규 골격으로 전환. 템플릿=docs/raw/2026-10-15.md·2026-10-13.md(이미 전환됨), 매핑 규칙=docs/superpowers/specs/2026-10-15-episode-memory-retrieval-design.md §6. 전환 완료 후 lib/wiki-lint.js의 RAW_SKELETON_CUTOFF 제거(전 파일 엄격 검사)가 AC 마지막 조각. README 링크 정정은 완료."}
 {"ts":"2026-11-07T06:46:17.479Z","action":"created","title":"QMD 컬렉션 경로 드리프트 자가치유"}
 {"ts":"2026-11-08T04:09:09.289Z","action":"claimed","title":"웹 뷰 — 드래그 이동","actor":"unnamed-agent"}
 {"ts":"2026-11-08T04:32:48.484Z","action":"claimed","title":"QMD 컬렉션 경로 드리프트 자가치유","actor":"unnamed-agent"}
@@ -225,3 +227,6 @@
 {"ts":"2026-11-23T02:49:25.609Z","action":"created","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동"}
 {"ts":"2026-11-23T02:49:50.359Z","action":"claimed","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동","actor":"unnamed-agent"}
 {"ts":"2026-11-23T03:13:14.096Z","action":"done","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동"}
+{"ts":"2026-11-23T09:14:02.182Z","action":"created","title":"qmd 해석 그림자 결함 — 최신 사본 우선"}
+{"ts":"2026-11-23T09:14:07.426Z","action":"claimed","title":"qmd 해석 그림자 결함 — 최신 사본 우선","actor":"unnamed-agent"}
+{"ts":"2026-11-23T09:22:26.263Z","action":"done","title":"qmd 해석 그림자 결함 — 최신 사본 우선"}

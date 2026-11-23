@@ -22,6 +22,15 @@ These are two different failure modes:
 | `CUDA error: out of memory` at runtime | ~~Transient driver/VRAM state~~ **규명(2026-11-21)**: 임베드 컨텍스트 상주 중 `rankAll` — ggml-cuda 상류 결함, VRAM 무관 | **qmd 2.9.0(n-l-c 3.22.3) 업그레이드로 수리 실측**(아래 해소 노트) |
 | `error STL1002: Unexpected compiler version, expected CUDA 12.4+` | MSVC + CUDA Toolkit mismatch at build time | Upgrade CUDA Toolkit (see below) |
 
+**해석 그림자 함정(2026-11-23 실측)**: qmd를 2.9.0으로 올렸는데도 같은 크래시가 재발하면,
+실행된 qmd가 어디의 건지부터 확인하라. llm-wiki는 PATH의 `qmd` 명령을 쓰지 않고
+`findQmd()`가 찾은 파일 경로로 실행하는데, 한 머신에 여러 사본(레포 node_modules ·
+글로벌)이 있으면 늙은 사본이 새 사본을 가릴 수 있었다(자기 트리 2.8.3이 글로벌
+2.9.0을 가려 채택 처방이 해석 단계에서 무력화 → 크래시 재발). 수리: `findQmd()`는
+이제 존재하는 후보 중 **버전이 가장 높은 사본**을 고른다(lib/find-qmd.js). 진단:
+`node -e "const{execSync}=require('child_process'),p=require('path');const r=execSync('npm root -g').toString().trim();console.log(require(p.join(r,'@kybird/llm-wiki','lib','find-qmd')).findQmd())"`
+— 출력된 경로 밑의 package.json 버전을 봐라. 의도적 핀은 `QMD_CLI_PATH`.
+
 ## Variable name reminder
 
 Use **`QMD_LLAMA_GPU`** to force CPU. Do **not** use `NODE_LLAMA_CPP_GPU` — it is read by nothing in the qmd codebase and has no effect.
@@ -113,7 +122,7 @@ Removing `.targets` does **not** delete the CUDA 11.8 toolkit itself — other p
    `grep -aoE 'cublas64_[0-9]+\.dll' <qmd>/node_modules/@node-llama-cpp/win-x64-cuda/bins/win-x64-cuda/ggml-cuda.dll`
    → 그 버전의 **런타임 DLL**을 가진 툴킷 하나를 PATH 선두에. 런타임 DLL을 가진 CUDA가 2개 이상이면 그것부터 정리한다 — nvcc 등 툴킷 잔재만 있는 공존은 prebuilt 경로에 무하다(2026-10-13 실측).
 2. `STL1002` / `expected CUDA 12.4+` → MSVC(cl 19.44+)↔툴킷 불일치. **빌드타임** 문제라 드라이버와 무관.
-3. 런타임 `CUDA error: out of memory`(여유 VRAM에서도) → **일시적 드라이버/VRAM 상태 모드**. 그 실행만 `QMD_LLAMA_GPU=false`. llm-wiki의 search 경로는 자동 vulkan 강하(lib/wiki-search.js, efe4c14)가 회수한다 — CPU 리랭크는 ~650s/21청크라 120s 타임아웃을 넘으니 `false` 처방은 직접 qmd CLI에만.
+3. 런타임 `CUDA error: out of memory`(여유 VRAM에서도) → **상류 ggml-cuda 결함**(임베드 컨텍스트 상주 중 `rankAll`, 2026-11-21 규명) — qmd 2.9.0(n-l-c 3.22.3) 업그레이드로 수리. 올렸는데도 재발하면 **해석 그림자**(위 섹션)부터 확인. 그 실행만 급히 피하려면 `QMD_LLAMA_GPU=false`. llm-wiki의 search 경로는 자동 vulkan 강하(lib/wiki-search.js, efe4c14)가 회수한다 — CPU 리랭크는 ~650s/21청크라 120s 타임아웃을 넘으니 `false` 처방은 직접 qmd CLI에만.
 4. `nvidia-smi`의 "CUDA Version"은 드라이버가 지원하는 **최대 런타임** — 설치한 툴킷/런타임이 이것을 초과하면 안 된다.
 
 ## Anti-patterns (do not do)

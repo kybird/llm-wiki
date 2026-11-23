@@ -23,7 +23,7 @@
   "homepage": "https://github.com/kybird/llm-wiki#readme",
   "bugs": "https://github.com/kybird/llm-wiki/issues",
   "optionalDependencies": {
-    "@tobilu/qmd": "^2.5.3"
+    "@tobilu/qmd": "^2.9.0"
   },
   "engines": {
     "node": ">=18"
