@@ -234,3 +234,7 @@
 {"ts":"2026-11-23T10:02:51.028Z","action":"claimed","title":"llm-wiki 자기 스큐 힌트 — npm 최신이 앞서면 한 줄 안내","actor":"unnamed-agent"}
 {"ts":"2026-11-23T10:22:09.083Z","action":"created","title":"findQmd 탐색 결함 — 자기 트리 resolve는 죽었고 cwd 루트만 본다"}
 {"ts":"2026-11-23T10:27:45.934Z","action":"done","title":"llm-wiki 자기 스큐 힌트 — npm 최신이 앞서면 한 줄 안내"}
+{"ts":"2026-11-23T11:19:20.205Z","action":"verdict","title":"llm-wiki 자기 스큐 힌트 — npm 최신이 앞서면 한 줄 안내","detail":"superseded — 사용자 판정(2026-11-23): 자동 갱신은 설치까지가 기본기능 — '안내만 하고 설치는 안 한다'는 에이전트의 설계 선택이었고 안내만으로는 부족하다. qmd 동반 갱신(B안)이 이미 자동 설치하므로 llm-wiki 자신도 같은 방식으로 끌어올린다. 'llm-wiki 자기 갱신' 카드가 계승"}
+{"ts":"2026-11-23T11:19:20.314Z","action":"created","title":"llm-wiki 자기 갱신 — 레지스트리가 앞서면 글로벌 설치본까지 끌어올린다"}
+{"ts":"2026-11-23T11:19:20.420Z","action":"claimed","title":"llm-wiki 자기 갱신 — 레지스트리가 앞서면 글로벌 설치본까지 끌어올린다","actor":"unnamed-agent"}
+{"ts":"2026-11-23T11:31:11.942Z","action":"done","title":"llm-wiki 자기 갱신 — 레지스트리가 앞서면 글로벌 설치본까지 끌어올린다"}

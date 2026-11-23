@@ -101,8 +101,10 @@ Kanban (cards are files; CLI is the only writer):
 
 Optional:
   npm i @tobilu/qmd                  Enable semantic search (falls back to grep if absent)
-  npm update -g @kybird/llm-wiki     Copied skills/hooks/scripts auto-update on the next
-                                     command ("autoUpdate": false in llm-wiki.config.json,
+  npm update -g @kybird/llm-wiki     Manual: apply a new version now. The global CLI also
+                                     self-updates (daily check, background install), and
+                                     copied skills/hooks/scripts follow on the next command
+                                     ("autoUpdate": false in llm-wiki.config.json,
                                      or LLM_WIKI_NO_AUTO_UPDATE=1, to opt out)
   --json                             Machine-readable output: {schemaVersion: 1, kind: ...}
                                      (search, lint, compile list|index, board report, pick)

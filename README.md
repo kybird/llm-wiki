@@ -20,7 +20,7 @@ npm install -g @kybird/llm-wiki   # installs the `llm-wiki` command
 npx @kybird/llm-wiki init
 ```
 
-Install it **globally — one per machine**. The CLI is machine-wide plumbing while the knowledge lives in each repo's `docs/`, so a per-repo install only adds a second CLI that drifts from the first. Keeping it current is part of the contract: the auto-update below re-syncs the copies *inside* your repos but never upgrades the `llm-wiki` command itself. If a command behaves oddly or another machine disagrees about behavior, run `npm update -g @kybird/llm-wiki` first — a stale CLI doesn't fail, it silently skips the contracts it predates (see [Updating](#updating)).
+Install it **globally — one per machine**. The CLI is machine-wide plumbing while the knowledge lives in each repo's `docs/`, so a per-repo install only adds a second CLI that drifts from the first. It keeps itself current: when npm has a newer version, the next `llm-wiki` command updates the global install and your repos' copies follow (see [Updating](#updating)). That only applies to a real global install — a source checkout, an `npm link`, or a per-repo install is never replaced, and there a stale CLI can still bite: it doesn't fail, it silently skips the contracts it predates.
 
 ## Quickstart (in any repo)
 
@@ -97,17 +97,17 @@ your-repo/
 
 ## Updating
 
-`npm update` is the only step. The skills, hooks, and scripts copied into your repo are **marker-protected copies**, and the first `llm-wiki` command you run after a version change re-syncs them automatically (it prints one summary line; `llm-wiki init --check` shows the full report, `llm-wiki init` applies manually as before):
+You normally don't update by hand — the CLI updates itself (see **Self-update** below). After a version change, the first `llm-wiki` command you run re-syncs the skills, hooks, and scripts copied into your repo; they are **marker-protected copies** (it prints one summary line; `llm-wiki init --check` shows the full report, `llm-wiki init` applies manually as before):
 
 ```bash
-npm update -g @kybird/llm-wiki    # then run any llm-wiki command — copies auto-update
+npm update -g @kybird/llm-wiki    # manual: apply a new version now, then run any llm-wiki command — copies auto-update
 ```
 
 The version stamp lives per-repo in `~/.llm-wiki/auto-update/` (override with `LLM_WIKI_STATE_DIR`), never inside your repo. Opt out with `"autoUpdate": false` in `llm-wiki.config.json`, or `LLM_WIKI_NO_AUTO_UPDATE=1` for a single run.
 
 **qmd companion update.** If `@tobilu/qmd` (the optional semantic-search backend) is installed on the machine, the same auto-update pass also brings it to the latest version (`npm i -g @tobilu/qmd@latest` — e.g. the win32 CUDA reranker coexistence crash fixed in qmd 2.9.0). A machine-wide stamp means only the first repo to run a command pays the npm cost. Not installed → never installed by llm-wiki (the optional dependency stays optional). A failed update warns one line and retries on the next opportunity; `LLM_WIKI_STATE_DIR` isolation also isolates this global side effect.
 
-**Stale-CLI notice.** The pass above syncs copies and qmd — it never upgrades the `llm-wiki` command itself, so a machine can keep running an old CLI after another machine has published a fix. llm-wiki therefore compares its own version with the npm registry and prints one line (`⚠ llm-wiki 스큐 — …`) when the registry is newer. The check runs at most once a day per machine (`~/.llm-wiki/auto-update/self-skew.checked`), never installs anything, stays silent when up to date or when the lookup fails (offline → no notice, no retry storm), and honors the same opt-outs. Updating stays a human step — run `npm update -g @kybird/llm-wiki` in your own terminal. It cannot catch a checkout that is *ahead* of the registry (this source repo with unreleased commits): there the global CLI and the registry agree, so the comparison is silent — use `npm link` or `node bin/llm-wiki.js` there (see [Development](#development-this-repo)).
+**Self-update.** Once a day per machine, a `llm-wiki` command compares its own version with the npm registry. If the registry is newer, it starts `npm i -g @kybird/llm-wiki@<version>` in a detached background process, prints one line (`· llm-wiki v0.13.0 → v0.14.0 자동 갱신 시작 …`), and returns immediately; the next command reports the outcome (`자동 갱신 완료`, or `자동 갱신 실패 …` with the manual command). The command after that runs the new version, and the pass above re-syncs your repos' copies. It only ever replaces a **real global install** (a directory under `npm root -g`): an `npm link`, a source checkout (`node bin/llm-wiki.js`), an npx cache, or a per-repo install is left untouched and nothing is printed. A failed or offline check is silent and retried the next day. The same opt-outs apply (`"autoUpdate": false`, `LLM_WIKI_NO_AUTO_UPDATE=1`; `LLM_WIKI_STATE_DIR` isolation disables it in tests). While npm is swapping the package — a few seconds — a command that starts in that window can fail once; rerun it. What the registry comparison cannot see: a checkout that is *ahead* of the registry (this source repo with unreleased commits) — there the global CLI and the registry agree, so use `npm link` or `node bin/llm-wiki.js` (see [Development](#development-this-repo)).
 
 The contract: a copy keeps its version marker (`skill-version:` in skills, `llm-wiki-template-version:` in hooks and scripts) only while it is unmodified. **To customize a copy, delete its marker line** — updates then treat it as yours and never overwrite it. Repos that keep their own canonical hook can skip the copy entirely: set `"hooksPath": "templates/githooks"` in `llm-wiki.config.json`. The seeded `AGENTS.md` stays yours: only the block between `llm-wiki:section` markers (absent in old seeds) is package-managed; everything outside the markers is never touched.
 
