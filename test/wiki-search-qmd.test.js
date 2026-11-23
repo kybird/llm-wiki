@@ -11,7 +11,25 @@ const os = require('node:os');
 const path = require('node:path');
 const { search } = require('../lib/wiki-search');
 
+// 재발 가드 — 이 파일이 진짜 질의 로그를 건드리면 실패하게 한다(2026-11-23). search()는
+// doc root를 스스로 정하고 질의 로그를 <docRoot>/raw/search-queries.jsonl에 쓰는데,
+// 격리가 없으면 진짜 레포의 로그에 고정 질의가 쌓인다(npm test마다 5줄).
+const REAL_QUERY_LOG = path.join(__dirname, '..', 'docs', 'raw', 'search-queries.jsonl');
+const realQueryLogBefore = fs.existsSync(REAL_QUERY_LOG) ? fs.readFileSync(REAL_QUERY_LOG) : null;
+
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lw-qmd-stub-'));
+
+// 이 파일은 임시 doc root·임시 cwd에서만 돈다 — 이 레포의 docs/는 테스트가 절대
+// 건드리지 않는다. search()는 findDocRoot()(LLM_WIKI_ROOT 우선)로 doc root를, cwd로
+// 설정 파일을 찾으므로 둘 다 임시로 옮긴다(2026-11-23 수리: 격리가 없어 진짜
+// search-queries.jsonl에 고정 질의가 누적됐다 — 당시 커밋된 65줄 중 60줄).
+const docRoot = path.join(tmp, 'docs');
+fs.mkdirSync(path.join(docRoot, 'raw'), { recursive: true });
+fs.mkdirSync(path.join(docRoot, 'wiki'), { recursive: true });
+const prevRoot = process.env.LLM_WIKI_ROOT;
+const prevCwd = process.cwd();
+process.env.LLM_WIKI_ROOT = docRoot;
+process.chdir(tmp);
 
 const okStub = path.join(tmp, 'stub-ok.js');
 fs.writeFileSync(okStub, `console.log('STUB-OK', process.argv.slice(2).join(' '));\n`);
@@ -127,5 +145,15 @@ test('CUDA 크래시 — 같은 수집을 vulkan 강하로 재시도해 회수�
 
 test.after(() => {
   delete process.env.QMD_CLI_PATH;
+  // cwd를 먼저 돌려놓고 지운다 — Windows는 현재 디렉터리 삭제를 EPERM으로 거부한다.
+  process.chdir(prevCwd);
+  if (prevRoot === undefined) delete process.env.LLM_WIKI_ROOT;
+  else process.env.LLM_WIKI_ROOT = prevRoot;
   fs.rmSync(tmp, { recursive: true, force: true });
+  const realQueryLogAfter = fs.existsSync(REAL_QUERY_LOG) ? fs.readFileSync(REAL_QUERY_LOG) : null;
+  assert.ok(
+    (realQueryLogBefore === null && realQueryLogAfter === null)
+      || (realQueryLogBefore !== null && realQueryLogAfter !== null && realQueryLogBefore.equals(realQueryLogAfter)),
+    '이 테스트 파일이 진짜 docs/raw/search-queries.jsonl을 바꿨다 — doc root 격리가 깨졌다',
+  );
 });
