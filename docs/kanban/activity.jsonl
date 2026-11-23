@@ -208,3 +208,6 @@
 {"ts":"2026-11-21T05:59:00.105Z","action":"created","title":"auto-update에 qmd 동반 갱신"}
 {"ts":"2026-11-21T05:59:00.456Z","action":"claimed","title":"auto-update에 qmd 동반 갱신","actor":"unnamed-agent"}
 {"ts":"2026-11-21T06:06:05.093Z","action":"done","title":"auto-update에 qmd 동반 갱신"}
+{"ts":"2026-11-23T02:49:25.609Z","action":"created","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동"}
+{"ts":"2026-11-23T02:49:50.359Z","action":"claimed","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동","actor":"unnamed-agent"}
+{"ts":"2026-11-23T03:13:14.096Z","action":"done","title":"monitor 마일스톤 탭 구조화 — 활성 칸반·리스트·활동"}

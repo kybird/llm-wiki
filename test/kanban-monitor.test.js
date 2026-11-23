@@ -210,6 +210,7 @@ test('monitor 마일스톤 패널 — /api/board 유도 집계·페이지 골격
   const b = makeBoard();
   assert.equal(b.run(['card', 'new', '목적 계획', '--kind', 'milestone', '--goal', '대의를 이룬다']).status, 0);
   assert.equal(b.run(['card', 'new', '패널멤버', '--milestone', '목적 계획', '--goal', 'g', '--ac', 'AC1']).status, 0);
+  assert.equal(b.run(['pick', '--claim', '테스터', '--card', '패널멤버']).status, 0);
   const m = await startMonitor(b);
   try {
     const board = await (await fetch(`${m.url}/api/board`)).json();
@@ -220,10 +221,23 @@ test('monitor 마일스톤 패널 — /api/board 유도 집계·페이지 골격
     assert.equal(ms.total, 1);
     assert.ok(ms.goal.includes('대의'), 'Goal(대의) 노출');
     assert.ok(!board.columns.todo.some(c => c.title === '목적 계획'), '컬럼 제외');
-    assert.equal(board.columns.todo[0].milestone, '목적 계획', 'viewCard에 소속 노출');
+    assert.equal(board.columns.doing[0].milestone, '목적 계획', 'viewCard에 소속 노출');
+    // 멤버 게이트 필드(2026-11-23) — 마일스톤 칸반이 전역 컬럼을 대체하면서
+    // 클레임·의존·만료 판정이 멤버 유도로 이주했다.
+    const mem = ms.members[0];
+    assert.equal(mem.title, '패널멤버', '멤버 유도');
+    assert.equal(mem.status, 'doing', '멤버 상태');
+    assert.equal(mem.claimedBy, '테스터', '클레임 주체');
+    assert.ok(mem.claimedAt, '클레임 시각');
+    assert.equal(mem.claimExpired, false, '만료 판정');
+    assert.deepEqual(mem.dependsOn, [], '의존 목록');
 
     const page = await (await fetch(m.url + '/')).text();
-    assert.ok(page.includes('list-milestones'), '패널 골격');
+    assert.ok(page.includes('list-ms-active'), '활성 탭 골격(첫 화면)');
+    assert.ok(page.includes('list-milestones'), '마일스톤 탭 골격');
+    assert.ok(page.includes('id="tab-activity"'), '활동 탭 골격(시간축 분리)');
+    assert.ok(page.includes('href="#active"'), '기본 탭 해시');
+    assert.ok(!page.includes('id="list-doing"'), '전역 컬럼 골격은 폐지');
 
     const detail = await (await fetch(`${m.url}/api/card?title=${encodeURIComponent('목적 계획')}`)).json();
     assert.ok(Array.isArray(detail.members) && detail.members[0].title === '패널멤버', '상세에 멤버 목록');
