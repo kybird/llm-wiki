@@ -230,3 +230,6 @@
 {"ts":"2026-11-23T09:14:02.182Z","action":"created","title":"qmd 해석 그림자 결함 — 최신 사본 우선"}
 {"ts":"2026-11-23T09:14:07.426Z","action":"claimed","title":"qmd 해석 그림자 결함 — 최신 사본 우선","actor":"unnamed-agent"}
 {"ts":"2026-11-23T09:22:26.263Z","action":"done","title":"qmd 해석 그림자 결함 — 최신 사본 우선"}
+{"ts":"2026-11-23T10:02:50.930Z","action":"created","title":"llm-wiki 자기 스큐 힌트 — npm 최신이 앞서면 한 줄 안내"}
+{"ts":"2026-11-23T10:02:51.028Z","action":"claimed","title":"llm-wiki 자기 스큐 힌트 — npm 최신이 앞서면 한 줄 안내","actor":"unnamed-agent"}
+{"ts":"2026-11-23T10:22:09.083Z","action":"created","title":"findQmd 탐색 결함 — 자기 트리 resolve는 죽었고 cwd 루트만 본다"}

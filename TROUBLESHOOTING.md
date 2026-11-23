@@ -25,9 +25,12 @@ These are two different failure modes:
 **해석 그림자 함정(2026-11-23 실측)**: qmd를 2.9.0으로 올렸는데도 같은 크래시가 재발하면,
 실행된 qmd가 어디의 건지부터 확인하라. llm-wiki는 PATH의 `qmd` 명령을 쓰지 않고
 `findQmd()`가 찾은 파일 경로로 실행하는데, 한 머신에 여러 사본(레포 node_modules ·
-글로벌)이 있으면 늙은 사본이 새 사본을 가릴 수 있었다(자기 트리 2.8.3이 글로벌
-2.9.0을 가려 채택 처방이 해석 단계에서 무력화 → 크래시 재발). 수리: `findQmd()`는
-이제 존재하는 후보 중 **버전이 가장 높은 사본**을 고른다(lib/find-qmd.js). 진단:
+글로벌)이 있으면 늙은 사본이 새 사본을 가릴 수 있었다(레포 루트에서 실행하면 **cwd
+레포의 node_modules** 사본이 먼저 발견돼 그 2.8.3이 글로벌 2.9.0을 가려 채택 처방이
+해석 단계에서 무력화 → 크래시 재발). 수리: `findQmd()`는 이제 존재하는 후보 중
+**버전이 가장 높은 사본**을 고른다(lib/find-qmd.js — 이 수리를 실은 버전의 CLI에만
+있다. 진단 결과가 레포 node_modules 쪽인데 CLI가 그 버전 미만이면 `npm update -g`
+먼저). 진단:
 `node -e "const{execSync}=require('child_process'),p=require('path');const r=execSync('npm root -g').toString().trim();console.log(require(p.join(r,'@kybird/llm-wiki','lib','find-qmd')).findQmd())"`
 — 출력된 경로 밑의 package.json 버전을 봐라. 의도적 핀은 `QMD_CLI_PATH`.
 
