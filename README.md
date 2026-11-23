@@ -20,6 +20,8 @@ npm install -g @kybird/llm-wiki   # installs the `llm-wiki` command
 npx @kybird/llm-wiki init
 ```
 
+Install it **globally — one per machine**. The CLI is machine-wide plumbing while the knowledge lives in each repo's `docs/`, so a per-repo install only adds a second CLI that drifts from the first. Keeping it current is part of the contract: the auto-update below re-syncs the copies *inside* your repos but never upgrades the `llm-wiki` command itself. If a command behaves oddly or another machine disagrees about behavior, run `npm update -g @kybird/llm-wiki` first — a stale CLI doesn't fail, it silently skips the contracts it predates (see [Updating](#updating)).
+
 ## Quickstart (in any repo)
 
 ```bash
