@@ -1,6 +1,6 @@
 ---
 title: raw 마이그레이션과 문서 정정
-status: todo
+status: review
 ordinal: 23000
 created: 2026-10-15
 depends_on: ["wiki-log 스킬 재작성","raw 골격 lint 검사"]
@@ -24,5 +24,6 @@ milestone: 에피소드 메모리 회수 가다듬기
 ## Notes
 
 ## Handoff
+- 2026-10-15T23:49+09:00 — QUESTION: 잔여: 레거시 raw 12개 파일(08-29·08-30·09-02·09-09·09-10·09-12·09-16·09-18·09-22·09-24·10-02·10-03)을 신규 골격으로 전환. 템플릿=docs/raw/2026-10-15.md·2026-10-13.md(이미 전환됨), 매핑 규칙=docs/superpowers/specs/2026-10-15-episode-memory-retrieval-design.md §6. 전환 완료 후 lib/wiki-lint.js의 RAW_SKELETON_CUTOFF 제거(전 파일 엄격 검사)가 AC 마지막 조각. README 링크 정정은 완료.
 
 ## Result
